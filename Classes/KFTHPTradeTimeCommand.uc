@@ -30,14 +30,14 @@ protected function DoAction(KFTHPCommandExecutionState ExecState)
 }
 
 /** @Override */
-protected function bool CheckCustom(KFTHPCommandExecutionState ExecState)
+protected function bool CheckGameState()
 {
-    if (!KFGT.bTradingDoorsOpen)
+    if (KFGT.bTradingDoorsOpen || KFGT.WaveNum == 0 && KFGT.WaveCountDown > 0)
     {
-        return false;
+        return true;
     }
 
-    return true;
+    return false;
 }
 
 /** @Override */
@@ -47,9 +47,9 @@ protected function string GetGlobalSuccessMessage(KFTHPCommandExecutionState Exe
 }
 
 /** @Override */
-protected function string CustomErrorMessage(KFTHPCommandExecutionState ExecState)
+protected function string InvalidGameStateMessage()
 {
-    return "Trader Time cannot be set during the wave";
+    return "Trader Time can only be set during trader time";
 }
 
 defaultproperties

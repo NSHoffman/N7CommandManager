@@ -8,51 +8,26 @@ enum ECmdArgs
 /** @Override */
 protected function DoAction(KFTHPCommandExecutionState ExecState)
 {
-    local KFGameReplicationInfo KFGRI;
-    KFGRI = KFGameReplicationInfo(Level.Game.GameReplicationInfo);
-
-    KillLivingZeds();
-
-    if (ExecState.GetArgC() == 1)
+    switch (ExecState.GetArgC())
     {
-        KFGT.NumMonsters = 0;
-        KFGT.TotalMaxMonsters = 0;
-        KFGT.MaxMonsters = 0;
-        KFGRI.MaxMonsters = 0;
+        case 0:
+            GSU.KillLivingZeds();
+            break;
+
+        case 1:
+            GSU.KillAllZeds();
+            break;
     }
-}
 
-protected function KillLivingZeds()
-{
-    local KFMonster TargetMonster;
-
-    foreach DynamicActors(Class'KFMonster', TargetMonster)
-    {
-        if (TargetMonster.Health > 0 && !TargetMonster.bDeleteMe)
-        {
-            KillZed(TargetMonster);
-        }
-    }
-}
-
-protected function KillZed(KFMonster TargetMonster)
-{
-    TargetMonster.Died(TargetMonster.Controller, Class'DamageType', TargetMonster.Location);
+    GSU.StopZedTime();
 }
 
 /** @Override */
 protected function bool CheckArgs(KFTHPCommandExecutionState ExecState)
 {
-    local string TargetString;
-
-    if (ExecState.GetArgC() == 1)
+    if (ExecState.GetArgC() == 1 && Locs(ExecState.GetArg(ECmdArgs.ARG_TARGET)) != "all")
     {
-        TargetString = Locs(ExecState.GetArg(ECmdArgs.ARG_TARGET));
-
-        if (TargetString != "all")
-        {
-            return false;
-        }
+        return false;
     }
 
     return true;
@@ -63,7 +38,7 @@ protected function string GetGlobalSuccessMessage(KFTHPCommandExecutionState Exe
 {
     if (ExecState.GetArgC() == 1)
     {
-        return "Wave cleared by "$GetInstigatorName(ExecState);
+        return "All ZEDs killed by "$GetInstigatorName(ExecState);
     }
 
     return "ZED Squads killed by "$GetInstigatorName(ExecState);

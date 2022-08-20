@@ -1,5 +1,9 @@
 class KFTHPGameStateUtils extends Core.Object within KFTHPCommandManager;
 
+/****************************
+ *  SETTINGS ACCESSORS
+ ****************************/
+
 public final function int GetAlivePlayersNum()
 {
     local Controller C;
@@ -44,6 +48,43 @@ public final function int GetFinalZedHPConfig()
     return Max(AlivePlayersNum, GetZedHPConfig());
 }
 
+/****************************
+ *  ZEDS RELATED UTILS
+ ****************************/
+
+public final function KillAllZeds(optional bool bDestroyNextTick)
+{
+    KillLivingZeds(bDestroyNextTick);
+
+    KFGT.NumMonsters = 0;
+    KFGT.TotalMaxMonsters = 0;
+    KFGT.MaxMonsters = 0;
+    KFGameReplicationInfo(Level.Game.GameReplicationInfo).MaxMonsters = 0;
+}
+
+public final function KillLivingZeds(optional bool bDestroyNextTick)
+{
+    local KFMonster TargetMonster;
+
+    foreach DynamicActors(Class'KFMonster', TargetMonster)
+    {
+        if (TargetMonster.Health > 0 && !TargetMonster.bDeleteMe)
+        {
+            KillZed(TargetMonster, bDestroyNextTick);
+        }
+    }
+}
+
+public final function KillZed(KFMonster TargetMonster, optional bool bDestroyNextTick)
+{
+    TargetMonster.Died(TargetMonster.Controller, Class'DamageType', TargetMonster.Location);
+    
+    if (bDestroyNextTick)
+    {
+        TargetMonster.bDestroyNextTick = true;
+    }
+}
+
 public final function int GetZedModifiedHealth(KFMonster Zed)
 {
     local float ZedRawHealth, ZedHealthModifiedByDifficulty, ZedModifiedHealth;
@@ -74,6 +115,74 @@ protected final function float GetZedHPModifierByPlayers(KFMonster Zed)
 protected final function float GetZedHeadHPModifierByPlayers(KFMonster Zed)
 {
     return 1.0 + Zed.PlayerNumHeadHealthScale * FMax(GetFinalZedHPConfig() - 1.0, 0);
+}
+
+/****************************
+ *  GAME RELATED UTILS
+ ****************************/
+
+public final function StopZedTime()
+{
+    KFGT.bZEDTimeActive = false;
+    KFGT.LastZedTimeEvent = Level.TimeSeconds;
+    KFGT.CurrentZEDTimeDuration = 0.0;
+    KFGT.SetGameSpeed(1.0);
+    KFGT.ZedTimeExtensionsUsed = 0;
+}
+
+public final function DoWaveEnd()
+{
+    local Controller C;
+    local KFDoorMover KFDM;
+
+    KFGT.bDidTraderMovingMessage = false;
+    KFGT.bDidMoveTowardTraderMessage = false;
+
+    KFGT.bWaveInProgress = false;
+    KFGT.bWaveBossInProgress = false;
+    KFGT.bNotifiedLastManStanding = false;
+    KFGameReplicationInfo(KFGT.GameReplicationInfo).bWaveInProgress = false;
+
+    KFGT.WaveCountDown = Max(KFGT.TimeBetweenWaves, 1);
+    KFGameReplicationInfo(KFGT.GameReplicationInfo).TimeToNextWave = KFGT.WaveCountDown;
+
+    for (C = Level.ControllerList; C != None; C = C.NextController)
+    {
+        if (KFPlayerController(C) != None && KFPlayerReplicationInfo(C.PlayerReplicationInfo) != None)
+        {
+            C.PlayerReplicationInfo.bOutOfLives = false;
+            C.PlayerReplicationInfo.NumLives = 1;
+
+            KFPlayerController(C).bChangedVeterancyThisWave = false;
+
+            if (KFPlayerReplicationInfo(C.PlayerReplicationInfo).ClientVeteranSkill != KFPlayerController(C).SelectedVeterancy)
+            {
+                KFPlayerController(C).SendSelectedVeterancyToServer();
+            }
+
+            if (C.Pawn == None && !C.PlayerReplicationInfo.bOnlySpectator)
+            {
+                C.PlayerReplicationInfo.Score = Max(KFGT.MinRespawnCash, int(C.PlayerReplicationInfo.Score));
+
+                PlayerController(C).GotoState('PlayerWaiting');
+                PlayerController(C).SetViewTarget(C);
+                PlayerController(C).ClientSetBehindView(false);
+                PlayerController(C).bBehindView = false;
+                PlayerController(C).ClientSetViewTarget(C.Pawn);
+
+                C.ServerReStartPlayer();
+            }
+
+            KFPlayerController(C).bSpawnedThisWave = false;
+        }
+    }
+
+    KFGT.bUpdateViewTargs = true;
+
+    foreach DynamicActors(Class'KFDoorMover', KFDM)
+    {
+        KFDM.RespawnDoor();
+    }
 }
 
 defaultproperties
