@@ -35,7 +35,7 @@ protected function DoActionForSingleTarget
 /** @Override */
 protected function bool CheckTargets(KFTHPCommandExecutionState ExecState)
 {
-    local string TargetName;
+    local string TargetName, TargetFullName;
 
     switch (ExecState.GetArgC())
     {
@@ -47,9 +47,16 @@ protected function bool CheckTargets(KFTHPCommandExecutionState ExecState)
             TargetName = ExecState.GetArg(ECmdArgs.ARG_TARGETNAME);
             KFTHPCommandPreservingState(ExecState).SaveString(TargetName);
 
-            return TargetName ~= "all" || DoesTargetExist(TargetName);
+            if (TargetName ~= "all")
+            {
+                return true;
+            }
+            else if (DoesTargetExist(TargetName, TargetFullName))
+            {
+                KFTHPCommandPreservingState(ExecState).SaveString(TargetFullName);
+                return true;
+            }
     }
-
     return false;
 }
 
@@ -73,9 +80,13 @@ protected function bool ShouldBeTarget(
             {
                 return true;
             }
-            return IsStringPartOf(TargetName, PC.PlayerReplicationInfo.PlayerName);
+            else if (IsStringPartOf(TargetName, PC.PlayerReplicationInfo.PlayerName))
+            {
+                ExecState.StopTargetSearch();
+                
+                return true;
+            }
     }
-
     return false;
 }
 

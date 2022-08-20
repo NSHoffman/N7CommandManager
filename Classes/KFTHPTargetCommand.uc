@@ -24,7 +24,7 @@ protected function bool ShouldBeTarget(
     return true;
 }
 
-protected function bool DoesTargetExist(string TargetName)
+protected function bool DoesTargetExist(string TargetName, out string TargetFullName)
 {
     local Controller C;
 
@@ -32,15 +32,17 @@ protected function bool DoesTargetExist(string TargetName)
     {
         if (IsPlayer(C) && IsStringPartOf(TargetName, PlayerController(C).PlayerReplicationInfo.PlayerName))
         {
+            TargetFullName = PlayerController(C).PlayerReplicationInfo.PlayerName;
+
             return true;            
         }
     }
-
     return false;
 }
 
 defaultproperties
 {
+    bUseTargets=true
     bNotifySenderOnSuccess=false
     bNotifyTargetsOnSuccess=true
 }

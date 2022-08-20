@@ -1,6 +1,7 @@
 class KFTHPCommandManager extends Engine.Mutator;
 
 var KFGameType KFGT;
+var KFGameReplicationInfo KFGRI;
 
 /** Class which contains some helper functions to work with game state */
 var const Class<KFTHPGameStateUtils> GSUClass;
@@ -50,49 +51,64 @@ var protected Class<KFTHPCommand> TradeTimeCommandClass;
 const CMD_ZEDTIME = 11;
 var protected Class<KFTHPCommand> ZEDTimeCommandClass;
 
-const CMD_SETWAVE = 12;
-// var protected Class<KFTHPCommand> SetWaveCommandClass;
+const CMD_GAMESPEED = 12;
+var protected Class<KFTHPCommand> GameSpeedCommandClass;
 
-const CMD_RESTARTWAVE = 13;
-// var protected Class<KFTHPCommand> RestartWaveCommandClass;
+const CMD_SETWAVE = 13;
+var protected Class<KFTHPCommand> SetWaveCommandClass;
+
+const CMD_RESTARTWAVE = 14;
+var protected Class<KFTHPCommand> RestartWaveCommandClass;
 
 /*********************************
  * GAMEPLAY RELATED COMMANDS
  *********************************/
 
-const CMD_RESPAWN = 14;
+const CMD_RESPAWN = 15;
 // var protected Class<KFTHPCommand> RespawnCommandClass;
 
-const CMD_RESTORE = 15;
+const CMD_RESTORE = 16;
 // var protected Class<KFTHPCommand> RestoreCommandClass;
 
-const CMD_KILLZEDS = 16;
+const CMD_KILLZEDS = 17;
 var protected Class<KFTHPCommand> KillZedsCommandClass;
 
-const CMD_WELDDOORS = 17;
+const CMD_WELDDOORS = 18;
 // var protected Class<KFTHPCommand> WeldDoorsCommandClass;
 
-const CMD_CLEARPIPES = 18;
+const CMD_CLEARPIPES = 19;
 // var protected Class<KFTHPCommand> ClearPipesCommandClass;
 
 /*********************************
  * PLAYERS RELATED COMMANDS
  *********************************/
 
-const CMD_SETNAME = 19;
+const CMD_SETNAME = 20;
 var protected Class<KFTHPCommand> SetNameCommandClass;
 
-const CMD_GOD = 20;
+const CMD_GOD = 21;
 var protected Class<KFTHPCommand> GodModeCommandClass;
 
-const CMD_HEADSIZE = 21;
+const CMD_HEADSIZE = 22;
 // var protected Class<KFTHPCommand> HeadSizeCommandClass;
 
-const CMD_BODYSIZE = 22;
+const CMD_BODYSIZE = 23;
 // var protected Class<KFTHPCommand> BodySizeCommandClass;
 
-const CMD_HIT = 23;
+const CMD_HITP = 24;
 // var protected Class<KFTHPCommand> HitPlayerCommandClass;
+
+const CMD_HITZ = 25;
+// var protected Class<KFTHPCommand> HitZedCommandClass;
+
+const CMD_TELEPORT = 26;
+// var protected Class<KFTHPCommand> TeleportCommandClass;
+
+const CMD_TELEPORTP = 27;
+// var protected Class<KFTHPCommand> TeleportToCommandClass;
+
+const CMD_GIVECASH = 28;
+// var protected Class<KFTHPCommand> GiveCashCommandClass;
 
 /** Commands List */
 var protected Array<KFTHPCommand> Commands;
@@ -155,7 +171,7 @@ public final function SetFakedPlayersNum(int NewFakedPlayersNum)
 
 event PostBeginPlay()
 {
-    KFGT = KFTHPGameType(Level.Game);
+    KFGT = KFGameType(Level.Game);
 
     if (KFGT == None)
     {
@@ -249,8 +265,9 @@ protected function InitGameSettingsCommands()
     Commands[CMD_SKIPTRADE]     = new(Self) SkipTradeCommandClass;
     Commands[CMD_TRADE]         = new(Self) TradeTimeCommandClass;
     Commands[CMD_ZEDTIME]       = new(Self) ZEDTimeCommandClass;
-    // Commands[CMD_SETWAVE]       = new(Self) SetWaveCommandClass;
-    // Commands[CMD_RESTARTWAVE]   = new(Self) RestartWaveCommandClass;
+    Commands[CMD_GAMESPEED]     = new(Self) GameSpeedCommandClass;
+    Commands[CMD_SETWAVE]       = new(Self) SetWaveCommandClass;
+    Commands[CMD_RESTARTWAVE]   = new(Self) RestartWaveCommandClass;
 }
 
 protected function InitGameplayCommands()
@@ -268,7 +285,10 @@ protected function InitPlayerCommands()
     Commands[CMD_GOD]       = new(Self) GodModeCommandClass;
     // Commands[CMD_HEADSIZE]  = new(Self) HeadSizeCommandClass;
     // Commands[CMD_BODYSIZE]  = new(Self) BodySizeCommandClass;
-    // Commands[CMD_HIT]       = new(Self) HitPlayerCommandClass;
+    // Commands[CMD_HITP]      = new(Self) HitPlayerCommandClass;
+    // Commands[CMD_TELEPORT]  = new(Self) TeleportCommandClass;
+    // Commands[CMD_TELEPORTP] = new(Self) TeleportToCommandClass;
+    // Commands[CMD_GIVECASH]  = new(Self) GiveCashCommandClass;
 }
 
 /*********************************
@@ -317,8 +337,9 @@ defaultproperties
     SkipTradeCommandClass=Class'KFTHPSkipTradeCommand'
     TradeTimeCommandClass=Class'KFTHPTradeTimeCommand'
     ZEDTimeCommandClass=Class'KFTHPZedTimeCommand'
-    // SetWaveCommandClass=Class'KFTHPSetWaveCommand'
-    // RestartWaveCommandClass=Class'KFTHPRestartWaveCommand'
+    GameSpeedCommandClass=Class'KFTHPGameSpeedCommand'
+    SetWaveCommandClass=Class'KFTHPSetWaveCommand'
+    RestartWaveCommandClass=Class'KFTHPRestartWaveCommand'
 
     // RespawnCommandClass=Class'KFTHPRespawnCommand'
     // RestoreCommandClass=Class'KFTHPRestoreCommand'
@@ -331,4 +352,8 @@ defaultproperties
     // HeadSizeCommandClass=Class'KFTHPHeadSizeCommand'
     // BodySizeCommandClass=Class'KFTHPBodySizeCommand'
     // HitPlayerCommandClass=Class'KFTHPHitPlayerCommand'
+    // HitZedCommandClass=Class'KFTHPHitZedCommand'
+    // TeleportCommandClass=Class'KFTHPTeleportCommand'
+    // TeleportToCommandClass=Class'KFTHPTeleportToCommand'
+    // GiveCashCommandClass=Class'KFTHPGiveCashCommand'
 }
