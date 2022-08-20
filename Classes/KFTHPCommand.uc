@@ -3,13 +3,14 @@ class KFTHPCommand extends Core.Object within KFTHPCommandManager
 
 const ERRNO_NONE        = 0;
 const ERRNO_NOGAMETYPE  = 1;
-const ERRNO_NOTADMIN    = 2;
-const ERRNO_ARGC        = 3;
-const ERRNO_ARGL        = 4;
-const ERRNO_ARGT        = 5;
-const ERRNO_INVALARGS   = 6;
-const ERRNO_INVALTARGET = 7;
-const ERRNO_CUSTOM      = 8;
+const ERRNO_GAMESTATE   = 2;
+const ERRNO_NOTADMIN    = 3;
+const ERRNO_ARGC        = 4;
+const ERRNO_ARGL        = 5;
+const ERRNO_ARGT        = 6;
+const ERRNO_INVALARGS   = 7;
+const ERRNO_INVALTARGET = 8;
+const ERRNO_CUSTOM      = 9;
 
 var protected const Class<KFTHPCommandValidator> ValidatorClass;
 var protected const Class<KFTHPCommandExecutionState> CommandStateClass;
@@ -19,16 +20,17 @@ var protected editconstarray Array<string> Aliases;
 
 var protected const int MinArgsNum, MaxArgsNum;
 
-var protected const string  Description;
-var protected const string  Signature;
+var protected const string Description;
+var protected const string Signature;
 
 var protected const bool bNotifySenderOnSuccess;
 var protected const bool bNotifyTargetsOnSuccess;
 var protected const bool bNotifyGlobalOnSuccess;
 var protected const bool bNotifyOnError;
 
+var protected const bool bUseTargets;
+
 var protected config const bool bAdminOnly;
-var protected config const bool bFirstMatchOnly;
 var protected config const bool bDisableNotifications;
 
 /****************************
@@ -118,6 +120,7 @@ protected final function Validate(KFTHPCommandExecutionState ExecState)
 protected final function StartValidationPipeline(KFTHPCommandExecutionState ExecState)
 {
     ValidateGameType(ExecState);
+    ValidateGameState(ExecState);
     ValidateAdmin(ExecState);
     ValidateArgsNum(ExecState);
     ValidateArgsLength(ExecState);
@@ -137,6 +140,20 @@ protected final function ValidateGameType(KFTHPCommandExecutionState ExecState)
     if (!CheckGameType())
     {
         ExecState.SetErrorNoGameType();
+        return;
+    }
+}
+
+protected final function ValidateGameState(KFTHPCommandExecutionState ExecState)
+{
+    if (CheckActionFailure(ExecState))
+    {
+        return;
+    }
+
+    if (!CheckGameState())
+    {
+        ExecState.SetErrorGameState();
         return;
     }
 }
@@ -248,6 +265,11 @@ protected final function bool CheckGameType()
     return KFGameType(Level.Game) != None && KFGameReplicationInfo(Level.Game.GameReplicationInfo) != None;
 }
 
+protected function bool CheckGameState()
+{
+    return true;
+}
+
 protected final function bool CheckActionFailure(KFTHPCommandExecutionState ExecState)
 {
     return ExecState.IsFailed();
@@ -344,8 +366,14 @@ protected function bool CheckCustom(KFTHPCommandExecutionState ExecState)
 
 protected final function ProcessAction(KFTHPCommandExecutionState ExecState)
 {
-    AddCommandActionTargets(ExecState);
+    if (bUseTargets)
+    {
+        AddCommandActionTargets(ExecState);
+    }
+
     DoAction(ExecState);
+
+    ExecState.RestoreArgs();
     ExecState.SetSuccessStatus();
 }
 
@@ -386,7 +414,7 @@ protected final function AddCommandActionTargets(KFTHPCommandExecutionState Exec
         {
             ExecState.AddTarget(PC);
 
-            if (bFirstMatchOnly)
+            if (ExecState.ShouldStopTargetSearch())
             {
                 break;
             }
@@ -489,6 +517,12 @@ protected function string GetErrorMessage(KFTHPCommandExecutionState ExecState)
 {
     switch (ExecState.GetErrNo())
     {
+        case ERRNO_NOGAMETYPE:
+            return Error(NoGameTypeMessage());
+
+        case ERRNO_GAMESTATE:
+            return Error(InvalidGameStateMessage());
+        
         case ERRNO_NOTADMIN:
             return Error(NotAdminMessage());
 
@@ -527,6 +561,11 @@ protected final function string Error(string Message)
 protected final function string NoGameTypeMessage()
 {
     return "KFGameType/KFGameReplicationInfo not found";
+}
+
+protected function string InvalidGameStateMessage()
+{
+    return "Command cannot be executed at current game state";
 }
 
 protected final function string NotAdminMessage()
@@ -586,6 +625,16 @@ protected final function int ToInt(string Arg)
 protected final function float ToFloat(string Arg)
 {
     return float(Arg);
+}
+
+protected final function string ToString(int Arg)
+{
+    return string(Arg);
+}
+
+protected final function string ToStringF(float Arg)
+{
+    return string(Arg);
 }
 
 /****************************
@@ -678,12 +727,12 @@ defaultproperties
     MinArgsNum=0
     MaxArgsNum=0
     bAdminOnly=false
-    bFirstMatchOnly=false
     bNotifyOnError=true
     bNotifySenderOnSuccess=true
     bNotifyTargetsOnSuccess=false
     bNotifyGlobalOnSuccess=false
     bDisableNotifications=false
+    bUseTargets=false
     CommandStateClass=Class'KFTHPCommandExecutionState'
     ValidatorClass=Class'KFTHPCommandValidator'
 }

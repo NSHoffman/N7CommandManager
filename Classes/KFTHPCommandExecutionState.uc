@@ -11,15 +11,17 @@ enum ECommandStatus
 };
 
 var protected ECommandStatus Status;
+var protected bool bStopTargetSearch;
 
 var protected PlayerController Sender;
 var protected Array<PlayerController> Targets;
 var protected Array<string> Args;
+var protected Array<string> InitialArgs;
 
 var protected int ErrNo;
 
 /****************************
- *  PROP GETTERS
+ *  STATE ACCESSORS
  ****************************/
 
 public final function PlayerController GetSender()
@@ -72,6 +74,11 @@ public final function int GetErrNo()
     return ErrNo;
 }
 
+public final function bool ShouldStopTargetSearch()
+{
+    return bStopTargetSearch;
+}
+
 /****************************
  *  STATE INITIALIZATION
  ****************************/
@@ -84,12 +91,28 @@ public final function InitCommandState
     for (i = 1; i < InitArgs.Length; i++)
     {
         Args[Args.Length] = InitArgs[i];
+        InitialArgs[InitialArgs.Length] = InitArgs[i];
     }
 
     Sender = InitSender;
     ErrNo = ERRNO_NONE;
+    bStopTargetSearch = false;
 
     SetInitializedStatus();
+}
+
+/****************************
+ *  ARGS MANAGEMENT
+ ****************************/
+
+public final function SetArgs(Array<string> NewArgs)
+{
+    Args = NewArgs;
+}
+
+public final function RestoreArgs()
+{
+    Args = InitialArgs;
 }
 
 /****************************
@@ -114,6 +137,11 @@ public final function bool IsTarget(PlayerController PC)
     }
 
     return false;
+}
+
+public final function StopTargetSearch()
+{
+    bStopTargetSearch = true;
 }
 
 /****************************
@@ -143,6 +171,11 @@ public final function SetSuccessStatus()
 public final function SetErrorNoGameType()
 {
     SetErrorStatus(ERRNO_NOGAMETYPE);
+}
+
+public final function SetErrorGameState()
+{
+    SetErrorStatus(ERRNO_GAMESTATE);
 }
 
 public final function SetErrorNotAdmin()
