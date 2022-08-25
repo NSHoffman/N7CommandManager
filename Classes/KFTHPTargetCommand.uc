@@ -24,20 +24,21 @@ protected function bool ShouldBeTarget(
     return true;
 }
 
-protected function bool DoesTargetExist(string TargetName, out string TargetFullName)
+protected function PlayerController FindTarget(string TargetName)
 {
     local Controller C;
+    local PlayerController PC;
 
     for (C = Level.ControllerList; C != None; C = C.NextController)
     {
-        if (IsPlayer(C) && IsStringPartOf(TargetName, PlayerController(C).PlayerReplicationInfo.PlayerName))
-        {
-            TargetFullName = PlayerController(C).PlayerReplicationInfo.PlayerName;
+        PC = PlayerController(C);
 
-            return true;            
+        if (IsPlayer(PC) && IsStringPartOf(TargetName, PC.PlayerReplicationInfo.PlayerName))
+        {
+            return PC;   
         }
     }
-    return false;
+    return None;
 }
 
 defaultproperties
