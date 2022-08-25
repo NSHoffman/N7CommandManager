@@ -30,9 +30,9 @@ protected function DoAction(KFTHPCommandExecutionState ExecState)
 }
 
 /** @Override */
-protected function bool CheckGameState()
+protected function bool CheckGameState(KFTHPCommandExecutionState ExecState)
 {
-    if (KFGT.bTradingDoorsOpen || KFGT.WaveNum == 0 && KFGT.WaveCountDown > 0)
+    if (KFGT.IsInState('MatchInProgress') && (KFGT.bTradingDoorsOpen || KFGT.WaveNum == 0 && KFGT.WaveCountDown > 0))
     {
         return true;
     }
@@ -49,7 +49,7 @@ protected function string GetGlobalSuccessMessage(KFTHPCommandExecutionState Exe
 /** @Override */
 protected function string InvalidGameStateMessage()
 {
-    return "Trader Time can only be set during trader time";
+    return "Trader Time can be set only during trader time";
 }
 
 defaultproperties

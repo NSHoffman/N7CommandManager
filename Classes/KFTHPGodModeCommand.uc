@@ -35,7 +35,8 @@ protected function DoActionForSingleTarget
 /** @Override */
 protected function bool CheckTargets(KFTHPCommandExecutionState ExecState)
 {
-    local string TargetName, TargetFullName;
+    local PlayerController Target;
+    local string TargetName;
 
     switch (ExecState.GetArgC())
     {
@@ -51,9 +52,11 @@ protected function bool CheckTargets(KFTHPCommandExecutionState ExecState)
             {
                 return true;
             }
-            else if (DoesTargetExist(TargetName, TargetFullName))
+
+            Target = FindTarget(TargetName);
+            if (Target != None)
             {
-                KFTHPCommandPreservingState(ExecState).SaveString(TargetFullName);
+                KFTHPCommandPreservingState(ExecState).SaveString(Target.PlayerReplicationInfo.PlayerName);
                 return true;
             }
     }
