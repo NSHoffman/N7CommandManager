@@ -85,7 +85,7 @@ defaultproperties
     Aliases(0)="TPT"
     Aliases(1)="TELEPORTP"
     ArgTypes(0)="any"
-    Signature="<string Target>"
+    Signature="<string TargetName>"
     Description="Teleport to another player"
     CommandStateClass=Class'KFTHPCommandPreservingState'
     bNotifySenderOnSuccess=false

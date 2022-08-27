@@ -43,10 +43,13 @@ protected function bool CheckTargets(KFTHPCommandExecutionState ExecState)
 
     switch (ExecState.GetArgC())
     {
-        case 0:
-            return ExecState.GetSender().Pawn != None;
-
         case 1:
+            KFTHPCommandPreservingState(ExecState).SaveString(
+                ExecState.GetSender().PlayerReplicationInfo.PlayerName
+            );
+            return IsAlive(ExecState.GetSender());
+
+        case 2:
             TargetName = ExecState.GetArg(ECmdArgs.ARG_TARGETNAME);
             KFTHPCommandPreservingState(ExecState).SaveString(TargetName);
 
@@ -56,7 +59,7 @@ protected function bool CheckTargets(KFTHPCommandExecutionState ExecState)
             }
 
             Target = FindTarget(TargetName);
-            if (Target != None && Target.Pawn != None)
+            if (Target != None && IsAlive(Target))
             {
                 KFTHPCommandPreservingState(ExecState).SaveString(Target.PlayerReplicationInfo.PlayerName);
                 return true;
@@ -86,5 +89,5 @@ protected function string InvalidTargetMessage(KFTHPCommandExecutionState ExecSt
 defaultproperties
 {
     MinScale=0.1
-    MaxScale=10.0
+    MaxScale=5.0
 }

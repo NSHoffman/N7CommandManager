@@ -20,6 +20,9 @@ protected function bool CheckTargets(KFTHPCommandExecutionState ExecState)
     switch (ExecState.GetArgC())
     {
         case 1:
+            KFTHPCommandPreservingState(ExecState).SaveString(
+                ExecState.GetSender().PlayerReplicationInfo.PlayerName
+            );
             return true;
 
         case 2:

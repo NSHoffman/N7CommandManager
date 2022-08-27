@@ -42,6 +42,9 @@ protected function bool CheckTargets(KFTHPCommandExecutionState ExecState)
     {
         case 0:
         case 1:
+            KFTHPCommandPreservingState(ExecState).SaveString(
+                ExecState.GetSender().PlayerReplicationInfo.PlayerName
+            );
             return true;
 
         case 2:

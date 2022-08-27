@@ -27,5 +27,6 @@ defaultproperties
 {
     Aliases(0)="BD"
     Aliases(1)="BREAKDOORS"
+    Signature="<>"
     Description="Break all welded doors"
 }

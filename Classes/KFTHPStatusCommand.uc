@@ -5,7 +5,6 @@ protected function DoAction(KFTHPCommandExecutionState ExecState)
 {
     SendMessage(ExecState.GetSender(), "MZ - "$KFGT.MaxZombiesOnce$" | "$"FAKES - "$FakedPlayersNum$" | "$"HP - "$GSU.GetFinalZedHPConfig()$" | "$"SR - "$KFGT.KFLRules.WaveSpawnPeriod);
     SendMessage(ExecState.GetSender(), "SLOTS - "$KFGT.MaxPlayers$" | "$"SPECS - "$KFGT.MaxSpectators);
-    SendMessage(ExecState.GetSender(), "Time Between Waves - "$KFGT.TimeBetweenWaves);
     
     if (IsZedTimeDisabled())
     {

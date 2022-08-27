@@ -7,6 +7,17 @@ protected function DoAction(KFTHPCommandExecutionState ExecState)
 }
 
 /** @Override */
+protected function bool CheckGameState(KFTHPCommandExecutionState ExecState)
+{
+    if (KFGT.IsInState('MatchInProgress') && (KFGT.bTradingDoorsOpen || KFGT.WaveNum == 0) && KFGT.WaveCountDown > 5)
+    {
+        return true;
+    }
+
+    return false;
+}
+
+/** @Override */
 protected function string GetGlobalSuccessMessage(KFTHPCommandExecutionState ExecState)
 {
     return "Trader skipped by "$GetInstigatorName(ExecState);
