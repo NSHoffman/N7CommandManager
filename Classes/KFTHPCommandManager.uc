@@ -7,108 +7,114 @@ var KFGameReplicationInfo KFGRI;
 var const Class<KFTHPGameStateUtils> GSUClass;
 var KFTHPGameStateUtils GSU;
 
+enum ECmd
+{
+    // Helper Commands
+    CMD_HELP,
+    CMD_AHELP,
+    CMD_STATUS,
+
+    // Game Settings Commands
+    CMD_SLOTS,
+    CMD_SPECS,
+    CMD_FAKED,
+    CMD_HPCONFIG,
+    CMD_MAXZEDS,
+    CMD_SPAWNRATE,
+    CMD_SKIPTRADE,
+    CMD_TRADE,
+    CMD_WAVEINTERVAL,
+    CMD_ZEDTIME,
+    CMD_GAMESPEED,
+
+    // Gameplay Commands
+    CMD_SETWAVE,
+    CMD_RESTARTWAVE,
+    CMD_RESPAWN,
+    CMD_RESTORE,
+    CMD_KILLZEDS,
+    CMD_RESPAWNDOORS,
+    CMD_BREAKDOORS,
+    CMD_WELDDOORS,
+    CMD_CLEARPIPES,
+
+    // Player Commands
+    CMD_SETNAME,
+    CMD_GOD,
+    CMD_HEADSIZE,
+    CMD_BODYSIZE,
+    CMD_HITP,
+    CMD_HITZ,
+    CMD_TELEPORT,
+    CMD_TELEPORTP,
+    CMD_GIVECASH,
+    CMD_WALK,
+    CMD_SPIDER,
+    CMD_FLY,
+    CMD_GHOST,
+    CMD_FORCESPEC,
+    CMD_KICK,
+    CMD_BAN,
+};
+
 /*********************************
  * HELPER COMMANDS
  *********************************/
 
-const CMD_HELP = 0;
 var protected Class<KFTHPCommand> HelpCommandClass;
-
-const CMD_AHELP = 1;
 var protected Class<KFTHPCommand> AdminHelpCommandClass;
-
-const CMD_STATUS = 2;
 var protected Class<KFTHPCommand> StatusCommandClass;
 
 /*********************************
  * GAME SETTINGS RELATED COMMANDS
  *********************************/
 
-const CMD_SLOTS = 3;
 var protected Class<KFTHPCommand> SlotsCommandClass;
-
-const CMD_SPECS = 4;
 var protected Class<KFTHPCommand> SpecsCommandClass;
-
-const CMD_FAKED = 5;
 var protected Class<KFTHPCommand> FakesCommandClass;
-
-const CMD_HPCONFIG = 6;
 var protected Class<KFTHPCommand> HPConfigCommandClass;
-
-const CMD_MAXZEDS = 7;
 var protected Class<KFTHPCommand> MaxZedsCommandClass;
-
-const CMD_SPAWNRATE = 8;
 var protected Class<KFTHPCommand> SpawnRateCommandClass;
-
-const CMD_SKIPTRADE = 9;
 var protected Class<KFTHPCommand> SkipTradeCommandClass;
-
-const CMD_TRADE = 10;
 var protected Class<KFTHPCommand> TradeTimeCommandClass;
-
-const CMD_ZEDTIME = 11;
+var protected Class<KFTHPCommand> WaveIntervalCommandClass;
 var protected Class<KFTHPCommand> ZEDTimeCommandClass;
-
-const CMD_GAMESPEED = 12;
 var protected Class<KFTHPCommand> GameSpeedCommandClass;
-
-const CMD_SETWAVE = 13;
-var protected Class<KFTHPCommand> SetWaveCommandClass;
-
-const CMD_RESTARTWAVE = 14;
-var protected Class<KFTHPCommand> RestartWaveCommandClass;
 
 /*********************************
  * GAMEPLAY RELATED COMMANDS
  *********************************/
 
-const CMD_RESPAWN = 15;
-// var protected Class<KFTHPCommand> RespawnCommandClass;
-
-const CMD_RESTORE = 16;
-// var protected Class<KFTHPCommand> RestoreCommandClass;
-
-const CMD_KILLZEDS = 17;
+var protected Class<KFTHPCommand> SetWaveCommandClass;
+var protected Class<KFTHPCommand> RestartWaveCommandClass;
+var protected Class<KFTHPCommand> RespawnPlayerCommandClass;
+var protected Class<KFTHPCommand> RestoreAttrsCommandClass;
 var protected Class<KFTHPCommand> KillZedsCommandClass;
-
-const CMD_WELDDOORS = 18;
-// var protected Class<KFTHPCommand> WeldDoorsCommandClass;
-
-const CMD_CLEARPIPES = 19;
-// var protected Class<KFTHPCommand> ClearPipesCommandClass;
+var protected Class<KFTHPCommand> RespawnDoorsCommandClass;
+var protected Class<KFTHPCommand> BreakDoorsCommandClass;
+var protected Class<KFTHPCommand> WeldDoorsCommandClass;
+var protected Class<KFTHPCommand> ClearPipesCommandClass;
 
 /*********************************
  * PLAYERS RELATED COMMANDS
  *********************************/
 
-const CMD_SETNAME = 20;
 var protected Class<KFTHPCommand> SetNameCommandClass;
-
-const CMD_GOD = 21;
 var protected Class<KFTHPCommand> GodModeCommandClass;
-
-const CMD_HEADSIZE = 22;
-// var protected Class<KFTHPCommand> HeadSizeCommandClass;
-
-const CMD_BODYSIZE = 23;
-// var protected Class<KFTHPCommand> BodySizeCommandClass;
-
-const CMD_HITP = 24;
+var protected Class<KFTHPCommand> HeadSizeCommandClass;
+var protected Class<KFTHPCommand> BodySizeCommandClass;
 // var protected Class<KFTHPCommand> HitPlayerCommandClass;
-
-const CMD_HITZ = 25;
 // var protected Class<KFTHPCommand> HitZedCommandClass;
-
-const CMD_TELEPORT = 26;
-// var protected Class<KFTHPCommand> TeleportCommandClass;
-
-const CMD_TELEPORTP = 27;
-// var protected Class<KFTHPCommand> TeleportToCommandClass;
-
-const CMD_GIVECASH = 28;
-// var protected Class<KFTHPCommand> GiveCashCommandClass;
+var protected Class<KFTHPCommand> TeleportCommandClass;
+var protected Class<KFTHPCommand> TeleportToCommandClass;
+var protected Class<KFTHPCommand> GiveCashCommandClass;
+var protected Class<KFTHPCommand> WalkCommandClass;
+var protected Class<KFTHPCommand> SpiderCommandClass;
+var protected Class<KFTHPCommand> FlyCommandClass;
+var protected Class<KFTHPCommand> GhostCommandClass;
+// var protected Class<KFTHPCommand> ForceSpectatorCommandClass;
+// var protected Class<KFTHPCommand> KickCommandClass;
+// var protected Class<KFTHPCommand> BanCommandClass;
 
 /** Commands List */
 var protected Array<KFTHPCommand> Commands;
@@ -120,6 +126,9 @@ var protected bool bZedTimeDisabled;
 var protected int ZedHPConfig;
 var protected const int ZedHPConfigThreshold;
 var protected int FakedPlayersNum;
+
+// Players whose attributes get restored on a regular basis
+var protected Array<PlayerController> RestoredPlayers;
 
 /*********************************
  * DATA ACCESSORS
@@ -165,6 +174,61 @@ public final function SetFakedPlayersNum(int NewFakedPlayersNum)
     FakedPlayersNum = NewFakedPlayersNum;
 }
 
+public final function Array<PlayerController> GetRestoredPlayers()
+{
+    return RestoredPlayers;
+}
+
+public final function RefreshRestoredPlayers()
+{
+    local PlayerController CurrentPC;
+    local int i;
+
+    while (i < RestoredPlayers.Length)
+    {
+        CurrentPC = RestoredPlayers[i];
+        if (CurrentPC == None)
+        {
+            RestoredPlayers.Remove(i, 1);
+            break;
+        }
+        i++;
+    }
+}
+
+public final function AddRestoredPlayer(PlayerController PC)
+{
+    local PlayerController CurrentPC;
+    local int i;
+
+    for (i = 0; i < RestoredPlayers.Length; i++)
+    {
+        CurrentPC = RestoredPlayers[i];
+        if (CurrentPC == PC)
+        {
+            return;
+        }
+    }
+
+    RestoredPlayers[RestoredPlayers.Length] = PC;
+}
+
+public final function RemoveRestoredPlayer(PlayerController PC)
+{
+    local PlayerController CurrentPC;
+    local int i;
+
+    for (i = 0; i < RestoredPlayers.Length; i++)
+    {
+        CurrentPC = RestoredPlayers[i];
+        if (CurrentPC == PC)
+        {
+            RestoredPlayers.Remove(i, 1);
+            return;
+        }
+    }
+}
+
 /*********************************
  * EVENTS
  *********************************/
@@ -185,11 +249,14 @@ event PostBeginPlay()
     InitGameplayCommands();
     InitPlayerCommands();
 
-    SetTimer(5.0, true);
+    SetTimer(1.0, true);
 }
 
 event Timer()
 {
+    local PlayerController PC;
+    local int i;
+
     /** 
      * Constantly delaying next ZED-Time event
      * so that it will never occur if bZedTimeDisabled is true
@@ -197,6 +264,22 @@ event Timer()
     if (IsZedTimeDisabled())
     {
         KFGT.LastZedTimeEvent = Level.TimeSeconds;
+    }
+
+    if (KFGT.WaveCountDown == KFGT.TimeBetweenWaves || KFGT.WaveCountDown == 5)
+    {
+        RefreshRestoredPlayers();
+
+        for (i = 0; i < RestoredPlayers.Length; i++)
+        {
+            PC = RestoredPlayers[i];
+            GSU.RestorePlayerAttributes(PC);
+
+            if (PC.Pawn != None && PC.Pawn.Health > 0)
+            {
+                PC.ClientMessage("Your attributes have been restored");
+            }
+        }
     }
 }
 
@@ -249,46 +332,57 @@ public function Mutate(string MutateString, PlayerController Sender)
 
 protected function InitHelperCommands()
 {
-    Commands[CMD_HELP]      = new(Self) HelpCommandClass;
-    Commands[CMD_AHELP]     = new(Self) AdminHelpCommandClass;
-    Commands[CMD_STATUS]    = new(Self) StatusCommandClass;
+    Commands[ECmd.CMD_HELP]      = new(Self) HelpCommandClass;
+    Commands[ECmd.CMD_AHELP]     = new(Self) AdminHelpCommandClass;
+    Commands[ECmd.CMD_STATUS]    = new(Self) StatusCommandClass;
 }
 
 protected function InitGameSettingsCommands()
 {
-    Commands[CMD_SLOTS]         = new(Self) SlotsCommandClass;
-    Commands[CMD_SPECS]         = new(Self) SpecsCommandClass;
-    Commands[CMD_FAKED]         = new(Self) FakesCommandClass;
-    Commands[CMD_HPCONFIG]      = new(Self) HPConfigCommandClass;
-    Commands[CMD_MAXZEDS]       = new(Self) MaxZedsCommandClass;
-    Commands[CMD_SPAWNRATE]     = new(Self) SpawnRateCommandClass;
-    Commands[CMD_SKIPTRADE]     = new(Self) SkipTradeCommandClass;
-    Commands[CMD_TRADE]         = new(Self) TradeTimeCommandClass;
-    Commands[CMD_ZEDTIME]       = new(Self) ZEDTimeCommandClass;
-    Commands[CMD_GAMESPEED]     = new(Self) GameSpeedCommandClass;
-    Commands[CMD_SETWAVE]       = new(Self) SetWaveCommandClass;
-    Commands[CMD_RESTARTWAVE]   = new(Self) RestartWaveCommandClass;
+    Commands[ECmd.CMD_SLOTS]         = new(Self) SlotsCommandClass;
+    Commands[ECmd.CMD_SPECS]         = new(Self) SpecsCommandClass;
+    Commands[ECmd.CMD_FAKED]         = new(Self) FakesCommandClass;
+    Commands[ECmd.CMD_HPCONFIG]      = new(Self) HPConfigCommandClass;
+    Commands[ECmd.CMD_MAXZEDS]       = new(Self) MaxZedsCommandClass;
+    Commands[ECmd.CMD_SPAWNRATE]     = new(Self) SpawnRateCommandClass;
+    Commands[ECmd.CMD_SKIPTRADE]     = new(Self) SkipTradeCommandClass;
+    Commands[ECmd.CMD_TRADE]         = new(Self) TradeTimeCommandClass;
+    Commands[ECmd.CMD_WAVEINTERVAL]  = new(Self) WaveIntervalCommandClass;
+    Commands[ECmd.CMD_ZEDTIME]       = new(Self) ZEDTimeCommandClass;
+    Commands[ECmd.CMD_GAMESPEED]     = new(Self) GameSpeedCommandClass;
 }
 
 protected function InitGameplayCommands()
 {
-    // Commands[CMD_RESPAWN]       = new(Self) RespawnCommandClass;
-    // Commands[CMD_RESTORE]       = new(Self) RestoreCommandClass;
-    Commands[CMD_KILLZEDS]      = new(Self) KillZedsCommandClass;
-    // Commands[CMD_WELDDOORS]     = new(Self) WeldDoorsCommandClass;
-    // Commands[CMD_CLEARPIPES]    = new(Self) ClearPipesCommandClass;
+    Commands[ECmd.CMD_SETWAVE]       = new(Self) SetWaveCommandClass;
+    Commands[ECmd.CMD_RESTARTWAVE]   = new(Self) RestartWaveCommandClass;
+    Commands[ECmd.CMD_RESPAWN]       = new(Self) RespawnPlayerCommandClass;
+    Commands[ECmd.CMD_RESTORE]       = new(Self) RestoreAttrsCommandClass;
+    Commands[ECmd.CMD_KILLZEDS]      = new(Self) KillZedsCommandClass;
+    Commands[ECmd.CMD_RESPAWNDOORS]  = new(Self) RespawnDoorsCommandClass;
+    Commands[ECmd.CMD_BREAKDOORS]    = new(Self) BreakDoorsCommandClass;
+    Commands[ECmd.CMD_WELDDOORS]     = new(Self) WeldDoorsCommandClass;
+    Commands[ECmd.CMD_CLEARPIPES]    = new(Self) ClearPipesCommandClass;
 }
 
 protected function InitPlayerCommands()
 {
-    Commands[CMD_SETNAME]   = new(Self) SetNameCommandClass;
-    Commands[CMD_GOD]       = new(Self) GodModeCommandClass;
-    // Commands[CMD_HEADSIZE]  = new(Self) HeadSizeCommandClass;
-    // Commands[CMD_BODYSIZE]  = new(Self) BodySizeCommandClass;
-    // Commands[CMD_HITP]      = new(Self) HitPlayerCommandClass;
-    // Commands[CMD_TELEPORT]  = new(Self) TeleportCommandClass;
-    // Commands[CMD_TELEPORTP] = new(Self) TeleportToCommandClass;
-    // Commands[CMD_GIVECASH]  = new(Self) GiveCashCommandClass;
+    Commands[ECmd.CMD_SETNAME]   = new(Self) SetNameCommandClass;
+    Commands[ECmd.CMD_GOD]       = new(Self) GodModeCommandClass;
+    Commands[ECmd.CMD_HEADSIZE]  = new(Self) HeadSizeCommandClass;
+    Commands[ECmd.CMD_BODYSIZE]  = new(Self) BodySizeCommandClass;
+    // Commands[ECmd.CMD_HITP]      = new(Self) HitPlayerCommandClass;
+    // Commands[ECmd.CMD_HITZ]      = new(Self) HitZedCommandClass;
+    Commands[ECmd.CMD_TELEPORT]  = new(Self) TeleportCommandClass;
+    Commands[ECmd.CMD_TELEPORTP] = new(Self) TeleportToCommandClass;
+    Commands[ECmd.CMD_GIVECASH]  = new(Self) GiveCashCommandClass;
+    Commands[ECmd.CMD_WALK]      = new(Self) WalkCommandClass;
+    Commands[ECmd.CMD_SPIDER]    = new(Self) SpiderCommandClass;
+    Commands[ECmd.CMD_FLY]       = new(Self) FlyCommandClass;
+    Commands[ECmd.CMD_GHOST]     = new(Self) GhostCommandClass;
+    // Commands[ECmd.CMD_FORCESPEC] = new(Self) ForceSpectatorCommandClass;
+    // Commands[ECmd.CMD_KICK]      = new(Self) KickCommandClass;
+    // Commands[ECmd.CMD_BAN]       = new(Self) BanCommandClass;
 }
 
 /*********************************
@@ -336,24 +430,34 @@ defaultproperties
     SpawnRateCommandClass=Class'KFTHPSpawnRateCommand'
     SkipTradeCommandClass=Class'KFTHPSkipTradeCommand'
     TradeTimeCommandClass=Class'KFTHPTradeTimeCommand'
+    WaveIntervalCommandClass=Class'KFTHPWaveIntervalCommand'
     ZEDTimeCommandClass=Class'KFTHPZedTimeCommand'
     GameSpeedCommandClass=Class'KFTHPGameSpeedCommand'
     SetWaveCommandClass=Class'KFTHPSetWaveCommand'
     RestartWaveCommandClass=Class'KFTHPRestartWaveCommand'
 
-    // RespawnCommandClass=Class'KFTHPRespawnCommand'
-    // RestoreCommandClass=Class'KFTHPRestoreCommand'
+    RespawnPlayerCommandClass=Class'KFTHPRespawnPlayerCommand'
+    RestoreAttrsCommandClass=Class'KFTHPRestoreAttrsCommand'
     KillZedsCommandClass=Class'KFTHPKillZedsCommand'
-    // WeldDoorsCommandClass=Class'KFTHPWeldDoorsCommand'
-    // ClearPipesCommandClass=Class'ClearPipesCommand'
+    RespawnDoorsCommandClass=Class'KFTHPRespawnDoorsCommand'
+    BreakDoorsCommandClass=Class'KFTHPBreakDoorsCommand'
+    WeldDoorsCommandClass=Class'KFTHPWeldDoorsCommand'
+    ClearPipesCommandClass=Class'KFTHPClearPipesCommand'
 
     SetNameCommandClass=Class'KFTHPSetNameCommand'
     GodModeCommandClass=Class'KFTHPGodModeCommand'
-    // HeadSizeCommandClass=Class'KFTHPHeadSizeCommand'
-    // BodySizeCommandClass=Class'KFTHPBodySizeCommand'
+    HeadSizeCommandClass=Class'KFTHPHeadSizeCommand'
+    BodySizeCommandClass=Class'KFTHPBodySizeCommand'
     // HitPlayerCommandClass=Class'KFTHPHitPlayerCommand'
     // HitZedCommandClass=Class'KFTHPHitZedCommand'
-    // TeleportCommandClass=Class'KFTHPTeleportCommand'
-    // TeleportToCommandClass=Class'KFTHPTeleportToCommand'
-    // GiveCashCommandClass=Class'KFTHPGiveCashCommand'
+    TeleportCommandClass=Class'KFTHPTeleportCommand'
+    TeleportToCommandClass=Class'KFTHPTeleportToCommand'
+    GiveCashCommandClass=Class'KFTHPGiveCashCommand'
+    WalkCommandClass=Class'KFTHPWalkCommand'
+    SpiderCommandClass=Class'KFTHPSpiderCommand'
+    FlyCommandClass=Class'KFTHPFlyCommand'
+    GhostCommandClass=Class'KFTHPGhostCommand'
+    // ForceSpectatorCommandClass=Class'KFTHPForceSpectatorCommand'
+    // KickCommandClass=Class'KFTHPKickCommand'
+    // BanCommandClass=Class'KFTHPBanCommand'
 }

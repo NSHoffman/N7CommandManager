@@ -130,6 +130,26 @@ public final function StopZedTime()
     KFGT.ZedTimeExtensionsUsed = 0;
 }
 
+public final function RestorePlayerAttributes(PlayerController PC)
+{
+    local Inventory Inv;
+
+    if (PC != None && PC.Pawn != None && PC.Pawn.Health > 0)
+    {
+        PC.Pawn.Health = PC.Pawn.Default.HealthMax;
+        PC.Pawn.AddShieldStrength(100);
+        
+        for (Inv = PC.Pawn.Inventory; Inv != None; Inv = Inv.Inventory)
+        {
+            if (Weapon(Inv) != None)
+            {
+                KFWeapon(Inv).MagAmmoRemaining = KFWeapon(Inv).MagCapacity;
+                Weapon(Inv).MaxOutAmmo();
+            }
+        }
+    }
+}
+
 public final function DoWaveEnd()
 {
     local Controller C;
