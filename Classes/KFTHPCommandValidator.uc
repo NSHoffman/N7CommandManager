@@ -152,7 +152,7 @@ static function bool IsInRangeF(
 
 static function bool IsPlayer(Controller C)
 {
-    return C.IsA('PlayerController') || C.IsA('xBot');
+    return PlayerController(C) != None;
 }
 
 static function bool IsAlive(PlayerController PC)

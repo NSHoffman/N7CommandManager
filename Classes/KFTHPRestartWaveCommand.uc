@@ -28,7 +28,7 @@ defaultproperties
 {
     MinArgsNum=0
     MaxArgsNum=0
-    Aliases(0)="RW"
+    Aliases=("RW")
     Signature="<>"
     Description="Restart current wave"
 }

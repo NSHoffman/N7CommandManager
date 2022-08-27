@@ -1,36 +1,15 @@
-class KFTHPGodModeCommand extends KFTHPTargetCommand;
+/**
+ * This class provides common logic for commands that accept two arguments:
+ * Numeric value that is going to be applied somehow and optional target
+ */
+class KFTHPBinaryNumericTargetCommand extends KFTHPTargetCommand
+    abstract;
 
 enum ECmdArgs
 {
-    ARG_FLAG,
+    ARG_NUMBER,
     ARG_TARGETNAME,
 };
-
-/** @Override */
-protected function DoActionForSingleTarget
-    (KFTHPCommandExecutionState ExecState, PlayerController PC)
-{
-    switch (ExecState.GetArgC())
-    {
-        case 0:
-            PC.bGodMode = !PC.bGodMode;
-            break;
-
-        case 1:
-        case 2:
-            if (IsSwitchOnValue(ExecState.GetArg(ECmdArgs.ARG_FLAG)))
-            {
-                PC.bGodMode = true;
-            }
-            else
-            {
-                PC.bGodMode = false;
-            }
-            break;
-    }
-
-    KFTHPCommandPreservingState(ExecState).SaveFlag(PC.bGodMode);
-}
 
 /** @Override */
 protected function bool CheckTargets(KFTHPCommandExecutionState ExecState)
@@ -40,7 +19,6 @@ protected function bool CheckTargets(KFTHPCommandExecutionState ExecState)
 
     switch (ExecState.GetArgC())
     {
-        case 0:
         case 1:
             KFTHPCommandPreservingState(ExecState).SaveString(
                 ExecState.GetSender().PlayerReplicationInfo.PlayerName
@@ -75,7 +53,6 @@ protected function bool ShouldBeTarget(
     
     switch (ExecState.GetArgC())
     {
-        case 0:
         case 1:
             return PC == ExecState.GetSender();
 
@@ -102,45 +79,11 @@ protected function string InvalidTargetMessage(KFTHPCommandExecutionState ExecSt
     return "Cannot find player with name "$KFTHPCommandPreservingState(ExecState).LoadString();
 }
 
-/** @Override */
-protected function string GetTargetSuccessMessage(KFTHPCommandExecutionState ExecState)
-{
-    local string TargetName;
-    TargetName = KFTHPCommandPreservingState(ExecState).LoadString();
-
-    if (TargetName ~= "all")
-    {
-        return "All players' God Mode is "$KFTHPCommandPreservingState(ExecState).LoadEnabled();
-    }
-
-    return "God Mode is "$KFTHPCommandPreservingState(ExecState).LoadEnabled();
-}
-
-/** @Override */
-protected function string GetGlobalSuccessMessage(KFTHPCommandExecutionState ExecState)
-{
-    local string TargetName;
-    TargetName = KFTHPCommandPreservingState(ExecState).LoadString();
-
-    if (TargetName ~= "all")
-    {
-        return "All players' God Mode is "$KFTHPCommandPreservingState(ExecState).LoadEnabled();
-    }
-
-    return TargetName$"'s God Mode is "$KFTHPCommandPreservingState(ExecState).LoadEnabled();
-}
-
 defaultproperties
 {
-    MinArgsNum=0
+    MinArgsNum=1
     MaxArgsNum=2
-    Aliases(0)="GM"
-    Aliases(1)="GOD"
-    ArgTypes(0)="switch"
+    ArgTypes(0)="number"
     ArgTypes(1)="any"
-    Signature="<optional (0 | 1 | ON | OFF) Flag, optional (string TargetName | 'all')>"
-    Description="Toggle God Mode"
-    bAdminOnly=true
-    bNotifyGlobalOnSuccess=true
     CommandStateClass=Class'KFTHPCommandPreservingState'
 }

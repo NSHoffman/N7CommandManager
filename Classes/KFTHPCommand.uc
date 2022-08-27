@@ -121,12 +121,12 @@ protected final function StartValidationPipeline(KFTHPCommandExecutionState Exec
 {
     ValidateGameType(ExecState);
     ValidateGameState(ExecState);
-    ValidateAdmin(ExecState);
     ValidateArgsNum(ExecState);
     ValidateArgsLength(ExecState);
     ValidateArgsTypes(ExecState);
     ValidateArgs(ExecState);
     ValidateTargets(ExecState);
+    ValidateAdmin(ExecState);
     ValidateCustom(ExecState);
 }
 
@@ -151,23 +151,9 @@ protected final function ValidateGameState(KFTHPCommandExecutionState ExecState)
         return;
     }
 
-    if (!CheckGameState())
+    if (!CheckGameState(ExecState))
     {
         ExecState.SetErrorGameState();
-        return;
-    }
-}
-
-protected final function ValidateAdmin(KFTHPCommandExecutionState ExecState)
-{
-    if (CheckActionFailure(ExecState))
-    {
-        return;
-    }
-
-    if (IsAdminOnly() && !CheckAdminPermissions(ExecState))
-    {
-        ExecState.SetErrorNotAdmin();
         return;
     }
 }
@@ -242,6 +228,20 @@ protected final function ValidateTargets(KFTHPCommandExecutionState ExecState)
     }
 }
 
+protected final function ValidateAdmin(KFTHPCommandExecutionState ExecState)
+{
+    if (CheckActionFailure(ExecState))
+    {
+        return;
+    }
+
+    if ((IsAdminOnly() || !CheckIfNonAdminExecutionAllowed(ExecState)) && !CheckAdminPermissions(ExecState))
+    {
+        ExecState.SetErrorNotAdmin();
+        return;
+    }
+}
+
 protected final function ValidateCustom(KFTHPCommandExecutionState ExecState)
 {
     if (CheckActionFailure(ExecState))
@@ -265,7 +265,7 @@ protected final function bool CheckGameType()
     return KFGameType(Level.Game) != None && KFGameReplicationInfo(Level.Game.GameReplicationInfo) != None;
 }
 
-protected function bool CheckGameState()
+protected function bool CheckGameState(KFTHPCommandExecutionState ExecState)
 {
     return true;
 }
@@ -282,7 +282,7 @@ protected final function bool CheckActionProcessing(KFTHPCommandExecutionState E
 
 protected final function bool CheckAdminPermissions(KFTHPCommandExecutionState ExecState)
 {
-    return ExecState.GetSender().Pawn.PlayerReplicationInfo.bAdmin || ExecState.GetSender().Pawn.PlayerReplicationInfo.bSilentAdmin;
+    return ExecState.GetSender().PlayerReplicationInfo.bAdmin || ExecState.GetSender().PlayerReplicationInfo.bSilentAdmin;
 }
 
 protected final function bool CheckArgsNum(KFTHPCommandExecutionState ExecState)
@@ -355,6 +355,12 @@ protected function bool CheckTargets(KFTHPCommandExecutionState ExecState)
     return true;
 }
 
+/** Special check in case a command requires admin access under certain circumstances */
+protected function bool CheckIfNonAdminExecutionAllowed(KFTHPCommandExecutionState ExecState)
+{
+    return true;
+}
+
 protected function bool CheckCustom(KFTHPCommandExecutionState ExecState)
 {
     return true;
@@ -410,7 +416,7 @@ protected final function AddCommandActionTargets(KFTHPCommandExecutionState Exec
     {
         PC = PlayerController(C);
 
-        if (PC != None && ShouldBeTarget(ExecState, PC))
+        if (IsPlayer(PC) && ShouldBeTarget(ExecState, PC))
         {
             ExecState.AddTarget(PC);
 

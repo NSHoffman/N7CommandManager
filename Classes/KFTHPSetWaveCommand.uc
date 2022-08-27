@@ -80,7 +80,7 @@ protected function DoAction(KFTHPCommandExecutionState ExecState)
 }
 
 /** @Override */
-protected function bool CheckGameState()
+protected function bool CheckGameState(KFTHPCommandExecutionState ExecState)
 {
     if (KFGT.IsInState('MatchInProgress') || KFGT.bGameEnded && KFGameReplicationInfo(Level.Game.GameReplicationInfo).EndGameType == 1)
     {
@@ -114,7 +114,7 @@ protected function string GetGlobalSuccessMessage(KFTHPCommandExecutionState Exe
 /** @Override */
 protected function string InvalidGameStateMessage()
 {
-    return "Wave can only be changed when match is in progress";
+    return "Wave can be changed only during the game";
 }
 
 /** @Override */
