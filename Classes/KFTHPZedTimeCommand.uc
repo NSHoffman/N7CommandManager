@@ -45,5 +45,4 @@ defaultproperties
     ArgTypes(0)="switch"
     Signature="<optional (0 | 1 | ON | OFF)>"
     Description="Toggle ZED-Time"
-    CommandStateClass=Class'KFTHPCommandPreservingState'
 }

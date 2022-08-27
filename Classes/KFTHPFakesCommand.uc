@@ -63,5 +63,4 @@ defaultproperties
     ArgTypes(0)="number"
     Signature="<int NewFakes>"
     Description="Set number of faked players"
-    CommandStateClass=Class'KFTHPCommandPreservingState'
 }

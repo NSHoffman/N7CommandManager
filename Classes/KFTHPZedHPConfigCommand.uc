@@ -63,5 +63,4 @@ defaultproperties
     ArgTypes(0)="number"
     Signature="<int HPConfig>"
     Description="Set HP multiplier for ZEDs"
-    CommandStateClass=Class'KFTHPCommandPreservingState'
 }

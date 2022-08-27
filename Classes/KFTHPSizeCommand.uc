@@ -2,7 +2,7 @@
  * This class provides common logic for commands
  * that change players' draw scale (body, head etc.)
  */
-class KFTHPSizeCommand extends KFTHPBinaryNumericTargetCommand
+class KFTHPSizeCommand extends KFTHPBinaryTargetCommand
     abstract;
 
 var protected const float MinScale; 
@@ -23,7 +23,12 @@ protected function bool CheckGameState(KFTHPCommandExecutionState ExecState)
 protected function bool CheckArgs(KFTHPCommandExecutionState ExecState)
 {
     local float NewScale;
-    NewScale = ToFloat(ExecState.GetArg(ECmdArgs.ARG_NUMBER));
+    NewScale = ToFloat(ExecState.GetArg(ECmdArgs.ARG_VALUE));
+
+    if (ExecState.GetArgC() == 0)
+    {
+        NewScale = 1.0;
+    }
 
     if (!IsInRangeF(NewScale, MinScale, MaxScale))
     {
@@ -33,39 +38,6 @@ protected function bool CheckArgs(KFTHPCommandExecutionState ExecState)
     KFTHPCommandPreservingState(ExecState).SaveNumberF(NewScale);
 
     return true;
-}
-
-/** @Override */
-protected function bool CheckTargets(KFTHPCommandExecutionState ExecState)
-{
-    local PlayerController Target;
-    local string TargetName;
-
-    switch (ExecState.GetArgC())
-    {
-        case 1:
-            KFTHPCommandPreservingState(ExecState).SaveString(
-                ExecState.GetSender().PlayerReplicationInfo.PlayerName
-            );
-            return IsAlive(ExecState.GetSender());
-
-        case 2:
-            TargetName = ExecState.GetArg(ECmdArgs.ARG_TARGETNAME);
-            KFTHPCommandPreservingState(ExecState).SaveString(TargetName);
-
-            if (TargetName ~= "all")
-            {
-                return true;
-            }
-
-            Target = FindTarget(TargetName);
-            if (Target != None && IsAlive(Target))
-            {
-                KFTHPCommandPreservingState(ExecState).SaveString(Target.PlayerReplicationInfo.PlayerName);
-                return true;
-            }
-    }
-    return false;
 }
 
 /** @Override */
@@ -90,4 +62,5 @@ defaultproperties
 {
     MinScale=0.1
     MaxScale=5.0
+    bOnlyAliveTargets=true
 }

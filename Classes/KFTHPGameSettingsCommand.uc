@@ -15,4 +15,5 @@ defaultproperties
 {
     bNotifySenderOnSuccess=false
     bNotifyGlobalOnSuccess=true
+    CommandStateClass=Class'KFTHPCommandPreservingState'
 }
