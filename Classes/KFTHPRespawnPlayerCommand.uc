@@ -74,7 +74,8 @@ defaultproperties
     Aliases(0)="RP"
     Aliases(1)="RESPAWN"
     Description="Respawn Player"
-    Signature="<optional string TargetName>"
+    Signature="<? string TargetName>"
     bOnlyDeadTargets=true
+    bAllowTargetAll=false
     bNotifyGlobalOnSuccess=true
 }

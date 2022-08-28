@@ -13,7 +13,15 @@ protected function DoAction(KFTHPCommandExecutionState ExecState)
 {
     local int NewHPConfig;
 
-    NewHPConfig = ToInt(ExecState.GetArg(ECmdArgs.ARG_HPCONFIG));
+    if (ExecState.GetArgC() > 0)
+    {
+        NewHPConfig = ToInt(ExecState.GetArg(ECmdArgs.ARG_HPCONFIG));
+    }
+    else
+    {
+        NewHPConfig = 1;
+    }
+
     SetZedHPConfig(NewHPConfig);
 }
 
@@ -22,20 +30,22 @@ protected function bool CheckArgs(KFTHPCommandExecutionState ExecState)
 {
     local int NewHPConfig, MinLimitActual;
 
-    NewHPConfig = ToInt(ExecState.GetArg(ECmdArgs.ARG_HPCONFIG));
-
-    MinLimitActual = Min(
-        ZedHPConfigThreshold, 
-        Max(MinLimit, GSU.GetAlivePlayersNum())
-    );
-
-    if (!IsInRange(NewHPConfig, MinLimitActual, MaxLimit))
+    if (ExecState.GetArgC() > 0)
     {
-        KFTHPCommandPreservingState(ExecState).SaveMinLimit(MinLimitActual);
+        NewHPConfig = ToInt(ExecState.GetArg(ECmdArgs.ARG_HPCONFIG));
 
-        return false;
+        MinLimitActual = Min(
+            ZedHPConfigThreshold, 
+            Max(MinLimit, GSU.GetAlivePlayersNum())
+        );
+
+        if (!IsInRange(NewHPConfig, MinLimitActual, MaxLimit))
+        {
+            KFTHPCommandPreservingState(ExecState).SaveMinLimit(MinLimitActual);
+
+            return false;
+        }
     }
-
 
     return true;
 }
@@ -56,11 +66,11 @@ defaultproperties
 {
     MinLimit=1
     MaxLimit=10
-    MinArgsNum=1
+    MinArgsNum=0
     MaxArgsNum=1
     Aliases(0)="HP"
     Aliases(1)="SETHP"
     ArgTypes(0)="number"
-    Signature="<int HPConfig>"
+    Signature="<? int HPConfig>"
     Description="Set HP multiplier for ZEDs"
 }

@@ -43,6 +43,6 @@ defaultproperties
     MaxArgsNum=1
     Aliases(0)="ZT"
     ArgTypes(0)="switch"
-    Signature="<optional (0 | 1 | ON | OFF)>"
+    Signature="<? (0 | 1 | ON | OFF)>"
     Description="Toggle ZED-Time"
 }

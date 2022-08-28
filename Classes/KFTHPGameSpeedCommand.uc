@@ -13,8 +13,15 @@ protected function DoAction(KFTHPCommandExecutionState ExecState)
 {
     local float NewGameSpeed;
 
-    NewGameSpeed = ToInt(ExecState.GetArg(ECmdArgs.ARG_NEWSPEED));
-    KFGT.SetGameSpeed(NewGameSpeed);
+    if (ExecState.GetArgC() > 0)
+    {
+        NewGameSpeed = ToInt(ExecState.GetArg(ECmdArgs.ARG_NEWSPEED));
+        KFGT.SetGameSpeed(NewGameSpeed);
+    }
+    else
+    {
+        KFGT.SetGameSpeed(1.0);
+    }
 }
 
 /** @Override */
@@ -22,11 +29,14 @@ protected function bool CheckArgs(KFTHPCommandExecutionState ExecState)
 {
     local float NewGameSpeed;
 
-    NewGameSpeed = ToInt(ExecState.GetArg(ECmdArgs.ARG_NEWSPEED));
-
-    if (!IsInRangeF(NewGameSpeed, MinGameSpeed, MaxGameSpeed))
+    if (ExecState.GetArgC() > 0)
     {
-        return false;
+        NewGameSpeed = ToInt(ExecState.GetArg(ECmdArgs.ARG_NEWSPEED));
+
+        if (!IsInRangeF(NewGameSpeed, MinGameSpeed, MaxGameSpeed))
+        {
+            return false;
+        }
     }
 
     return true;
@@ -49,12 +59,12 @@ defaultproperties
     bAdminOnly=true
     MinGameSpeed=0.25
     MaxGameSpeed=10.0
-    MinArgsNum=1
+    MinArgsNum=0
     MaxArgsNum=1
     Aliases(0)="GS"
     Aliases(1)="GAMESPEED"
     Aliases(2)="SLOMO"
     ArgTypes(0)="number"
-    Signature="<int | float NewGameSpeed>"
+    Signature="<? int | float NewGameSpeed>"
     Description="Set Game Speed"
 }

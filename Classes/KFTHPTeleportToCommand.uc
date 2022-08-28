@@ -40,7 +40,7 @@ defaultproperties
     Aliases(0)="TPT"
     Aliases(1)="TELEPORTP"
     ArgTypes(0)="any"
-    Signature="<string TargetName>"
+    Signature="<? string TargetName>"
     Description="Teleport to another player"
     bOnlyAliveTargets=true
     bNotifySenderOnSuccess=false

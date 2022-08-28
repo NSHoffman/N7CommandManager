@@ -57,6 +57,6 @@ defaultproperties
     Aliases(0)="KZ"
     Aliases(1)="KILLZEDS"
     ArgTypes(0)="word"
-    Signature="<optional string 'all'>"
+    Signature="<? string 'all'>"
     Description="Kill ZEDs"
 }

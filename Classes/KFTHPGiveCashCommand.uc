@@ -69,11 +69,12 @@ protected function string GetGlobalSuccessMessage(KFTHPCommandExecutionState Exe
 defaultproperties
 {
     bAdminOnly=true
+    MinArgsNum=1
     Aliases(0)="GC"
     Aliases(1)="GD"
     Aliases(2)="CASH"
     Aliases(3)="DOSH"
-    Signature="<int Amount, optional (string TargetName | 'all')>"
+    Signature="<int Amount, ? (string TargetName | 'all')>"
     Description="Give Money"
     MinCashAmount=1
     MaxCashAmount=50000

@@ -13,8 +13,15 @@ protected function DoAction(KFTHPCommandExecutionState ExecState)
 {
     local float NewSpawnRate;
 
-    NewSpawnRate = ToFloat(ExecState.GetArg(ECmdArgs.ARG_SPAWNRATE));
-    KFGT.KFLRules.WaveSpawnPeriod = NewSpawnRate;
+    if (ExecState.GetArgC() > 0)
+    {
+        NewSpawnRate = ToFloat(ExecState.GetArg(ECmdArgs.ARG_SPAWNRATE));
+        KFGT.KFLRules.WaveSpawnPeriod = NewSpawnRate;
+    }
+    else
+    {
+        KFGT.KFLRules.WaveSpawnPeriod = KFGT.KFLRules.Default.WaveSpawnPeriod;
+    }
 }
 
 /** @Override */
@@ -22,11 +29,14 @@ protected function bool CheckArgs(KFTHPCommandExecutionState ExecState)
 {
     local float NewSpawnRate;
 
-    NewSpawnRate = ToFloat(ExecState.GetArg(ECmdArgs.ARG_SPAWNRATE));
-
-    if (!IsInRangeF(NewSpawnRate, MinRate, MaxRate))
+    if (ExecState.GetArgC() > 0)
     {
-        return false;
+        NewSpawnRate = ToFloat(ExecState.GetArg(ECmdArgs.ARG_SPAWNRATE));
+
+        if (!IsInRangeF(NewSpawnRate, MinRate, MaxRate))
+        {
+            return false;
+        }
     }
 
     return true;
@@ -48,11 +58,11 @@ defaultproperties
 {
     MinRate=0.0
     MaxRate=10.0
-    MinArgsNum=1
+    MinArgsNum=0
     MaxArgsNum=1
     Aliases(0)="SR"
     Aliases(1)="SETSR"
     ArgTypes(0)="number"
-    Signature="<int | float SpawnRate>"
+    Signature="<? int | float SpawnRate>"
     Description="Set interval between ZED squads spawn"
 }

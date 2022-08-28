@@ -45,7 +45,7 @@ defaultproperties
     bAdminOnly=true
     Aliases(0)="HEAD"
     Aliases(1)="HEADSIZE"
-    Signature="<float HeadScale, optional (string TargetName | 'all')>"
+    Signature="<? float HeadScale, ? (string TargetName | 'all')>"
     Description="Set Player's head size scale"
     bNotifySenderOnSuccess=true
 }

@@ -65,7 +65,7 @@ defaultproperties
     Aliases(0)="GM"
     Aliases(1)="GOD"
     ArgTypes(0)="switch"
-    Signature="<optional (0 | 1 | ON | OFF) Flag, optional (string TargetName | 'all')>"
+    Signature="<? (0 | 1 | ON | OFF) Flag, ? (string TargetName | 'all')>"
     Description="Toggle God Mode"
     bAdminOnly=true
     bNotifyGlobalOnSuccess=true

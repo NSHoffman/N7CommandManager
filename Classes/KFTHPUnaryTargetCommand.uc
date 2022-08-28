@@ -63,5 +63,5 @@ defaultproperties
     MinArgsNum=0
     MaxArgsNum=1
     ArgTypes(0)="any"
-    Signature="<optional (string TargetName | 'all')>"
+    Signature="<? (string TargetName | 'all')>"
 }

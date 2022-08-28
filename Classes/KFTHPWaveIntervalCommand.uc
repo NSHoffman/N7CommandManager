@@ -13,19 +13,26 @@ protected function DoAction(KFTHPCommandExecutionState ExecState)
 {
     local int NewWaveInterval;
 
-    NewWaveInterval = ToInt(ExecState.GetArg(ECmdArgs.ARG_NEWTIME));
+    if (ExecState.GetArgC() > 0)
+    {
+        NewWaveInterval = ToInt(ExecState.GetArg(ECmdArgs.ARG_NEWTIME));
 
-    if (IsInRange(NewWaveInterval, MinWaveInterval, MaxWaveInterval))
-    {
-        KFGT.TimeBetweenWaves = NewWaveInterval; 
-    }
-    else if (IsInRange(NewWaveInterval, MinWaveInterval))
-    {
-        KFGT.TimeBetweenWaves = MaxWaveInterval;
+        if (IsInRange(NewWaveInterval, MinWaveInterval, MaxWaveInterval))
+        {
+            KFGT.TimeBetweenWaves = NewWaveInterval; 
+        }
+        else if (IsInRange(NewWaveInterval, MinWaveInterval))
+        {
+            KFGT.TimeBetweenWaves = MaxWaveInterval;
+        }
+        else
+        {
+            KFGT.TimeBetweenWaves = MinWaveInterval;
+        }
     }
     else
     {
-        KFGT.TimeBetweenWaves = MinWaveInterval;
+        KFGT.TimeBetweenWaves = KFGT.Default.TimeBetweenWaves;
     }
 }
 
@@ -37,7 +44,7 @@ protected function string GetGlobalSuccessMessage(KFTHPCommandExecutionState Exe
 
 defaultproperties
 {
-    MinArgsNum=1
+    MinArgsNum=0
     MaxArgsNum=1
     MinWaveInterval=6
     MaxWaveInterval=600
@@ -45,6 +52,6 @@ defaultproperties
     Aliases(1)="WT"
     Aliases(2)="INTERVAL"
     ArgTypes(0)="number"
-    Signature="<int WaveInterval>"
+    Signature="<? int WaveInterval>"
     Description="Set interval between waves"
 }
