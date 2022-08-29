@@ -8,23 +8,23 @@ protected function DoActionForSingleTarget
     KFGT.NumSpectators++;
     KFGT.NumPlayers--;
 
-	if (PC.Pawn != None)
+    if (PC.Pawn != None)
     {
-		PC.Pawn.Died(PC, Class'DamageType', PC.Pawn.Location);
+        PC.Pawn.Died(PC, Class'DamageType', PC.Pawn.Location);
     }
 
-	if (PC.PlayerReplicationInfo.Team != None)
+    if (PC.PlayerReplicationInfo.Team != None)
     {
-		PC.PlayerReplicationInfo.Team.RemoveFromTeam(PC);
+        PC.PlayerReplicationInfo.Team.RemoveFromTeam(PC);
     }
-	PC.PlayerReplicationInfo.Team = None;
-	PC.PlayerReplicationInfo.Score = 0;
-	PC.PlayerReplicationInfo.Deaths = 0;
-	PC.PlayerReplicationInfo.GoalsScored = 0;
-	PC.PlayerReplicationInfo.Kills = 0;
-	
+    PC.PlayerReplicationInfo.Team = None;
+    PC.PlayerReplicationInfo.Score = 0;
+    PC.PlayerReplicationInfo.Deaths = 0;
+    PC.PlayerReplicationInfo.GoalsScored = 0;
+    PC.PlayerReplicationInfo.Kills = 0;
+    
     PC.ServerSpectate();
-	PC.ClientBecameSpectator();
+    PC.ClientBecameSpectator();
 }
 
 /** @Override */
