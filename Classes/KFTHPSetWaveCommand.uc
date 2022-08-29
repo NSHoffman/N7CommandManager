@@ -25,6 +25,9 @@ protected function DoAction(KFTHPCommandExecutionState ExecState)
     if (KFGT.bGameEnded && KFGRI.EndGameType == 1)
     {
         KFGT.Reset();
+        KFGT.VotingHandler.SetTimer(0, false);
+        KFGT.bGameRestarted = false;
+
         KFGRI.Reset();
         KFGRI.EndGameType = 0;
 

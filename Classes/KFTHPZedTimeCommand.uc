@@ -8,20 +8,12 @@ enum ECmdArgs
 /** @Override */
 protected function DoAction(KFTHPCommandExecutionState ExecState)
 {
-    local string Flag;
+    local bool bShouldEnableZedTime;
 
     if (ExecState.GetArgC() == 1)
     {
-        Flag = ExecState.GetArg(ECmdArgs.ARG_FLAG);
-
-        if (IsSwitchOnValue(Flag))
-        {
-            SetZedTime(false);
-        }
-        else if (IsSwitchOffValue(Flag))
-        {
-            SetZedTime(true);
-        }
+        bShouldEnableZedTime = ToBool(ExecState.GetArg(ECmdArgs.ARG_FLAG));
+        SetZedTime(bShouldEnableZedTime);
     }
     else
     {
