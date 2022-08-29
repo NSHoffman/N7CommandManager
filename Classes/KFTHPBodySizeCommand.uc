@@ -54,7 +54,7 @@ defaultproperties
     bAdminOnly=true
     Aliases(0)="BODY"
     Aliases(1)="BODYSIZE"
-    Signature="<float BodyScale, optional (string TargetName | 'all')>"
+    Signature="<? float BodyScale, ? (string TargetName | 'all')>"
     Description="Set Player's body size scale"
     bNotifySenderOnSuccess=true
 }

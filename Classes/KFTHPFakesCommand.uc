@@ -13,9 +13,16 @@ protected function DoAction(KFTHPCommandExecutionState ExecState)
 {
     local int NewFakes;
 
-    NewFakes = ToInt(ExecState.GetArg(ECmdArgs.ARG_NEWFAKES));
-    SetFakedPlayersNum(NewFakes);
+    if (ExecState.GetArgC() > 0)
+    {
+        NewFakes = ToInt(ExecState.GetArg(ECmdArgs.ARG_NEWFAKES));
+    }
+    else
+    {
+        NewFakes = 0;
+    }
 
+    SetFakedPlayersNum(NewFakes);
     KFGT.NumPlayers = GSU.GetRealPlayersNum() + GetFakedPlayersNum();
 }
 
@@ -24,14 +31,17 @@ protected function bool CheckArgs(KFTHPCommandExecutionState ExecState)
 {
     local int NewFakes, MaxFakesActual;
 
-    NewFakes = ToInt(ExecState.GetArg(ECmdArgs.ARG_NEWFAKES));
-    MaxFakesActual = Min(KFGT.MaxPlayers - (KFGT.NumPlayers - FakedPlayersNum), MaxFakes);
-
-    if (!IsInRange(NewFakes, MinFakes, MaxFakesActual))
+    if (ExecState.GetArgC() > 0)
     {
-        KFTHPCommandPreservingState(ExecState).SaveMaxLimit(MaxFakesActual);
+        NewFakes = ToInt(ExecState.GetArg(ECmdArgs.ARG_NEWFAKES));
+        MaxFakesActual = Min(KFGT.MaxPlayers - (KFGT.NumPlayers - FakedPlayersNum), MaxFakes);
 
-        return false;
+        if (!IsInRange(NewFakes, MinFakes, MaxFakesActual))
+        {
+            KFTHPCommandPreservingState(ExecState).SaveMaxLimit(MaxFakesActual);
+
+            return false;
+        }
     }
 
     return true;
@@ -53,7 +63,7 @@ defaultproperties
 {
     MinFakes=0
     MaxFakes=10
-    MinArgsNum=1
+    MinArgsNum=0
     MaxArgsNum=1
     Aliases(0)="FAKE"
     Aliases(1)="FAKES"
@@ -61,7 +71,6 @@ defaultproperties
     Aliases(3)="SETFAKED"
     Aliases(4)="SETFAKES"
     ArgTypes(0)="number"
-    Signature="<int NewFakes>"
+    Signature="<? int NewFakes>"
     Description="Set number of faked players"
-    CommandStateClass=Class'KFTHPCommandPreservingState'
 }

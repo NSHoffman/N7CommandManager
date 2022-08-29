@@ -13,8 +13,15 @@ protected function DoAction(KFTHPCommandExecutionState ExecState)
 {
     local int NewSpectators;
 
-    NewSpectators = ToInt(ExecState.GetArg(ECmdArgs.ARG_NEWSPECS));
-    KFGT.MaxSpectators = NewSpectators;
+    if (ExecState.GetArgC() > 0)
+    {
+        NewSpectators = ToInt(ExecState.GetArg(ECmdArgs.ARG_NEWSPECS));
+        KFGT.MaxSpectators = NewSpectators;
+    }
+    else
+    {
+        KFGT.MaxSpectators = KFGT.Default.MaxSpectators;
+    }
 }
 
 /** @Override */
@@ -22,12 +29,15 @@ protected function bool CheckArgs(KFTHPCommandExecutionState ExecState)
 {
     local int NewSpectators, MinSpectatorsActual;
 
-    NewSpectators = ToInt(ExecState.GetArg(ECmdArgs.ARG_NEWSPECS));
-    MinSpectatorsActual = Max(KFGT.NumSpectators, MinSpectators);
-
-    if (!IsInRange(NewSpectators, MinSpectatorsActual, MaxSpectators))
+    if (ExecState.GetArgC() > 0)
     {
-        return false;
+        NewSpectators = ToInt(ExecState.GetArg(ECmdArgs.ARG_NEWSPECS));
+        MinSpectatorsActual = Max(KFGT.NumSpectators, MinSpectators);
+
+        if (!IsInRange(NewSpectators, MinSpectatorsActual, MaxSpectators))
+        {
+            return false;
+        }
     }
 
     return true;
@@ -49,11 +59,11 @@ defaultproperties
 {
     MinSpectators=0
     MaxSpectators=10
-    MinArgsNum=1
+    MinArgsNum=0
     MaxArgsNum=1
     Aliases(0)="SPEC"
     Aliases(1)="SPECS"
     ArgTypes(0)="number"
-    Signature="<int NewSpectators>"
+    Signature="<? int NewSpectators>"
     Description="Set maximum of spectators allowed"
 }

@@ -73,5 +73,4 @@ defaultproperties
     ArgTypes(0)="switch"
     Signature="<(0 | 1 | ON | OFF)>"
     Description="Weld all doors"
-    CommandStateClass=Class'KFTHPCommandPreservingState'
 }

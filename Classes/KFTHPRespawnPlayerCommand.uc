@@ -31,31 +31,6 @@ protected function DoActionForSingleTarget
 }
 
 /** @Override */
-protected function bool ShouldBeTarget(
-    KFTHPCommandExecutionState ExecState, 
-    PlayerController PC)
-{
-    local string TargetName;
-    
-    switch (ExecState.GetArgC())
-    {
-        case 0:
-            return PC == ExecState.GetSender();
-
-        case 1:
-            TargetName = ExecState.GetArg(ECmdArgs.ARG_TARGETNAME);
-
-            if (IsStringPartOf(TargetName, PC.PlayerReplicationInfo.PlayerName))
-            {
-                ExecState.StopTargetSearch();
-                
-                return true;
-            }
-    }
-    return false;
-}
-
-/** @Override */
 protected function bool CheckGameState(KFTHPCommandExecutionState ExecState)
 {
     if (KFGT.IsInState('MatchInProgress'))
@@ -63,39 +38,6 @@ protected function bool CheckGameState(KFTHPCommandExecutionState ExecState)
         return true;
     }
 
-    return false;
-}
-
-/** @Override */
-protected function bool CheckTargets(KFTHPCommandExecutionState ExecState)
-{
-    local PlayerController Target;
-    local string TargetName;
-
-    switch (ExecState.GetArgC())
-    {
-        case 0:
-            KFTHPCommandPreservingState(ExecState).SaveString(
-                ExecState.GetSender().PlayerReplicationInfo.PlayerName
-            );
-            return !IsAlive(ExecState.GetSender());
-
-        case 1:
-            TargetName = ExecState.GetArg(ECmdArgs.ARG_TARGETNAME);
-            KFTHPCommandPreservingState(ExecState).SaveString(TargetName);
-
-            if (TargetName ~= "all")
-            {
-                return true;
-            }
-
-            Target = FindTarget(TargetName);
-            if (Target != None && !IsAlive(Target))
-            {
-                KFTHPCommandPreservingState(ExecState).SaveString(Target.PlayerReplicationInfo.PlayerName);
-                return true;
-            }
-    }
     return false;
 }
 
@@ -114,9 +56,6 @@ protected function string InvalidTargetMessage(KFTHPCommandExecutionState ExecSt
 /** @Override */
 protected function string GetTargetSuccessMessage(KFTHPCommandExecutionState ExecState)
 {
-    local string TargetName;
-    TargetName = KFTHPCommandPreservingState(ExecState).LoadString();
-
     return "You have been respawned";
 }
 
@@ -124,7 +63,7 @@ protected function string GetTargetSuccessMessage(KFTHPCommandExecutionState Exe
 protected function string GetGlobalSuccessMessage(KFTHPCommandExecutionState ExecState)
 {
     local string TargetName;
-    TargetName = KFTHPCommandPreservingState(ExecState).LoadString();
+    TargetName = LoadTarget(ExecState);
 
     return TargetName$" has been respawned";
 }
@@ -135,6 +74,8 @@ defaultproperties
     Aliases(0)="RP"
     Aliases(1)="RESPAWN"
     Description="Respawn Player"
-    Signature="<optional string TargetName>"
+    Signature="<? string TargetName>"
+    bOnlyDeadTargets=true
+    bAllowTargetAll=false
     bNotifyGlobalOnSuccess=true
 }

@@ -138,5 +138,4 @@ defaultproperties
     ArgTypes(0)="number"
     Signature="<int WaveNum>"
     Description="Set Wave number"
-    CommandStateClass="KFTHPCommandPreservingState"
 }

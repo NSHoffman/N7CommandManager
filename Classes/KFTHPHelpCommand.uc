@@ -84,7 +84,7 @@ defaultproperties
     MaxArgsNum=1
     Aliases(0)="HELP"
     ArgTypes(0)="word"
-    Signature="<optional string Command>"
+    Signature="<? string Command>"
     Description="Show a list of commands available to players or display info about one specific command"
     bNotifySenderOnSuccess=false
 }

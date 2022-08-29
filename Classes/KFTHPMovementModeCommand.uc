@@ -26,5 +26,6 @@ protected function string InvalidGameStateMessage()
 defaultproperties
 {
     bAdminOnly=true
+    bOnlyAliveTargets=true
     bNotifyGlobalOnSuccess=true
 }

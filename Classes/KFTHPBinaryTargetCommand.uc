@@ -1,12 +1,13 @@
 /**
- * This class provides common logic for target based commands 
- * that accept only one optional target argument
+ * This class provides common logic for commands that accept two arguments:
+ * A value that is going to be applied somehow and optional target
  */
-class KFTHPUnaryTargetCommand extends KFTHPTargetCommand
+class KFTHPBinaryTargetCommand extends KFTHPTargetCommand
     abstract;
 
 enum ECmdArgs
 {
+    ARG_VALUE,
     ARG_TARGETNAME,
 };
 
@@ -19,11 +20,11 @@ protected function bool CheckTargets(KFTHPCommandExecutionState ExecState)
     switch (ExecState.GetArgC())
     {
         case 0:
+        case 1:
             bValidTarget = VerifyTargetBySender(ExecState, TargetName);
             break;
 
-        case 1:
-        default:
+        case 2:
             TargetName = ExecState.GetArg(ECmdArgs.ARG_TARGETNAME);
             bValidTarget = VerifyTargetByName(ExecState, TargetName);
             break;
@@ -43,10 +44,10 @@ protected function bool ShouldBeTarget(
     switch (ExecState.GetArgC())
     {
         case 0:
+        case 1:
             return AcceptTargetBySender(ExecState, PC, TargetName);
 
-        case 1:
-        default:
+        case 2:
             TargetName = ExecState.GetArg(ECmdArgs.ARG_TARGETNAME);
             return AcceptTargetByName(ExecState, PC, TargetName);
     }
@@ -63,7 +64,7 @@ protected function string InvalidTargetMessage(KFTHPCommandExecutionState ExecSt
 defaultproperties
 {
     MinArgsNum=0
-    MaxArgsNum=1
-    ArgTypes(0)="any"
-    Signature="<? (string TargetName | 'all')>"
+    MaxArgsNum=2
+    ArgTypes(0)="number"
+    ArgTypes(1)="any"
 }

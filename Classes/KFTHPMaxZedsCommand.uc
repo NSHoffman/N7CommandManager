@@ -13,11 +13,20 @@ protected function DoAction(KFTHPCommandExecutionState ExecState)
 {
     local int NewMaxZeds;
 
-    NewMaxZeds = ToInt(ExecState.GetArg(ECmdArgs.ARG_MAXZEDS));
+    if (ExecState.GetArgC() > 0)
+    {
+        NewMaxZeds = ToInt(ExecState.GetArg(ECmdArgs.ARG_MAXZEDS));
 
-    KFGT.MaxZombiesOnce = NewMaxZeds;
-    KFGT.StandardMaxZombiesOnce = NewMaxZeds;
-    KFGT.MaxMonsters = NewMaxZeds;
+        KFGT.MaxZombiesOnce = NewMaxZeds;
+        KFGT.StandardMaxZombiesOnce = NewMaxZeds;
+        KFGT.MaxMonsters = NewMaxZeds;
+    }
+    else
+    {
+        KFGT.MaxZombiesOnce = KFGT.Default.MaxZombiesOnce;
+        KFGT.StandardMaxZombiesOnce = KFGT.Default.StandardMaxZombiesOnce;
+        KFGT.MaxMonsters = KFGT.Default.MaxMonsters;
+    }
 }
 
 /** @Override */
@@ -25,11 +34,14 @@ protected function bool CheckArgs(KFTHPCommandExecutionState ExecState)
 {
     local int NewMaxZeds;
 
-    NewMaxZeds = ToInt(ExecState.GetArg(ECmdArgs.ARG_MAXZEDS));
-
-    if (!IsInRange(NewMaxZeds, MinLimit, MaxLimit))
+    if (ExecState.GetArgC() > 0)
     {
-        return false;
+        NewMaxZeds = ToInt(ExecState.GetArg(ECmdArgs.ARG_MAXZEDS));
+
+        if (!IsInRange(NewMaxZeds, MinLimit, MaxLimit))
+        {
+            return false;
+        }
     }
 
     return true;
@@ -51,12 +63,12 @@ defaultproperties
 {
     MinLimit=4
     MaxLimit=96
-    MinArgsNum=1
+    MinArgsNum=0
     MaxArgsNum=1
     Aliases(0)="MZ"
     Aliases(1)="SETMZ"
     Aliases(2)="MAXZEDS"
     ArgTypes(0)="number"
-    Signature="<int MaxZeds>"
+    Signature="<? int MaxZeds>"
     Description="Set max number of ZEDs present at a time"
 }

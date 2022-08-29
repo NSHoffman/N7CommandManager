@@ -13,8 +13,15 @@ protected function DoAction(KFTHPCommandExecutionState ExecState)
 {
     local int NewSlots;
 
-    NewSlots = ToInt(ExecState.GetArg(ECmdArgs.ARG_NEWSLOTS));
-    KFGT.MaxPlayers = NewSlots;
+    if (ExecState.GetArgC() > 0)
+    {
+        NewSlots = ToInt(ExecState.GetArg(ECmdArgs.ARG_NEWSLOTS));
+        KFGT.MaxPlayers = NewSlots;
+    }
+    else
+    {
+        KFGT.MaxPlayers = KFGT.Default.MaxPlayers;
+    }
 }
 
 /** @Override */
@@ -22,12 +29,15 @@ protected function bool CheckArgs(KFTHPCommandExecutionState ExecState)
 {
     local int NewSlots, MinSlotsActual;
 
-    NewSlots = ToInt(ExecState.GetArg(ECmdArgs.ARG_NEWSLOTS));
-    MinSlotsActual = Max(KFGT.NumPlayers, MinSlots);
-
-    if (!IsInRange(NewSlots, MinSlotsActual, MaxSlots))
+    if (ExecState.GetArgC() > 0)
     {
-        return false;
+        NewSlots = ToInt(ExecState.GetArg(ECmdArgs.ARG_NEWSLOTS));
+        MinSlotsActual = Max(KFGT.NumPlayers, MinSlots);
+
+        if (!IsInRange(NewSlots, MinSlotsActual, MaxSlots))
+        {
+            return false;
+        }
     }
 
     return true;
@@ -49,11 +59,11 @@ defaultproperties
 {
     MinSlots=1
     MaxSlots=10
-    MinArgsNum=1
+    MinArgsNum=0
     MaxArgsNum=1
     Aliases(0)="SLOT"
     Aliases(1)="SLOTS"
     ArgTypes(0)="number"
-    Signature="<int NewSlots>"
+    Signature="<? int NewSlots>"
     Description="Set maximum number of players allowed"
 }

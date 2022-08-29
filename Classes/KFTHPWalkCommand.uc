@@ -17,7 +17,7 @@ protected function DoActionForSingleTarget
 protected function string GetTargetSuccessMessage(KFTHPCommandExecutionState ExecState)
 {
     local string TargetName;
-    TargetName = KFTHPCommandPreservingState(ExecState).LoadString();
+    TargetName = LoadTarget(ExecState);
 
     if (TargetName ~= "all")
     {
@@ -31,7 +31,7 @@ protected function string GetTargetSuccessMessage(KFTHPCommandExecutionState Exe
 protected function string GetGlobalSuccessMessage(KFTHPCommandExecutionState ExecState)
 {
     local string TargetName;
-    TargetName = KFTHPCommandPreservingState(ExecState).LoadString();
+    TargetName = LoadTarget(ExecState);
 
     if (TargetName ~= "all")
     {

@@ -1,10 +1,4 @@
-class KFTHPGodModeCommand extends KFTHPTargetCommand;
-
-enum ECmdArgs
-{
-    ARG_FLAG,
-    ARG_TARGETNAME,
-};
+class KFTHPGodModeCommand extends KFTHPBinaryTargetCommand;
 
 /** @Override */
 protected function DoActionForSingleTarget
@@ -18,14 +12,7 @@ protected function DoActionForSingleTarget
 
         case 1:
         case 2:
-            if (IsSwitchOnValue(ExecState.GetArg(ECmdArgs.ARG_FLAG)))
-            {
-                PC.bGodMode = true;
-            }
-            else
-            {
-                PC.bGodMode = false;
-            }
+            PC.bGodMode = ToBool(ExecState.GetArg(ECmdArgs.ARG_VALUE));
             break;
     }
 
@@ -33,80 +20,16 @@ protected function DoActionForSingleTarget
 }
 
 /** @Override */
-protected function bool CheckTargets(KFTHPCommandExecutionState ExecState)
-{
-    local PlayerController Target;
-    local string TargetName;
-
-    switch (ExecState.GetArgC())
-    {
-        case 0:
-        case 1:
-            KFTHPCommandPreservingState(ExecState).SaveString(
-                ExecState.GetSender().PlayerReplicationInfo.PlayerName
-            );
-            return true;
-
-        case 2:
-            TargetName = ExecState.GetArg(ECmdArgs.ARG_TARGETNAME);
-            KFTHPCommandPreservingState(ExecState).SaveString(TargetName);
-
-            if (TargetName ~= "all")
-            {
-                return true;
-            }
-
-            Target = FindTarget(TargetName);
-            if (Target != None)
-            {
-                KFTHPCommandPreservingState(ExecState).SaveString(Target.PlayerReplicationInfo.PlayerName);
-                return true;
-            }
-    }
-    return false;
-}
-
-/** @Override */
-protected function bool ShouldBeTarget(
-    KFTHPCommandExecutionState ExecState, 
-    PlayerController PC)
-{
-    local string TargetName;
-    
-    switch (ExecState.GetArgC())
-    {
-        case 0:
-        case 1:
-            return PC == ExecState.GetSender();
-
-        case 2:
-            TargetName = ExecState.GetArg(ECmdArgs.ARG_TARGETNAME);
-
-            if (TargetName ~= "all")
-            {
-                return true;
-            }
-            else if (IsStringPartOf(TargetName, PC.PlayerReplicationInfo.PlayerName))
-            {
-                ExecState.StopTargetSearch();
-                
-                return true;
-            }
-    }
-    return false;
-}
-
-/** @Override */
 protected function string InvalidTargetMessage(KFTHPCommandExecutionState ExecState)
 {
-    return "Cannot find player with name "$KFTHPCommandPreservingState(ExecState).LoadString();
+    return "Cannot find player with name "$LoadTarget(ExecState);
 }
 
 /** @Override */
 protected function string GetTargetSuccessMessage(KFTHPCommandExecutionState ExecState)
 {
     local string TargetName;
-    TargetName = KFTHPCommandPreservingState(ExecState).LoadString();
+    TargetName = LoadTarget(ExecState);
 
     if (TargetName ~= "all")
     {
@@ -120,7 +43,7 @@ protected function string GetTargetSuccessMessage(KFTHPCommandExecutionState Exe
 protected function string GetGlobalSuccessMessage(KFTHPCommandExecutionState ExecState)
 {
     local string TargetName;
-    TargetName = KFTHPCommandPreservingState(ExecState).LoadString();
+    TargetName = LoadTarget(ExecState);
 
     if (TargetName ~= "all")
     {
@@ -132,15 +55,11 @@ protected function string GetGlobalSuccessMessage(KFTHPCommandExecutionState Exe
 
 defaultproperties
 {
-    MinArgsNum=0
-    MaxArgsNum=2
     Aliases(0)="GM"
     Aliases(1)="GOD"
     ArgTypes(0)="switch"
-    ArgTypes(1)="any"
-    Signature="<optional (0 | 1 | ON | OFF) Flag, optional (string TargetName | 'all')>"
+    Signature="<? (0 | 1 | ON | OFF) Flag, ? (string TargetName | 'all')>"
     Description="Toggle God Mode"
     bAdminOnly=true
     bNotifyGlobalOnSuccess=true
-    CommandStateClass=Class'KFTHPCommandPreservingState'
 }
