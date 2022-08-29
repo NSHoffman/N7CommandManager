@@ -5,15 +5,10 @@ protected function DoActionForSingleTarget
     (KFTHPCommandExecutionState ExecState, PlayerController PC)
 {
     local float NewBodyScale;
-    NewBodyScale = KFTHPCommandPreservingState(ExecState).LoadNumberF();
 
-    PC.Pawn.SetDrawScale(PC.Pawn.Default.DrawScale * NewBodyScale);
-    PC.Pawn.SetCollisionSize(
-        PC.Pawn.Default.CollisionRadius * NewBodyScale, 
-        PC.Pawn.Default.CollisionHeight * NewBodyScale
-    );
-    PC.Pawn.BaseEyeHeight = PC.Pawn.Default.BaseEyeHeight * NewBodyScale;
-    PC.Pawn.EyeHeight = PC.Pawn.Default.EyeHeight * NewBodyScale;
+    NewBodyScale = KFTHPCommandPreservingState(ExecState).LoadNumberF();
+    GSU.ResizePlayer(PC, NewBodyScale);
+    AddResizedPlayer(PC, NewBodyScale);
 }
 
 /** @Override */
