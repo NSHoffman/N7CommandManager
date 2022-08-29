@@ -4,7 +4,7 @@ class KFTHPTeleportCommand extends KFTHPCommand;
 protected function DoAction(KFTHPCommandExecutionState ExecState)
 {
     local Actor HitActor;
-	local Vector HitNormal, HitLocation;
+    local Vector HitNormal, HitLocation;
     local PlayerController Sender;
 
     Sender = ExecState.GetSender();

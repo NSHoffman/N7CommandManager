@@ -1,7 +1,6 @@
 class KFTHPCommandManager extends Engine.Mutator;
 
 var KFGameType KFGT;
-var KFGameReplicationInfo KFGRI;
 
 /** Class which contains some helper functions to work with game state */
 var const Class<KFTHPGameStateUtils> GSUClass;
@@ -112,9 +111,9 @@ var protected Class<KFTHPCommand> WalkCommandClass;
 var protected Class<KFTHPCommand> SpiderCommandClass;
 var protected Class<KFTHPCommand> FlyCommandClass;
 var protected Class<KFTHPCommand> GhostCommandClass;
-// var protected Class<KFTHPCommand> ForceSpectatorCommandClass;
-// var protected Class<KFTHPCommand> KickCommandClass;
-// var protected Class<KFTHPCommand> BanCommandClass;
+var protected Class<KFTHPCommand> ForceSpectatorCommandClass;
+var protected Class<KFTHPCommand> KickCommandClass;
+var protected Class<KFTHPCommand> BanCommandClass;
 
 /** Commands List */
 var protected Array<KFTHPCommand> Commands;
@@ -129,6 +128,15 @@ var protected int FakedPlayersNum;
 
 // Players whose attributes get restored on a regular basis
 var protected Array<PlayerController> RestoredPlayers;
+
+// Players whose body size scaling needs to be tracked
+struct ResizedPlayer
+{
+    var PlayerController PC;
+    var float ResizeMultiplier;
+};
+var protected Array<ResizedPlayer> ResizedPlayers;
+var protected float NextResizedPlayersRefreshTime;
 
 /*********************************
  * DATA ACCESSORS
@@ -229,6 +237,46 @@ public final function RemoveRestoredPlayer(PlayerController PC)
     }
 }
 
+public final function Array<ResizedPlayer> GetResizedPlayers()
+{
+    return ResizedPlayers;
+}
+
+public final function RefreshResizedPlayers()
+{
+    local int i;
+
+    while (i < ResizedPlayers.Length)
+    {
+        if (ResizedPlayers[i].PC == None)
+        {
+            ResizedPlayers.Remove(i, 1);
+            break;
+        }
+        i++;
+    }
+}
+
+public final function AddResizedPlayer(PlayerController PC, float ResizeMultiplier)
+{
+    local ResizedPlayer NewPlayer;
+    local int i;
+
+    NewPlayer.PC = PC;
+    NewPlayer.ResizeMultiplier = ResizeMultiplier;
+
+    for (i = 0; i < ResizedPlayers.Length; i++)
+    {
+        if (ResizedPlayers[i].PC == PC)
+        {
+            ResizedPlayers[i].ResizeMultiplier = ResizeMultiplier;
+            return;
+        }
+    }
+
+    ResizedPlayers[ResizedPlayers.Length] = NewPlayer;
+}
+
 /*********************************
  * EVENTS
  *********************************/
@@ -250,6 +298,28 @@ event PostBeginPlay()
     InitPlayerCommands();
 
     SetTimer(1.0, true);
+}
+
+event Tick(float DeltaTime)
+{
+    local int i;
+
+    if (ResizedPlayers.Length > 0)
+    {
+        if (Level.TimeSeconds >= NextResizedPlayersRefreshTime)
+        {
+            RefreshResizedPlayers();
+            NextResizedPlayersRefreshTime = Level.TimeSeconds + 1;
+        }
+
+        for (i = 0; i < ResizedPlayers.Length; i++)
+        {
+            if (ResizedPlayers[i].PC != None)
+            {
+                GSU.ResizePlayer(ResizedPlayers[i].PC, ResizedPlayers[i].ResizeMultiplier);
+            }
+        }
+    }
 }
 
 event Timer()
@@ -380,9 +450,9 @@ protected function InitPlayerCommands()
     Commands[ECmd.CMD_SPIDER]    = new(Self) SpiderCommandClass;
     Commands[ECmd.CMD_FLY]       = new(Self) FlyCommandClass;
     Commands[ECmd.CMD_GHOST]     = new(Self) GhostCommandClass;
-    // Commands[ECmd.CMD_FORCESPEC] = new(Self) ForceSpectatorCommandClass;
-    // Commands[ECmd.CMD_KICK]      = new(Self) KickCommandClass;
-    // Commands[ECmd.CMD_BAN]       = new(Self) BanCommandClass;
+    Commands[ECmd.CMD_FORCESPEC] = new(Self) ForceSpectatorCommandClass;
+    Commands[ECmd.CMD_KICK]      = new(Self) KickCommandClass;
+    Commands[ECmd.CMD_BAN]       = new(Self) BanCommandClass;
 }
 
 /*********************************
@@ -457,7 +527,7 @@ defaultproperties
     SpiderCommandClass=Class'KFTHPSpiderCommand'
     FlyCommandClass=Class'KFTHPFlyCommand'
     GhostCommandClass=Class'KFTHPGhostCommand'
-    // ForceSpectatorCommandClass=Class'KFTHPForceSpectatorCommand'
-    // KickCommandClass=Class'KFTHPKickCommand'
-    // BanCommandClass=Class'KFTHPBanCommand'
+    ForceSpectatorCommandClass=Class'KFTHPForceSpectatorCommand'
+    KickCommandClass=Class'KFTHPKickCommand'
+    BanCommandClass=Class'KFTHPBanCommand'
 }

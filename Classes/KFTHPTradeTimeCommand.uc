@@ -57,7 +57,7 @@ defaultproperties
     MinArgsNum=1
     MaxArgsNum=1
     MinTradeTime=6
-    MaxTradeTime=600
+    MaxTradeTime=3600
     Aliases(0)="TT"
     Aliases(1)="TRADE"
     Aliases(2)="SETTRADE"

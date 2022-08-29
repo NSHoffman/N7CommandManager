@@ -118,16 +118,30 @@ protected final function float GetZedHeadHPModifierByPlayers(KFMonster Zed)
 }
 
 /****************************
- *  GAME RELATED UTILS
+ *  PLAYERS RELATED UTILS
  ****************************/
 
-public final function StopZedTime()
+public final function ResizePlayer(
+    PlayerController PC, float ResizeMultiplier)
 {
-    KFGT.bZEDTimeActive = false;
-    KFGT.LastZedTimeEvent = Level.TimeSeconds;
-    KFGT.CurrentZEDTimeDuration = 0.0;
-    KFGT.SetGameSpeed(1.0);
-    KFGT.ZedTimeExtensionsUsed = 0;
+    if (PC.Pawn != None && PC.Pawn.Health > 0)
+    {
+        PC.Pawn.SetDrawScale(PC.Pawn.Default.DrawScale * ResizeMultiplier);
+
+        if (!PC.Pawn.bIsCrouched)
+        {
+            PC.Pawn.SetCollisionSize(
+                PC.Pawn.Default.CollisionRadius * ResizeMultiplier, 
+                PC.Pawn.Default.CollisionHeight * ResizeMultiplier
+            );
+        }
+        else
+        {
+            PC.Pawn.CrouchRadius = PC.Pawn.Default.CrouchRadius * ResizeMultiplier; 
+            PC.Pawn.CrouchHeight = PC.Pawn.Default.CrouchHeight * ResizeMultiplier;
+            PC.Pawn.BaseEyeHeight = FMin(0.8 * PC.Pawn.Default.CrouchHeight, PC.Pawn.Default.CrouchHeight - 10);
+        }
+    }
 }
 
 public final function RestorePlayerAttributes(PlayerController PC)
@@ -148,6 +162,19 @@ public final function RestorePlayerAttributes(PlayerController PC)
             }
         }
     }
+}
+
+/****************************
+ *  GAME RELATED UTILS
+ ****************************/
+
+public final function StopZedTime()
+{
+    KFGT.bZEDTimeActive = false;
+    KFGT.LastZedTimeEvent = Level.TimeSeconds;
+    KFGT.CurrentZEDTimeDuration = 0.0;
+    KFGT.SetGameSpeed(1.0);
+    KFGT.ZedTimeExtensionsUsed = 0;
 }
 
 public final function DoWaveEnd()

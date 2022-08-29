@@ -61,8 +61,8 @@ protected function string InvalidArgsMessage(KFTHPCommandExecutionState ExecStat
 
 defaultproperties
 {
-    MinLimit=4
-    MaxLimit=96
+    MinLimit=0
+    MaxLimit=100
     MinArgsNum=0
     MaxArgsNum=1
     Aliases(0)="MZ"
