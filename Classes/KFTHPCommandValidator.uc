@@ -155,9 +155,24 @@ static function bool IsPlayer(Controller C)
     return PlayerController(C) != None;
 }
 
+static function bool IsSpectator(PlayerController PC)
+{
+    return PC.PlayerReplicationInfo.bOnlySpectator;
+}
+
 static function bool IsAlive(PlayerController PC)
 {
-    return PC.Pawn.Health > 0;
+    return PC.Pawn != None && PC.Pawn.Health > 0;
+}
+
+static function bool IsAdmin(PlayerController PC)
+{
+    return PC.PlayerReplicationInfo.bAdmin || PC.PlayerReplicationInfo.bSilentAdmin;
+}
+
+static function bool IsWebAdmin(PlayerController PC)
+{
+    return PC.PlayerReplicationInfo.PlayerName == "WebAdmin";
 }
 
 defaultproperties
