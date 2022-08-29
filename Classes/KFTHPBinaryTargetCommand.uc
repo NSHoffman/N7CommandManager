@@ -21,12 +21,12 @@ protected function bool CheckTargets(KFTHPCommandExecutionState ExecState)
     {
         case 0:
         case 1:
-            bValidTarget = CheckTargetBySender(ExecState.GetSender(), TargetName);
+            bValidTarget = VerifyTargetBySender(ExecState, TargetName);
             break;
 
         case 2:
             TargetName = ExecState.GetArg(ECmdArgs.ARG_TARGETNAME);
-            bValidTarget = CheckTargetByName(TargetName);
+            bValidTarget = VerifyTargetByName(ExecState, TargetName);
             break;
     }
 

@@ -35,13 +35,13 @@ protected function bool ShouldBeTarget(
     KFTHPCommandExecutionState ExecState, 
     PlayerController PC)
 {
-    return PC == ExecState.GetSender();
+    return AcceptTargetBySender(ExecState, PC);
 }
 
 /** @Override */
 protected function bool CheckGameState(KFTHPCommandExecutionState ExecState)
 {
-    if (ExecState.GetArgC() == 1 || ExecState.GetArgC() == 0 && KFGT.IsInState('MatchInProgress'))
+    if (ExecState.GetArgC() == 1 || ExecState.GetArgC() == 0 && KFGT.IsInState('MatchInProgress') && KFGT.WaveCountDown > 0)
     {
         return true;
     }
@@ -52,10 +52,12 @@ protected function bool CheckGameState(KFTHPCommandExecutionState ExecState)
 /** @Override */
 protected function bool CheckTargets(KFTHPCommandExecutionState ExecState)
 {
+    local string TargetName;
+
     switch (ExecState.GetArgC())
     {
         case 0:
-            return IsAlive(ExecState.GetSender());
+            return VerifyTargetBySender(ExecState, TargetName);
 
         case 1:
             return true;
@@ -67,7 +69,7 @@ protected function bool CheckTargets(KFTHPCommandExecutionState ExecState)
 /** @Override */
 protected function string InvalidGameStateMessage()
 {
-    return "Attributes can be restored only during the game";
+    return "Attributes can be restored only during trade time";
 }
 
 /** @Override */

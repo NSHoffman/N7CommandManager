@@ -12,14 +12,7 @@ protected function DoActionForSingleTarget
 
         case 1:
         case 2:
-            if (IsSwitchOnValue(ExecState.GetArg(ECmdArgs.ARG_VALUE)))
-            {
-                PC.bGodMode = true;
-            }
-            else
-            {
-                PC.bGodMode = false;
-            }
+            PC.bGodMode = ToBool(ExecState.GetArg(ECmdArgs.ARG_VALUE));
             break;
     }
 
@@ -29,14 +22,14 @@ protected function DoActionForSingleTarget
 /** @Override */
 protected function string InvalidTargetMessage(KFTHPCommandExecutionState ExecState)
 {
-    return "Cannot find player with name "$KFTHPCommandPreservingState(ExecState).LoadString();
+    return "Cannot find player with name "$LoadTarget(ExecState);
 }
 
 /** @Override */
 protected function string GetTargetSuccessMessage(KFTHPCommandExecutionState ExecState)
 {
     local string TargetName;
-    TargetName = KFTHPCommandPreservingState(ExecState).LoadString();
+    TargetName = LoadTarget(ExecState);
 
     if (TargetName ~= "all")
     {
@@ -50,7 +43,7 @@ protected function string GetTargetSuccessMessage(KFTHPCommandExecutionState Exe
 protected function string GetGlobalSuccessMessage(KFTHPCommandExecutionState ExecState)
 {
     local string TargetName;
-    TargetName = KFTHPCommandPreservingState(ExecState).LoadString();
+    TargetName = LoadTarget(ExecState);
 
     if (TargetName ~= "all")
     {

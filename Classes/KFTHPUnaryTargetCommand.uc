@@ -19,12 +19,13 @@ protected function bool CheckTargets(KFTHPCommandExecutionState ExecState)
     switch (ExecState.GetArgC())
     {
         case 0:
-            bValidTarget = CheckTargetBySender(ExecState.GetSender(), TargetName);
+            bValidTarget = VerifyTargetBySender(ExecState, TargetName);
             break;
 
         case 1:
+        default:
             TargetName = ExecState.GetArg(ECmdArgs.ARG_TARGETNAME);
-            bValidTarget = CheckTargetByName(TargetName);
+            bValidTarget = VerifyTargetByName(ExecState, TargetName);
             break;
     }
 
@@ -45,6 +46,7 @@ protected function bool ShouldBeTarget(
             return AcceptTargetBySender(ExecState, PC, TargetName);
 
         case 1:
+        default:
             TargetName = ExecState.GetArg(ECmdArgs.ARG_TARGETNAME);
             return AcceptTargetByName(ExecState, PC, TargetName);
     }

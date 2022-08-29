@@ -26,6 +26,7 @@ var protected const string Signature;
 var protected const bool bNotifySenderOnSuccess;
 var protected const bool bNotifyTargetsOnSuccess;
 var protected const bool bNotifyGlobalOnSuccess;
+var protected const bool bNotifyAdminsOnlyOnSuccess;
 var protected const bool bNotifyOnError;
 
 var protected const bool bUseTargets;
@@ -282,7 +283,7 @@ protected final function bool CheckActionProcessing(KFTHPCommandExecutionState E
 
 protected final function bool CheckAdminPermissions(KFTHPCommandExecutionState ExecState)
 {
-    return ExecState.GetSender().PlayerReplicationInfo.bAdmin || ExecState.GetSender().PlayerReplicationInfo.bSilentAdmin;
+    return IsAdmin(ExecState.GetSender());
 }
 
 protected final function bool CheckArgsNum(KFTHPCommandExecutionState ExecState)
@@ -491,7 +492,7 @@ protected final function NotifyGlobalOnSuccess(KFTHPCommandExecutionState ExecSt
     {
         PC = PlayerController(C);
 
-        if (PC != None)
+        if (PC != None && (!bNotifyAdminsOnlyOnSuccess || IsAdmin(PC)))
         {
             if (
                 bNotifySenderOnSuccess && PC == ExecState.GetSender() ||
@@ -643,6 +644,20 @@ protected final function string ToStringF(float Arg)
     return string(Arg);
 }
 
+protected final function bool ToBool(string Arg)
+{
+    if (IsSwitchOnValue(Arg))
+    {
+        return true;
+    }
+    else if (IsSwitchOffValue(Arg))
+    {
+        return false;
+    }
+    
+    return bool(Arg);
+}
+
 /****************************
  *  VALIDATION UTILS
  ****************************/
@@ -723,9 +738,24 @@ protected final function bool IsPlayer(Controller C)
     return ValidatorClass.static.IsPlayer(C);
 }
 
+protected final function bool IsSpectator(PlayerController PC)
+{
+    return ValidatorClass.static.IsSpectator(PC);
+}
+
 protected final function bool IsAlive(PlayerController PC)
 {
     return ValidatorClass.static.IsAlive(PC);
+}
+
+protected final function bool IsAdmin(PlayerController PC)
+{
+    return ValidatorClass.static.IsAdmin(PC);
+}
+
+protected final function bool IsWebAdmin(PlayerController PC)
+{
+    return ValidatorClass.static.IsWebAdmin(PC);
 }
 
 defaultproperties
@@ -737,6 +767,7 @@ defaultproperties
     bNotifySenderOnSuccess=true
     bNotifyTargetsOnSuccess=false
     bNotifyGlobalOnSuccess=false
+    bNotifyAdminsOnlyOnSuccess=false
     bDisableNotifications=false
     bUseTargets=false
     CommandStateClass=Class'KFTHPCommandExecutionState'
