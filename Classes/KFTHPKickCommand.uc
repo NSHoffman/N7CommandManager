@@ -4,7 +4,7 @@ class KFTHPKickCommand extends KFTHPUnaryTargetCommand;
 protected function DoActionForSingleTarget
     (KFTHPCommandExecutionState ExecState, PlayerController PC)
 {
-    PC.ClientNetworkMessage("AC_Kicked", KFGT.AccessControl.defaultKickReason);
+    PC.ClientNetworkMessage("AC_Kicked", KFGT.AccessControl.DefaultKickReason);
 
     if (PC.Pawn != None && Vehicle(PC.Pawn) == None)
     {

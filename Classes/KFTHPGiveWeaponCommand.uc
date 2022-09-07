@@ -9,7 +9,7 @@ protected function DoActionForSingleTarget
 {
     local Weapon NewWeapon;
 
-	NewWeapon = PC.Pawn.Spawn(WeaponClass);
+    NewWeapon = PC.Pawn.Spawn(WeaponClass);
 
     if (NewWeapon != None)
     {
