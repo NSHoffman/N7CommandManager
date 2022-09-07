@@ -66,7 +66,7 @@ public final function KillLivingZeds(optional bool bDestroyNextTick)
 {
     local KFMonster TargetMonster;
 
-    foreach DynamicActors(Class'KFMonster', TargetMonster)
+    foreach DynamicActors(class'KFMonster', TargetMonster)
     {
         if (TargetMonster.Health > 0 && !TargetMonster.bDeleteMe)
         {
@@ -77,7 +77,7 @@ public final function KillLivingZeds(optional bool bDestroyNextTick)
 
 public final function KillZed(KFMonster TargetMonster, optional bool bDestroyNextTick)
 {
-    TargetMonster.Died(TargetMonster.Controller, Class'DamageType', TargetMonster.Location);
+    TargetMonster.Died(TargetMonster.Controller, class'DamageType', TargetMonster.Location);
     
     if (bDestroyNextTick)
     {
@@ -126,20 +126,19 @@ public final function ResizePlayer(
 {
     if (PC.Pawn != None && PC.Pawn.Health > 0)
     {
-        PC.Pawn.SetDrawScale(PC.Pawn.Default.DrawScale * ResizeMultiplier);
-
-        if (!PC.Pawn.bIsCrouched)
+        PC.Pawn.SetDrawScale(PC.Pawn.default.DrawScale * ResizeMultiplier);
+        if (!PC.Pawn.bIsCrouched && !PC.Pawn.bWantsToCrouch)
         {
             PC.Pawn.SetCollisionSize(
-                PC.Pawn.Default.CollisionRadius * ResizeMultiplier, 
-                PC.Pawn.Default.CollisionHeight * ResizeMultiplier
+                PC.Pawn.default.CollisionRadius * ResizeMultiplier,
+                PC.Pawn.default.CollisionHeight * ResizeMultiplier
             );
         }
         else
         {
-            PC.Pawn.CrouchRadius = PC.Pawn.Default.CrouchRadius * ResizeMultiplier; 
-            PC.Pawn.CrouchHeight = PC.Pawn.Default.CrouchHeight * ResizeMultiplier;
-            PC.Pawn.BaseEyeHeight = FMin(0.8 * PC.Pawn.Default.CrouchHeight, PC.Pawn.Default.CrouchHeight - 10);
+            PC.Pawn.CrouchRadius = PC.Pawn.default.CrouchRadius * ResizeMultiplier;
+            PC.Pawn.CrouchHeight = PC.Pawn.default.CrouchHeight * ResizeMultiplier;
+            PC.Pawn.BaseEyeHeight = FMin(0.8 * PC.Pawn.default.CrouchHeight, PC.Pawn.default.CrouchHeight - 10);
         }
     }
 }
@@ -150,7 +149,7 @@ public final function RestorePlayerAttributes(PlayerController PC)
 
     if (PC != None && PC.Pawn != None && PC.Pawn.Health > 0)
     {
-        PC.Pawn.Health = PC.Pawn.Default.HealthMax;
+        PC.Pawn.Health = PC.Pawn.default.HealthMax;
         PC.Pawn.AddShieldStrength(100);
         
         for (Inv = PC.Pawn.Inventory; Inv != None; Inv = Inv.Inventory)
@@ -226,7 +225,7 @@ public final function DoWaveEnd()
 
     KFGT.bUpdateViewTargs = true;
 
-    foreach DynamicActors(Class'KFDoorMover', KFDM)
+    foreach DynamicActors(class'KFDoorMover', KFDM)
     {
         KFDM.RespawnDoor();
     }

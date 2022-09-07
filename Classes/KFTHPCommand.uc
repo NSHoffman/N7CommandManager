@@ -4,16 +4,18 @@ class KFTHPCommand extends Core.Object within KFTHPCommandManager
 const ERRNO_NONE        = 0;
 const ERRNO_NOGAMETYPE  = 1;
 const ERRNO_GAMESTATE   = 2;
-const ERRNO_NOTADMIN    = 3;
-const ERRNO_ARGC        = 4;
-const ERRNO_ARGL        = 5;
-const ERRNO_ARGT        = 6;
-const ERRNO_INVALARGS   = 7;
-const ERRNO_INVALTARGET = 8;
-const ERRNO_CUSTOM      = 9;
+const ERRNO_SENDER      = 3;
+const ERRNO_NOTADMIN    = 4;
+const ERRNO_ARGC        = 5;
+const ERRNO_ARGL        = 6;
+const ERRNO_ARGT        = 7;
+const ERRNO_INVALARGS   = 8;
+const ERRNO_INVALTARGET = 9;
+const ERRNO_CUSTOM      = 10;
+const ERRNO_RUNTIME     = 11;
 
-var protected const Class<KFTHPCommandValidator> ValidatorClass;
-var protected const Class<KFTHPCommandExecutionState> CommandStateClass;
+var protected const class<KFTHPCommandValidator> ValidatorClass;
+var protected const class<KFTHPCommandExecutionState> CommandStateClass;
 
 var protected editconstarray Array<string> ArgTypes;
 var protected editconstarray Array<string> Aliases;
@@ -31,6 +33,9 @@ var protected const bool bNotifyOnError;
 
 var protected const bool bUseTargets;
 
+var protected const bool bOnlyPlayerSender;
+var protected const bool bOnlyAliveSender;
+
 var protected config const bool bAdminOnly;
 var protected config const bool bDisableNotifications;
 
@@ -38,9 +43,8 @@ var protected config const bool bDisableNotifications;
  *  PUBLIC INTERFACE
  ****************************/
 
-public final function KFTHPCommandExecutionState Execute(
-    PlayerController Sender, 
-    Array<string> Args)
+public final function Execute(
+    PlayerController Sender, Array<string> Args)
 {
     local KFTHPCommandExecutionState ExecState;
 
@@ -51,18 +55,21 @@ public final function KFTHPCommandExecutionState Execute(
 
     if (CheckActionProcessing(ExecState))
     {
-        ProcessAction(ExecState);
+        ProcessAction(ExecState);   
+    }
+
+    if (CheckActionSuccess(ExecState))
+    {
         FinishExecution(ExecState);
     }
     else
     {
         TerminateExecution(ExecState);
     }
-
-    return ExecState;
+    Cleanup();
 }
 
-public final function string GetHelpString()
+public final function GetHelp(PlayerController PC)
 {
     local int i;
     local string HelpMessage;
@@ -76,11 +83,12 @@ public final function string GetHelpString()
             HelpMessage $= "/";
         }
     }
-
     HelpMessage $= " "$Signature$" - "$Description;
-
-    return HelpMessage;
+    
+    SendMessage(PC, HelpMessage);
 }
+
+public function GetExtendedHelp(PlayerController PC);
 
 public final function bool IsAdminOnly()
 {
@@ -122,6 +130,7 @@ protected final function StartValidationPipeline(KFTHPCommandExecutionState Exec
 {
     ValidateGameType(ExecState);
     ValidateGameState(ExecState);
+    ValidateSender(ExecState);
     ValidateArgsNum(ExecState);
     ValidateArgsLength(ExecState);
     ValidateArgsTypes(ExecState);
@@ -155,6 +164,20 @@ protected final function ValidateGameState(KFTHPCommandExecutionState ExecState)
     if (!CheckGameState(ExecState))
     {
         ExecState.SetErrorGameState();
+        return;
+    }
+}
+
+protected final function ValidateSender(KFTHPCommandExecutionState ExecState)
+{
+    if (CheckActionFailure(ExecState))
+    {
+        return;
+    }
+
+    if (!CheckSender(ExecState))
+    {
+        ExecState.SetErrorSender();
         return;
     }
 }
@@ -271,9 +294,19 @@ protected function bool CheckGameState(KFTHPCommandExecutionState ExecState)
     return true;
 }
 
-protected final function bool CheckActionFailure(KFTHPCommandExecutionState ExecState)
+protected function bool CheckSender(KFTHPCommandExecutionState ExecState)
 {
-    return ExecState.IsFailed();
+    if ((bOnlyAliveSender || !IsAdmin(ExecState.GetSender())) && IsSpectator(ExecState.GetSender()) && bOnlyPlayerSender)
+    {
+        return false;
+    }
+
+    if (bOnlyAliveSender && !IsAlive(ExecState.GetSender()))
+    {
+        return false;
+    }
+
+    return true;
 }
 
 protected final function bool CheckActionProcessing(KFTHPCommandExecutionState ExecState)
@@ -281,9 +314,19 @@ protected final function bool CheckActionProcessing(KFTHPCommandExecutionState E
     return ExecState.IsProcessing();
 }
 
+protected final function bool CheckActionSuccess(KFTHPCommandExecutionState ExecState)
+{
+    return ExecState.IsSuccess();
+}
+
+protected final function bool CheckActionFailure(KFTHPCommandExecutionState ExecState)
+{
+    return ExecState.IsFailed();
+}
+
 protected final function bool CheckAdminPermissions(KFTHPCommandExecutionState ExecState)
 {
-    return IsAdmin(ExecState.GetSender());
+    return IsAdmin(ExecState.GetSender()) || IsTempAdmin(ExecState.GetSender());
 }
 
 protected final function bool CheckArgsNum(KFTHPCommandExecutionState ExecState)
@@ -379,9 +422,12 @@ protected final function ProcessAction(KFTHPCommandExecutionState ExecState)
     }
 
     DoAction(ExecState);
-
     ExecState.RestoreArgs();
-    ExecState.SetSuccessStatus();
+
+    if (!CheckActionFailure(ExecState))
+    {
+        ExecState.SetSuccessStatus();
+    }
 }
 
 protected function DoAction(KFTHPCommandExecutionState ExecState);
@@ -403,6 +449,8 @@ protected final function FinishExecution(KFTHPCommandExecutionState ExecState)
         NotifyOnSuccess(ExecState);
     }
 }
+
+protected function Cleanup();
 
 /****************************
  *  ACTION TARGET MANAGEMENT
@@ -443,6 +491,11 @@ protected function bool ShouldBeTarget(
 protected final function SendMessage(PlayerController PC, string Message)
 {
     PC.ClientMessage(Message);
+}
+
+protected final function string GetInstigatorName(KFTHPCommandExecutionState ExecState)
+{
+    return ExecState.GetSender().PlayerReplicationInfo.PlayerName;
 }
 
 protected final function NotifyOnSuccess(KFTHPCommandExecutionState ExecState)
@@ -529,6 +582,9 @@ protected function string GetErrorMessage(KFTHPCommandExecutionState ExecState)
 
         case ERRNO_GAMESTATE:
             return Error(InvalidGameStateMessage());
+
+        case ERRNO_SENDER:
+            return Error(InvalidSenderMessage());
         
         case ERRNO_NOTADMIN:
             return Error(NotAdminMessage());
@@ -550,6 +606,9 @@ protected function string GetErrorMessage(KFTHPCommandExecutionState ExecState)
 
         case ERRNO_CUSTOM:
             return Error(CustomErrorMessage(ExecState));
+
+        case ERRNO_RUNTIME:
+            return Error(RuntimeErrorMessage(ExecState));
 
         default:
             return Error(UnexpectedErrorMessage());
@@ -573,6 +632,11 @@ protected final function string NoGameTypeMessage()
 protected function string InvalidGameStateMessage()
 {
     return "Command cannot be executed at current game state";
+}
+
+protected function string InvalidSenderMessage()
+{
+    return "Command is not available for spectators";
 }
 
 protected final function string NotAdminMessage()
@@ -613,6 +677,11 @@ protected function string InvalidTargetMessage(KFTHPCommandExecutionState ExecSt
 protected function string CustomErrorMessage(KFTHPCommandExecutionState ExecState)
 {
     return "Custom Error";
+}
+
+protected function string RuntimeErrorMessage(KFTHPCommandExecutionState ExecState)
+{
+    return "Runtime Error";
 }
 
 protected final function string UnexpectedErrorMessage()
@@ -753,6 +822,11 @@ protected final function bool IsAdmin(PlayerController PC)
     return ValidatorClass.static.IsAdmin(PC);
 }
 
+protected final function bool IsTempAdmin(PlayerController PC)
+{
+    return ValidatorClass.static.IsTempAdmin(PC);
+}
+
 protected final function bool IsWebAdmin(PlayerController PC)
 {
     return ValidatorClass.static.IsWebAdmin(PC);
@@ -763,6 +837,8 @@ defaultproperties
     MinArgsNum=0
     MaxArgsNum=0
     bAdminOnly=false
+    bOnlyPlayerSender=true
+    bOnlyAliveSender=false
     bNotifyOnError=true
     bNotifySenderOnSuccess=true
     bNotifyTargetsOnSuccess=false
@@ -770,6 +846,6 @@ defaultproperties
     bNotifyAdminsOnlyOnSuccess=false
     bDisableNotifications=false
     bUseTargets=false
-    CommandStateClass=Class'KFTHPCommandExecutionState'
-    ValidatorClass=Class'KFTHPCommandValidator'
+    CommandStateClass=class'KFTHPCommandExecutionState'
+    ValidatorClass=class'KFTHPCommandValidator'
 }

@@ -18,7 +18,7 @@ protected function DoAction(KFTHPCommandExecutionState ExecState)
 
     if (IsSwitchOnValue(Flag))
     {
-        foreach DynamicActors(Class'KFUseTrigger', KFUT)
+        foreach DynamicActors(class'KFUseTrigger', KFUT)
         {
             bTriggerDoorsClosed = true;
 
@@ -43,11 +43,11 @@ protected function DoAction(KFTHPCommandExecutionState ExecState)
             }
         }
 
-        KFTHPCommandPreservingState(ExecState).SaveString("welded");
+        KFTHPCommandPreservedState(ExecState).SaveString("welded");
     }
     else if (IsSwitchOffValue(Flag))
     {
-        foreach DynamicActors(Class'KFDoorMover', KFDM)
+        foreach DynamicActors(class'KFDoorMover', KFDM)
         {
             if (!KFDM.bDoorIsDead) 
             {
@@ -55,14 +55,14 @@ protected function DoAction(KFTHPCommandExecutionState ExecState)
             }
         }
 
-        KFTHPCommandPreservingState(ExecState).SaveString("unwelded");
+        KFTHPCommandPreservedState(ExecState).SaveString("unwelded");
     }
 }
 
 /** @Override */
 protected function string GetGlobalSuccessMessage(KFTHPCommandExecutionState ExecState)
 {
-    return "All doors are "$KFTHPCommandPreservingState(ExecState).LoadString()$" by "$GetInstigatorName(ExecState);
+    return "All doors are "$KFTHPCommandPreservedState(ExecState).LoadString()$" by "$GetInstigatorName(ExecState);
 }
 
 defaultproperties

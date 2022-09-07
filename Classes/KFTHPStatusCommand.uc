@@ -22,4 +22,5 @@ defaultproperties
     Signature="<>"
     Description="Display current game settings"
     bNotifySenderOnSuccess=false
+    bOnlyPlayerSender=false
 }

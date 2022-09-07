@@ -20,7 +20,7 @@ protected function DoAction(KFTHPCommandExecutionState ExecState)
     }
     else
     {
-        KFGT.MaxSpectators = KFGT.Default.MaxSpectators;
+        KFGT.MaxSpectators = KFGT.default.MaxSpectators;
     }
 }
 
@@ -65,5 +65,5 @@ defaultproperties
     Aliases(1)="SPECS"
     ArgTypes(0)="number"
     Signature="<? int NewSpectators>"
-    Description="Set maximum of spectators allowed"
+    Description="Set maximum number of spectators"
 }

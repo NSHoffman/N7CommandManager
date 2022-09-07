@@ -79,39 +79,29 @@ protected function DoAction(KFTHPCommandExecutionState ExecState)
         KFGT.WaveNum = WaveNum - 2;
         KFGRI.WaveNumber = Max(KFGT.WaveNum, 0);
     }
-    KFTHPCommandPreservingState(ExecState).SaveNumber(WaveNum);
+    KFTHPCommandPreservedState(ExecState).SaveNumber(WaveNum);
 }
 
 /** @Override */
 protected function bool CheckGameState(KFTHPCommandExecutionState ExecState)
 {
-    if (KFGT.IsInState('MatchInProgress') || KFGT.bGameEnded && KFGameReplicationInfo(Level.Game.GameReplicationInfo).EndGameType == 1)
-    {
-        return true;
-    }
-
-    return false;
+    return KFGT.IsInState('MatchInProgress') 
+        || KFGT.bGameEnded && KFGameReplicationInfo(Level.Game.GameReplicationInfo).EndGameType == 1;
 }
 
 /** @Override */
 protected function bool CheckArgs(KFTHPCommandExecutionState ExecState)
 {
     local int WaveNum;
-
     WaveNum = ToInt(ExecState.GetArg(ECmdArgs.ARG_WAVE));
 
-    if (!IsInRange(WaveNum, MinWave, MaxWave))
-    {
-        return false;
-    }
-
-    return true;
+    return IsInRange(WaveNum, MinWave, MaxWave);
 }
 
 /** @Override */
 protected function string GetGlobalSuccessMessage(KFTHPCommandExecutionState ExecState)
 {
-    return "Wave set to "$KFTHPCommandPreservingState(ExecState).LoadNumber()$" by "$GetInstigatorName(ExecState);
+    return "Wave set to "$KFTHPCommandPreservedState(ExecState).LoadNumber()$" by "$GetInstigatorName(ExecState);
 }
 
 /** @Override */

@@ -20,13 +20,13 @@ protected function DoAction(KFTHPCommandExecutionState ExecState)
         SetZedTime(!IsZedTimeDisabled());
     }
 
-    KFTHPCommandPreservingState(ExecState).SaveFlag(!IsZedTimeDisabled());
+    KFTHPCommandPreservedState(ExecState).SaveFlag(!IsZedTimeDisabled());
 }
 
 /** @Override */
 protected function string GetGlobalSuccessMessage(KFTHPCommandExecutionState ExecState)
 {
-    return "ZED-Time is "$KFTHPCommandPreservingState(ExecState).LoadEnabled()$" by "$GetInstigatorName(ExecState);
+    return "ZED-Time is "$KFTHPCommandPreservedState(ExecState).LoadEnabled()$" by "$GetInstigatorName(ExecState);
 }
 
 defaultproperties

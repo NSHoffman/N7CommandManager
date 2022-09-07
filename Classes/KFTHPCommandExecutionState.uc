@@ -90,8 +90,11 @@ public final function InitCommandState
 
     for (i = 1; i < InitArgs.Length; i++)
     {
-        Args[Args.Length] = InitArgs[i];
-        InitialArgs[InitialArgs.Length] = InitArgs[i];
+        if (Len(InitArgs[i]) > 0)
+        {
+            Args[Args.Length] = InitArgs[i];
+            InitialArgs[InitialArgs.Length] = InitArgs[i];
+        }
     }
 
     Sender = InitSender;
@@ -178,6 +181,11 @@ public final function SetErrorGameState()
     SetErrorStatus(ERRNO_GAMESTATE);
 }
 
+public final function SetErrorSender()
+{
+    SetErrorStatus(ERRNO_SENDER);
+}
+
 public final function SetErrorNotAdmin()
 {
     SetErrorStatus(ERRNO_NOTADMIN);
@@ -211,6 +219,11 @@ public final function SetErrorInvalTarget()
 public final function SetErrorCustom()
 {
     SetErrorStatus(ERRNO_CUSTOM);
+}
+
+public final function SetErrorRuntime()
+{
+    SetErrorStatus(ERRNO_RUNTIME);
 }
 
 protected final function SetErrorStatus(int NextErrNo)

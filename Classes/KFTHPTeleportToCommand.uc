@@ -14,12 +14,7 @@ protected function DoActionForSingleTarget
 /** @Override */
 protected function bool CheckGameState(KFTHPCommandExecutionState ExecState)
 {
-    if (KFGT.IsInState('MatchInProgress'))
-    {
-        return true;
-    }
-
-    return false;
+    return KFGT.IsInState('MatchInProgress');
 }
 
 /** @Override */
@@ -28,16 +23,10 @@ protected function string InvalidGameStateMessage()
     return "You can teleport only during the game";
 }
 
-/** @Override */
-protected function string InvalidTargetMessage(KFTHPCommandExecutionState ExecState)
-{
-    return "Cannot find alive player with name "$LoadTarget(ExecState);
-}
-
 defaultproperties
 {
     bAdminOnly=true
-    Aliases(0)="TPT"
+    Aliases(0)="TPP"
     Aliases(1)="TELEPORTP"
     ArgTypes(0)="any"
     Signature="<? string TargetName>"

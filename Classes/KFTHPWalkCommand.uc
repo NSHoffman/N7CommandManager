@@ -5,7 +5,7 @@ protected function DoActionForSingleTarget
     (KFTHPCommandExecutionState ExecState, PlayerController PC)
 {
     PC.Pawn.bAmbientCreature = false;
-    PC.Pawn.UnderWaterTime = PC.Pawn.Default.UnderWaterTime;
+    PC.Pawn.UnderWaterTime = PC.Pawn.default.UnderWaterTime;
     PC.Pawn.SetCollision(true, true, true);
     PC.Pawn.SetPhysics(PHYS_Walking);
     PC.Pawn.bCollideWorld = true;

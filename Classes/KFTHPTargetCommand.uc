@@ -12,6 +12,8 @@ var protected config const bool bOnlyDeadTargets;
 var protected config const bool bOnlyFirstTargetMatch;
 var protected config const bool bOnlyPlayerTargets;
 var protected config const bool bOnlySpectatorTargets;
+var protected config const bool bOnlyAdminTargets;
+var protected config const bool bOnlyNonAdminTargets;
 
 /** @Override */
 protected function DoAction(KFTHPCommandExecutionState ExecState)
@@ -111,32 +113,12 @@ protected function bool AcceptTargetByName(
 protected final function bool ValidateTarget(
     KFTHPCommandExecutionState ExecState, PlayerController Target)
 {
-    if (!CheckTargetReplicationInfo(ExecState, Target))
-    {
-        return false;
-    }
-
-    if (!CheckTargetSelf(ExecState, Target))
-    {
-        return false;
-    }
-
-    if (!CheckTargetRole(ExecState, Target))
-    {
-        return false;
-    }
-
-    if (!CheckTargetHealth(ExecState, Target))
-    {
-        return false;
-    }
-
-    if (!CheckTargetCustom(ExecState, Target))
-    {
-        return false;
-    }
-
-    return true;
+    return CheckTargetReplicationInfo(ExecState, Target)
+        && CheckTargetSelf(ExecState, Target)
+        && CheckTargetAdmin(ExecState, Target)
+        && CheckTargetSpectator(ExecState, Target)
+        && CheckTargetHealth(ExecState, Target)
+        && CheckTargetCustom(ExecState, Target);
 }
 
 protected final function bool CheckTargetReplicationInfo(
@@ -151,42 +133,28 @@ protected final function bool CheckTargetSelf(
     return Target != ExecState.GetSender() || bAllowTargetSelf;
 }
 
-protected final function bool CheckTargetRole(
+protected final function bool CheckTargetAdmin(
     KFTHPCommandExecutionState ExecState, PlayerController Target)
 {
-    if (bOnlyPlayerTargets && !IsSpectator(Target))
-    {
-        return true;
-    }
-    else if (bOnlySpectatorTargets && IsSpectator(Target))
-    {
-        return true;
-    }
-    else if (!bOnlyPlayerTargets && !bOnlySpectatorTargets)
-    {
-        return true;
-    }
+    return bOnlyNonAdminTargets && !IsAdmin(Target)
+        || bOnlyAdminTargets && IsAdmin(Target)
+        || !bOnlyAdminTargets && !bOnlyNonAdminTargets;
+}
 
-    return false;
+protected final function bool CheckTargetSpectator(
+    KFTHPCommandExecutionState ExecState, PlayerController Target)
+{
+    return bOnlyPlayerTargets && !IsSpectator(Target)
+        || bOnlySpectatorTargets && IsSpectator(Target)
+        || !bOnlyPlayerTargets && !bOnlySpectatorTargets;
 }
 
 protected final function bool CheckTargetHealth(
     KFTHPCommandExecutionState ExecState, PlayerController Target)
 {
-    if (bOnlyAliveTargets && IsAlive(Target))
-    {
-        return true;
-    }
-    else if (bOnlyDeadTargets && !IsAlive(Target))
-    {
-        return true;
-    }
-    else if (!bOnlyAliveTargets && !bOnlyDeadTargets)
-    {
-        return true;
-    }
-
-    return false;
+    return bOnlyAliveTargets && IsAlive(Target)
+        || bOnlyDeadTargets && !IsAlive(Target)
+        || !bOnlyAliveTargets && !bOnlyDeadTargets;
 }
 
 protected function bool CheckTargetCustom(
@@ -204,13 +172,13 @@ protected function SaveTarget(
 {
     if (bOnlyFirstTargetMatch)
     {
-        KFTHPCommandPreservingState(ExecState).SaveString(TargetName);
+        KFTHPCommandPreservedState(ExecState).SaveTarget(TargetName);
     }
 }
 
 protected function string LoadTarget(KFTHPCommandExecutionState ExecState)
 {
-    return KFTHPCommandPreservingState(ExecState).LoadString();
+    return KFTHPCommandPreservedState(ExecState).LoadTarget();
 }
 
 protected function PlayerController FindTarget(string TargetName)
@@ -237,8 +205,10 @@ defaultproperties
     bOnlyDeadTargets=false
     bOnlyPlayerTargets=true
     bOnlySpectatorTargets=false
+    bOnlyAdminTargets=false
+    bOnlyNonAdminTargets=false
     bOnlyFirstTargetMatch=true
     bNotifySenderOnSuccess=false
     bNotifyTargetsOnSuccess=true
-    CommandStateClass=Class'KFTHPCommandPreservingState'
+    CommandStateClass=class'KFTHPCommandPreservedState'
 }

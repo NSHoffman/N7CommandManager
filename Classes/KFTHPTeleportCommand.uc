@@ -30,12 +30,7 @@ protected function DoAction(KFTHPCommandExecutionState ExecState)
 /** @Override */
 protected function bool CheckGameState(KFTHPCommandExecutionState ExecState)
 {
-    if (KFGT.IsInState('MatchInProgress'))
-    {
-        return true;
-    }
-
-    return false;
+    return KFGT.IsInState('MatchInProgress');
 }
 
 /** @Override */
@@ -51,5 +46,6 @@ defaultproperties
     Aliases(1)="TELEPORT"
     Signature="<>"
     Description="Teleport to the position being looked at"
+    bOnlyAliveSender=true
     bNotifySenderOnSuccess=false
 }

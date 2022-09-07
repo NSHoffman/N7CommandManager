@@ -19,9 +19,21 @@ protected function string GetGlobalSuccessMessage(KFTHPCommandExecutionState Exe
 }
 
 /** @Override */
+protected function bool CheckGameState(KFTHPCommandExecutionState ExecState)
+{
+    return Super.CheckGameState(ExecState) && KFGT.WaveCountDown <= 0;
+}
+
+/** @Override */
 protected function bool CheckArgs(KFTHPCommandExecutionState ExecState)
 {
     return true;
+}
+
+/** @Override */
+protected function string InvalidGameStateMessage()
+{
+    return "Wave can be restarted only when it's in progress";
 }
 
 defaultproperties

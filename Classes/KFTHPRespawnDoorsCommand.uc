@@ -6,7 +6,7 @@ protected function DoAction(KFTHPCommandExecutionState ExecState)
     local KFUseTrigger KFUT;
     local int i;
 
-    foreach DynamicActors(Class'KFUseTrigger', KFUT)
+    foreach DynamicActors(class'KFUseTrigger', KFUT)
     {
         for (i = 0; i < KFUT.DoorOwners.Length; i++)
         {

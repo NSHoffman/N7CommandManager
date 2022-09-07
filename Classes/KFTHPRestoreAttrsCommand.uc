@@ -19,12 +19,12 @@ protected function DoActionForSingleTarget
             if (IsSwitchOnValue(ExecState.GetArg(ECmdArgs.ARG_FLAG)))
             {
                 AddRestoredPlayer(PC);
-                KFTHPCommandPreservingState(ExecState).SaveFlag(true);
+                KFTHPCommandPreservedState(ExecState).SaveFlag(true);
             }
             else
             {
                 RemoveRestoredPlayer(PC);
-                KFTHPCommandPreservingState(ExecState).SaveFlag(false);
+                KFTHPCommandPreservedState(ExecState).SaveFlag(false);
             }
             break;
     }
@@ -41,12 +41,8 @@ protected function bool ShouldBeTarget(
 /** @Override */
 protected function bool CheckGameState(KFTHPCommandExecutionState ExecState)
 {
-    if (ExecState.GetArgC() == 1 || ExecState.GetArgC() == 0 && KFGT.IsInState('MatchInProgress') && KFGT.WaveCountDown > 0)
-    {
-        return true;
-    }
-
-    return false;
+    return ExecState.GetArgC() == 1 
+        || ExecState.GetArgC() == 0 && KFGT.IsInState('MatchInProgress') && KFGT.WaveCountDown > 0;
 }
 
 /** @Override */
@@ -86,7 +82,7 @@ protected function string GetTargetSuccessMessage(KFTHPCommandExecutionState Exe
         return "Your attributes have been restored";
     }
 
-    return "Attribute restoration is "$KFTHPCommandPreservingState(ExecState).LoadEnabled();
+    return "Attribute restoration is "$KFTHPCommandPreservedState(ExecState).LoadEnabled();
 }
 
 defaultproperties

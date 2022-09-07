@@ -1,6 +1,7 @@
 /**
  * This class provides common logic for target based commands 
  * that accept only one optional target argument
+ * (or in some cases there can be more arguments given that target argument is the first one)
  */
 class KFTHPUnaryTargetCommand extends KFTHPTargetCommand
     abstract;
@@ -57,7 +58,7 @@ protected function bool ShouldBeTarget(
 /** @Override */
 protected function string InvalidTargetMessage(KFTHPCommandExecutionState ExecState)
 {
-    return "Cannot find player with name "$LoadTarget(ExecState);
+    return LoadTarget(ExecState)$" is not a valid target";
 }
 
 defaultproperties

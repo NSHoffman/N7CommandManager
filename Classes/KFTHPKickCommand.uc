@@ -25,12 +25,6 @@ protected function bool CheckTargetCustom(
 }
 
 /** @Override */
-protected function string InvalidTargetMessage(KFTHPCommandExecutionState ExecState)
-{
-    return "Cannot find valid targets with name "$LoadTarget(ExecState);
-}
-
-/** @Override */
 protected function string GetGlobalSuccessMessage(KFTHPCommandExecutionState ExecState)
 {
     local string TargetName;
@@ -48,6 +42,8 @@ defaultproperties
     Description="Kick Player"
     Signature="<string TargetName>"
     bAllowTargetAll=false
+    bOnlyPlayerTargets=false
+    bOnlyNonAdminTargets=true
     bNotifyTargetsOnSuccess=false
     bNotifyGlobalOnSuccess=true
 }

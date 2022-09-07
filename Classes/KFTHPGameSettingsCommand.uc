@@ -5,15 +5,9 @@
 class KFTHPGameSettingsCommand extends KFTHPCommand
     abstract;
 
-/** Will return the instigator of the setting change */
-protected function string GetInstigatorName(KFTHPCommandExecutionState ExecState)
-{
-    return ExecState.GetSender().PlayerReplicationInfo.PlayerName;
-}
-
 defaultproperties
 {
     bNotifySenderOnSuccess=false
     bNotifyGlobalOnSuccess=true
-    CommandStateClass=Class'KFTHPCommandPreservingState'
+    CommandStateClass=class'KFTHPCommandPreservedState'
 }
