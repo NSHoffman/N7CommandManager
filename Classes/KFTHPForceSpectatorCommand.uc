@@ -10,7 +10,7 @@ protected function DoActionForSingleTarget
 
     if (PC.Pawn != None)
     {
-        PC.Pawn.Died(PC, Class'DamageType', PC.Pawn.Location);
+        PC.Pawn.Died(PC, class'DamageType', PC.Pawn.Location);
     }
 
     if (PC.PlayerReplicationInfo.Team != None)
@@ -31,27 +31,22 @@ protected function DoActionForSingleTarget
 protected function bool CheckTargetCustom(
     KFTHPCommandExecutionState ExecState, PlayerController PC)
 {
-    if (PC.PlayerReplicationInfo == None
-        || KFGT.NumSpectators >= KFGT.MaxSpectators 
-        || PC.IsInState('GameEnded') 
-        || PC.IsInState('RoundEnded'))
-    {
-        return false;
-    }
-
-    return true;
+    return PC.PlayerReplicationInfo != None
+        && KFGT.NumSpectators < KFGT.MaxSpectators 
+        && !PC.IsInState('GameEnded') 
+        && !PC.IsInState('RoundEnded');
 }
 
 /** @Override */
 protected function string InvalidTargetMessage(KFTHPCommandExecutionState ExecState)
 {
-    return LoadTarget(ExecState)$" is not a valid target";
+    return "Invalid target "$LoadTarget(ExecState)$" or spectators limit reached";
 }
 
 /** @Override */
 protected function string GetTargetSuccessMessage(KFTHPCommandExecutionState ExecState)
 {
-    return "You have been forced to become spectator";
+    return "You have been forced to become a spectator";
 }
 
 /** @Override */
@@ -60,7 +55,7 @@ protected function string GetGlobalSuccessMessage(KFTHPCommandExecutionState Exe
     local string TargetName;
     TargetName = LoadTarget(ExecState);
 
-    return TargetName$" has been forced to become spectator";
+    return TargetName$" has been forced to become a spectator";
 }
 
 defaultproperties
@@ -68,8 +63,9 @@ defaultproperties
     bAdminOnly=true
     Aliases(0)="FSPEC"
     Aliases(1)="FORCESPEC"
-    Description="Force a Player become spectator"
+    Description="Force player to become a spectator"
     Signature="<? string TargetName>"
     bAllowTargetAll=false
+    bOnlyNonAdminTargets=true
     bNotifyGlobalOnSuccess=true
 }

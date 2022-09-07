@@ -32,7 +32,7 @@ protected function DoAction(KFTHPCommandExecutionState ExecState)
     }
     else
     {
-        KFGT.TimeBetweenWaves = KFGT.Default.TimeBetweenWaves;
+        KFGT.TimeBetweenWaves = KFGT.default.TimeBetweenWaves;
     }
 }
 

@@ -6,7 +6,7 @@ protected function DoActionForSingleTarget
 {
     local float NewBodyScale;
 
-    NewBodyScale = KFTHPCommandPreservingState(ExecState).LoadNumberF();
+    NewBodyScale = KFTHPCommandPreservedState(ExecState).LoadNumberF();
     GSU.ResizePlayer(PC, NewBodyScale);
     AddResizedPlayer(PC, NewBodyScale);
 }
@@ -17,8 +17,8 @@ protected function string GetTargetSuccessMessage(KFTHPCommandExecutionState Exe
     local string TargetName;
     local float NewBodyScale;
 
-    TargetName = KFTHPCommandPreservingState(ExecState).LoadString();
-    NewBodyScale = KFTHPCommandPreservingState(ExecState).LoadNumberF();
+    TargetName = LoadTarget(ExecState);
+    NewBodyScale = KFTHPCommandPreservedState(ExecState).LoadNumberF();
 
     return "Your body size scale is set to "$NewBodyScale;
 }
@@ -29,8 +29,8 @@ protected function string GetSenderSuccessMessage(KFTHPCommandExecutionState Exe
     local string TargetName;
     local float NewBodyScale;
 
-    TargetName = KFTHPCommandPreservingState(ExecState).LoadString();
-    NewBodyScale = KFTHPCommandPreservingState(ExecState).LoadNumberF();
+    TargetName = LoadTarget(ExecState);
+    NewBodyScale = KFTHPCommandPreservedState(ExecState).LoadNumberF();
 
     if (TargetName ~= "all")
     {

@@ -20,7 +20,7 @@ protected function DoAction(KFTHPCommandExecutionState ExecState)
     }
     else
     {
-        KFGT.KFLRules.WaveSpawnPeriod = KFGT.KFLRules.Default.WaveSpawnPeriod;
+        KFGT.KFLRules.WaveSpawnPeriod = KFGT.KFLRules.default.WaveSpawnPeriod;
     }
 }
 

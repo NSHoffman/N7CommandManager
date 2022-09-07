@@ -41,8 +41,7 @@ protected function bool CheckArgs(KFTHPCommandExecutionState ExecState)
 
         if (!IsInRange(NewHPConfig, MinLimitActual, MaxLimit))
         {
-            KFTHPCommandPreservingState(ExecState).SaveMinLimit(MinLimitActual);
-
+            KFTHPCommandPreservedState(ExecState).SaveMinLimit(MinLimitActual);
             return false;
         }
     }
@@ -59,7 +58,7 @@ protected function string GetGlobalSuccessMessage(KFTHPCommandExecutionState Exe
 /** @Override */
 protected function string InvalidArgsMessage(KFTHPCommandExecutionState ExecState)
 {
-    return "HP config must be in range from "$KFTHPCommandPreservingState(ExecState).LoadMinLimit()$" to "$MaxLimit;
+    return "HP config must be in range from "$KFTHPCommandPreservedState(ExecState).LoadMinLimit()$" to "$MaxLimit;
 }
 
 defaultproperties

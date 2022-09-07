@@ -7,12 +7,12 @@ protected function DoAction(KFTHPCommandExecutionState ExecState)
     local KFDoorMover KFDM;
     local int i;
 
-    foreach DynamicActors(Class'KFUseTrigger', KFUT)
+    foreach DynamicActors(class'KFUseTrigger', KFUT)
     {
         for (i = 0; i < KFUT.DoorOwners.Length; i++)
         {
             KFDM = KFUT.DoorOwners[i];
-            KFDM.TakeDamage(KFDM.Health, ExecState.GetSender().Pawn, KFDM.Location, vect(0, 0, 0), Class'DamTypeFrag');
+            KFDM.TakeDamage(KFDM.Health, ExecState.GetSender().Pawn, KFDM.Location, vect(0, 0, 0), class'DamTypeFrag');
         }
     }
 }

@@ -23,9 +23,9 @@ protected function DoAction(KFTHPCommandExecutionState ExecState)
     }
     else
     {
-        KFGT.MaxZombiesOnce = KFGT.Default.MaxZombiesOnce;
-        KFGT.StandardMaxZombiesOnce = KFGT.Default.StandardMaxZombiesOnce;
-        KFGT.MaxMonsters = KFGT.Default.MaxMonsters;
+        KFGT.MaxZombiesOnce = KFGT.default.MaxZombiesOnce;
+        KFGT.StandardMaxZombiesOnce = KFGT.default.StandardMaxZombiesOnce;
+        KFGT.MaxMonsters = KFGT.default.MaxMonsters;
     }
 }
 

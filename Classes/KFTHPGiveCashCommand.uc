@@ -7,29 +7,19 @@ var protected const int MaxCashAmount;
 protected function DoActionForSingleTarget
     (KFTHPCommandExecutionState ExecState, PlayerController PC)
 {
-    PC.PlayerReplicationInfo.Score += KFTHPCommandPreservingState(ExecState).LoadNumber();
-}
-
-/** @Override */
-protected function bool CheckArgs(KFTHPCommandExecutionState ExecState)
-{
     local int CashAmount;
     CashAmount = ToInt(ExecState.GetArg(ECmdArgs.ARG_VALUE));
 
-    if (!IsInRange(CashAmount, MinCashAmount, MaxCashAmount))
+    if (!IsInRange(CashAmount, MinCashAmount, MaxCashAmount) && IsInRange(CashAmount, MinCashAmount))
     {
-        return false; 
+        CashAmount = MaxCashAmount;
     }
-
-    KFTHPCommandPreservingState(ExecState).SaveNumber(CashAmount);
-
-    return true;
-}
-
-/** @Override */
-protected function string InvalidArgsMessage(KFTHPCommandExecutionState ExecState)
-{
-    return "Cash Amount must be positive number from "$MinCashAmount$" to "$MaxCashAmount;
+    else if (!IsInRange(CashAmount, MinCashAmount))
+    {
+        CashAmount = MinCashAmount;
+    }
+    PC.PlayerReplicationInfo.Score += CashAmount;
+    KFTHPCommandPreservedState(ExecState).SaveNumber(CashAmount);
 }
 
 /** @Override */
@@ -39,7 +29,7 @@ protected function string GetTargetSuccessMessage(KFTHPCommandExecutionState Exe
     local int CashAmount;
 
     TargetName = LoadTarget(ExecState);
-    CashAmount = KFTHPCommandPreservingState(ExecState).LoadNumber();
+    CashAmount = KFTHPCommandPreservedState(ExecState).LoadNumber();
 
     if (TargetName ~= "all")
     {
@@ -56,7 +46,7 @@ protected function string GetGlobalSuccessMessage(KFTHPCommandExecutionState Exe
     local int CashAmount;
 
     TargetName = LoadTarget(ExecState);
-    CashAmount = KFTHPCommandPreservingState(ExecState).LoadNumber();
+    CashAmount = KFTHPCommandPreservedState(ExecState).LoadNumber();
 
     if (TargetName ~= "all")
     {

@@ -3,9 +3,10 @@
  * preserve some pieces of intermediary state for later use
  * so that there is no need to recalculate same parts again
  */
-class KFTHPCommandPreservingState extends KFTHPCommandExecutionState;
+class KFTHPCommandPreservedState extends KFTHPCommandExecutionState;
 
 var protected string PreservedString;
+var protected string PreservedTarget;
 
 var protected int PreservedNumber;
 var protected int PreservedMinLimit;
@@ -20,6 +21,11 @@ var protected bool bPreservedFlag;
 public final function SaveString(string Value)
 {
     PreservedString = Value;
+}
+
+public final function SaveTarget(string Value)
+{
+    PreservedTarget = Value;
 }
 
 public final function SaveNumber(int Value)
@@ -60,6 +66,11 @@ public final function SaveFlag(bool bValue)
 public final function string LoadString()
 {
     return PreservedString;
+}
+
+public final function string LoadTarget()
+{
+    return PreservedTarget;
 }
 
 public final function int LoadNumber()

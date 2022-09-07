@@ -20,7 +20,7 @@ protected function DoAction(KFTHPCommandExecutionState ExecState)
     }
     else
     {
-        KFGT.MaxPlayers = KFGT.Default.MaxPlayers;
+        KFGT.MaxPlayers = KFGT.default.MaxPlayers;
     }
 }
 
@@ -65,5 +65,5 @@ defaultproperties
     Aliases(1)="SLOTS"
     ArgTypes(0)="number"
     Signature="<? int NewSlots>"
-    Description="Set maximum number of players allowed"
+    Description="Set maximum number of players"
 }

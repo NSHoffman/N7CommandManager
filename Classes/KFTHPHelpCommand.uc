@@ -19,7 +19,7 @@ protected function DoAction(KFTHPCommandExecutionState ExecState)
             {
                 if (Commands[i] != None && ShouldDisplayHelpForCommand(Commands[i]))
                 {
-                    DisplayHelpForCommand(ExecState.GetSender(), Commands[i]);
+                    Commands[i].GetHelp(ExecState.GetSender());
                 }
             }
             break;
@@ -28,7 +28,8 @@ protected function DoAction(KFTHPCommandExecutionState ExecState)
             CommandString = ExecState.GetArg(ECmdArgs.ARG_COMMAND);
             RequestedCommand = GetCommand(CommandString);
 
-            DisplayHelpForCommand(ExecState.GetSender(), RequestedCommand);
+            RequestedCommand.GetHelp(ExecState.GetSender());
+            RequestedCommand.GetExtendedHelp(ExecState.GetSender());
             break;
     }
 }
@@ -37,19 +38,17 @@ protected function DoAction(KFTHPCommandExecutionState ExecState)
 protected function bool CheckArgs(KFTHPCommandExecutionState ExecState)
 {
     local string CommandString;
+    local KFTHPCommand RequestedCommand;
 
     if (ExecState.GetArgC() == 1)
     {
         CommandString = ExecState.GetArg(ECmdArgs.ARG_COMMAND);
-        return GetCommand(CommandString) != None;
+        RequestedCommand = GetCommand(CommandString);
+
+        return RequestedCommand != None && ShouldDisplayHelpForCommand(RequestedCommand);
     }
 
     return true;
-}
-
-protected final function DisplayHelpForCommand(PlayerController Target, KFTHPCommand Command)
-{
-    SendMessage(Target, Command.GetHelpString());
 }
 
 protected function bool ShouldDisplayHelpForCommand(KFTHPCommand Command)
@@ -75,7 +74,7 @@ protected function KFTHPCommand GetCommand(string CommandString)
 /** @Override */
 protected function string InvalidArgsMessage(KFTHPCommandExecutionState ExecState)
 {
-    return "Unrecognized command";
+    return "Unavailable command";
 }
 
 defaultproperties
@@ -85,6 +84,7 @@ defaultproperties
     Aliases(0)="HELP"
     ArgTypes(0)="word"
     Signature="<? string Command>"
-    Description="Show a list of commands available to players or display info about one specific command"
+    Description="Show list of commands available to players or display extended info about one specific command"
     bNotifySenderOnSuccess=false
+    bOnlyPlayerSender=false
 }

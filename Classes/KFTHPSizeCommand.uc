@@ -11,12 +11,7 @@ var protected const float MaxScale;
 /** @Override */
 protected function bool CheckGameState(KFTHPCommandExecutionState ExecState)
 {
-    if (KFGT.IsInState('MatchInProgress'))
-    {
-        return true;
-    }
-
-    return false;
+    return KFGT.IsInState('MatchInProgress');
 }
 
 /** @Override */
@@ -35,7 +30,7 @@ protected function bool CheckArgs(KFTHPCommandExecutionState ExecState)
         return false; 
     }
 
-    KFTHPCommandPreservingState(ExecState).SaveNumberF(NewScale);
+    KFTHPCommandPreservedState(ExecState).SaveNumberF(NewScale);
 
     return true;
 }

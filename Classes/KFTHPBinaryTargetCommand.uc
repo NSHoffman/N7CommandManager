@@ -58,7 +58,7 @@ protected function bool ShouldBeTarget(
 /** @Override */
 protected function string InvalidTargetMessage(KFTHPCommandExecutionState ExecState)
 {
-    return "Cannot find player with name "$LoadTarget(ExecState);
+    return LoadTarget(ExecState)$" is not a valid target";
 }
 
 defaultproperties

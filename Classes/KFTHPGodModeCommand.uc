@@ -16,13 +16,7 @@ protected function DoActionForSingleTarget
             break;
     }
 
-    KFTHPCommandPreservingState(ExecState).SaveFlag(PC.bGodMode);
-}
-
-/** @Override */
-protected function string InvalidTargetMessage(KFTHPCommandExecutionState ExecState)
-{
-    return "Cannot find player with name "$LoadTarget(ExecState);
+    KFTHPCommandPreservedState(ExecState).SaveFlag(PC.bGodMode);
 }
 
 /** @Override */
@@ -33,10 +27,10 @@ protected function string GetTargetSuccessMessage(KFTHPCommandExecutionState Exe
 
     if (TargetName ~= "all")
     {
-        return "All players' God Mode is "$KFTHPCommandPreservingState(ExecState).LoadEnabled();
+        return "All players' God Mode is "$KFTHPCommandPreservedState(ExecState).LoadEnabled();
     }
 
-    return "God Mode is "$KFTHPCommandPreservingState(ExecState).LoadEnabled();
+    return "God Mode is "$KFTHPCommandPreservedState(ExecState).LoadEnabled();
 }
 
 /** @Override */
@@ -47,10 +41,10 @@ protected function string GetGlobalSuccessMessage(KFTHPCommandExecutionState Exe
 
     if (TargetName ~= "all")
     {
-        return "All players' God Mode is "$KFTHPCommandPreservingState(ExecState).LoadEnabled();
+        return "All players' God Mode is "$KFTHPCommandPreservedState(ExecState).LoadEnabled();
     }
 
-    return TargetName$"'s God Mode is "$KFTHPCommandPreservingState(ExecState).LoadEnabled();
+    return TargetName$"'s God Mode is "$KFTHPCommandPreservedState(ExecState).LoadEnabled();
 }
 
 defaultproperties

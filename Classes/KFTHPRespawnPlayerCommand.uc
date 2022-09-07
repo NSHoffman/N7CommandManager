@@ -33,12 +33,7 @@ protected function DoActionForSingleTarget
 /** @Override */
 protected function bool CheckGameState(KFTHPCommandExecutionState ExecState)
 {
-    if (KFGT.IsInState('MatchInProgress'))
-    {
-        return true;
-    }
-
-    return false;
+    return KFGT.IsInState('MatchInProgress');
 }
 
 /** @Override */
@@ -65,17 +60,20 @@ protected function string GetGlobalSuccessMessage(KFTHPCommandExecutionState Exe
     local string TargetName;
     TargetName = LoadTarget(ExecState);
 
+    if (TargetName ~= "all")
+    {
+        return "All players have been respawned";
+    }
+
     return TargetName$" has been respawned";
 }
 
 defaultproperties
 {
-    bAdminOnly=true
     Aliases(0)="RP"
     Aliases(1)="RESPAWN"
     Description="Respawn Player"
-    Signature="<? string TargetName>"
+    Signature="<? (string TargetName | 'all')>"
     bOnlyDeadTargets=true
-    bAllowTargetAll=false
     bNotifyGlobalOnSuccess=true
 }

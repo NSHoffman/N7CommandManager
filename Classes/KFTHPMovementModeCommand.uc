@@ -9,12 +9,7 @@ class KFTHPMovementModeCommand extends KFTHPUnaryTargetCommand
 /** @Override */
 protected function bool CheckGameState(KFTHPCommandExecutionState ExecState)
 {
-    if (KFGT.IsInState('MatchInProgress'))
-    {
-        return true;
-    }
-
-    return false;
+    return KFGT.IsInState('MatchInProgress');
 }
 
 /** @Override */

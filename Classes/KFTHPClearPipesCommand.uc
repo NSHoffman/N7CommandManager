@@ -5,7 +5,7 @@ protected function DoAction(KFTHPCommandExecutionState ExecState)
 {
     local PipeBombProjectile PipeBomb;
 
-    foreach DynamicActors(Class'PipeBombProjectile', PipeBomb)
+    foreach DynamicActors(class'PipeBombProjectile', PipeBomb)
     {
         PipeBomb.bHidden = true;
         PipeBomb.Destroyed();

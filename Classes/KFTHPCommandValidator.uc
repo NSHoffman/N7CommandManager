@@ -162,12 +162,24 @@ static function bool IsSpectator(PlayerController PC)
 
 static function bool IsAlive(PlayerController PC)
 {
-    return PC.Pawn != None && PC.Pawn.Health > 0;
+    return !PC.PlayerReplicationInfo.bIsSpectator 
+        && !PC.PlayerReplicationInfo.bOutOfLives 
+        && PC.Pawn != None 
+        && PC.Pawn.Health > 0;
 }
 
+/** 
+ * Original admin access implies that EITHER bAdmin OR bSilentAdmin is true depending on how user logs in 
+ * Temporary admin access requires BOTH flags to be true so that these access types can be differentiated
+ */
 static function bool IsAdmin(PlayerController PC)
 {
-    return PC.PlayerReplicationInfo.bAdmin || PC.PlayerReplicationInfo.bSilentAdmin;
+    return PC.PlayerReplicationInfo.bAdmin ^^ PC.PlayerReplicationInfo.bSilentAdmin;
+}
+
+static function bool IsTempAdmin(PlayerController PC)
+{
+    return PC.PlayerReplicationInfo.bAdmin && PC.PlayerReplicationInfo.bSilentAdmin;
 }
 
 static function bool IsWebAdmin(PlayerController PC)

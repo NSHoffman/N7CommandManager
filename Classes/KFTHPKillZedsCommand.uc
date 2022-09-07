@@ -25,12 +25,8 @@ protected function DoAction(KFTHPCommandExecutionState ExecState)
 /** @Override */
 protected function bool CheckArgs(KFTHPCommandExecutionState ExecState)
 {
-    if (ExecState.GetArgC() == 1 && Locs(ExecState.GetArg(ECmdArgs.ARG_TARGET)) != "all")
-    {
-        return false;
-    }
-
-    return true;
+    return ExecState.GetArgC() == 0 
+        || ExecState.GetArgC() == 1 && Locs(ExecState.GetArg(ECmdArgs.ARG_TARGET)) == "all";
 }
 
 /** @Override */

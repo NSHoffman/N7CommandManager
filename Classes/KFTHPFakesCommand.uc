@@ -38,7 +38,7 @@ protected function bool CheckArgs(KFTHPCommandExecutionState ExecState)
 
         if (!IsInRange(NewFakes, MinFakes, MaxFakesActual))
         {
-            KFTHPCommandPreservingState(ExecState).SaveMaxLimit(MaxFakesActual);
+            KFTHPCommandPreservedState(ExecState).SaveMaxLimit(MaxFakesActual);
 
             return false;
         }
@@ -56,7 +56,7 @@ protected function string GetGlobalSuccessMessage(KFTHPCommandExecutionState Exe
 /** @Override */
 protected function string InvalidArgsMessage(KFTHPCommandExecutionState ExecState)
 {
-    return "Faked players number must be in range from "$MinFakes$" to "$KFTHPCommandPreservingState(ExecState).LoadMaxLimit();
+    return "Faked players number must be in range from "$MinFakes$" to "$KFTHPCommandPreservedState(ExecState).LoadMaxLimit();
 }
 
 defaultproperties

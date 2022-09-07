@@ -1,57 +1,47 @@
-class KFTHPSetNameCommand extends KFTHPCommand;
-
-enum ECmdArgs
-{
-    ARG_NAME,
-};
+class KFTHPSetNameCommand extends KFTHPBinaryTargetCommand;
 
 /** @Override */
-protected function DoAction(KFTHPCommandExecutionState ExecState)
+protected function DoActionForSingleTarget
+    (KFTHPCommandExecutionState ExecState, PlayerController PC)
 {
-    local string OldName, NewName;
-
-    OldName = ExecState.GetSender().PlayerReplicationInfo.PlayerName;
-    NewName = ExecState.GetArg(ECmdArgs.ARG_NAME);
-
-    KFTHPCommandPreservingState(ExecState).SaveString(OldName);
-    ExecState.GetSender().PlayerReplicationInfo.PlayerName = NewName;
+    PC.PlayerReplicationInfo.PlayerName = ExecState.GetArg(ECmdArgs.ARG_VALUE);
 }
 
 /** @Override */
-protected function bool ShouldNotifyGlobalOnSuccess()
+protected function bool CheckIfNonAdminExecutionAllowed(KFTHPCommandExecutionState ExecState)
 {
-    return true;
+    return ExecState.GetArgC() == 1 
+        || IsStringPartOf(ExecState.GetArg(ECmdArgs.ARG_TARGETNAME), ExecState.GetSender().PlayerReplicationInfo.PlayerName);
 }
 
 /** @Override */
-protected function string GetSenderSuccessMessage(KFTHPCommandExecutionState ExecState)
+protected function string GetTargetSuccessMessage(KFTHPCommandExecutionState ExecState)
 {
-    local string NewName;
-    
-    NewName = ExecState.GetArg(ECmdArgs.ARG_NAME);
-
-    return "Your name has been changed to "$NewName;
+    return "Your name has been changed to "$ExecState.GetArg(ECmdArgs.ARG_VALUE);
 }
 
 /** @Override */
 protected function string GetGlobalSuccessMessage(KFTHPCommandExecutionState ExecState)
 {
-    local string NewName;
+    local string OldName, NewName;
     
-    NewName = ExecState.GetArg(ECmdArgs.ARG_NAME);
+    OldName = LoadTarget(ExecState);
+    NewName = ExecState.GetArg(ECmdArgs.ARG_VALUE);
 
-    return KFTHPCommandPreservingState(ExecState).LoadString()$"'s name has been changed to "$NewName;
+    return OldName$"'s name has been changed to "$NewName;
 }
 
 defaultproperties
 {
     MinArgsNum=1
-    MaxArgsNum=1
+    MaxArgsNum=2
     Aliases(0)="CN"
     Aliases(1)="SN"
     Aliases(2)="SETNAME"
     ArgTypes(0)="any"
-    Signature="<string Name>"
-    Description="Set new name"
-    CommandStateClass=Class'KFTHPCommandPreservingState'
+    ArgTypes(1)="any"
+    Signature="<string Name, adminonly ? string TargetName>"
+    Description="Change Player's name. Admin access allows for changing other players names"
+    bNotifyGlobalOnSuccess=true
+    bAllowTargetAll=false
 }

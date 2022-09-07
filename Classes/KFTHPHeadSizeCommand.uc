@@ -4,7 +4,7 @@ class KFTHPHeadSizeCommand extends KFTHPSizeCommand;
 protected function DoActionForSingleTarget
     (KFTHPCommandExecutionState ExecState, PlayerController PC)
 {
-    PC.Pawn.HeadScale = KFTHPCommandPreservingState(ExecState).LoadNumberF();
+    PC.Pawn.HeadScale = KFTHPCommandPreservedState(ExecState).LoadNumberF();
 }
 
 /** @Override */
@@ -13,8 +13,8 @@ protected function string GetTargetSuccessMessage(KFTHPCommandExecutionState Exe
     local string TargetName;
     local float NewHeadScale;
 
-    TargetName = KFTHPCommandPreservingState(ExecState).LoadString();
-    NewHeadScale = KFTHPCommandPreservingState(ExecState).LoadNumberF();
+    TargetName = LoadTarget(ExecState);
+    NewHeadScale = KFTHPCommandPreservedState(ExecState).LoadNumberF();
 
     return "Your head size scale is set to "$NewHeadScale;
 }
@@ -25,8 +25,8 @@ protected function string GetSenderSuccessMessage(KFTHPCommandExecutionState Exe
     local string TargetName;
     local float NewHeadScale;
 
-    TargetName = KFTHPCommandPreservingState(ExecState).LoadString();
-    NewHeadScale = KFTHPCommandPreservingState(ExecState).LoadNumberF();
+    TargetName = LoadTarget(ExecState);
+    NewHeadScale = KFTHPCommandPreservedState(ExecState).LoadNumberF();
 
     if (TargetName ~= "all")
     {

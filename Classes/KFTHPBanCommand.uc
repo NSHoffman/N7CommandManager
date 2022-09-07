@@ -1,6 +1,10 @@
 class KFTHPBanCommand extends KFTHPUnaryTargetCommand;
 
-const ARG_PERMANENT = 1;
+enum ECmdArgs_X
+{
+    ARG_TARGETNAME,
+    ARG_PERMANENT,
+};
 
 /** @Override */
 protected function DoActionForSingleTarget
@@ -13,7 +17,7 @@ protected function DoActionForSingleTarget
     IP = PC.GetPlayerNetworkAddress();
     IP = Left(IP, InStr(IP, ":"));
 
-    bPermanentBan = ToBool(ExecState.GetArg(ARG_PERMANENT));
+    bPermanentBan = ToBool(ExecState.GetArg(ECmdArgs_X.ARG_PERMANENT));
     AC = KFGT.AccessControl;
 
     if (bPermanentBan)
@@ -60,12 +64,6 @@ protected function bool CheckTargetCustom(
 }
 
 /** @Override */
-protected function string InvalidTargetMessage(KFTHPCommandExecutionState ExecState)
-{
-    return "Cannot find valid targets with name "$LoadTarget(ExecState);
-}
-
-/** @Override */
 protected function string GetGlobalSuccessMessage(KFTHPCommandExecutionState ExecState)
 {
     local string TargetName;
@@ -74,7 +72,7 @@ protected function string GetGlobalSuccessMessage(KFTHPCommandExecutionState Exe
     TargetName = LoadTarget(ExecState);
     BanSuccessMessage = TargetName$" was banned";
 
-    if (ToBool(ExecState.GetArg(ARG_PERMANENT)))
+    if (ToBool(ExecState.GetArg(ECmdArgs_X.ARG_PERMANENT)))
     {
         BanSuccessMessage $= " permanently"; 
     }
@@ -89,9 +87,11 @@ defaultproperties
     MaxArgsNum=2
     ArgTypes(1)="switch"
     Aliases(0)="BAN"
-    Description="Ban Player"
+    Description="Ban player for the time of current session or permanently"
     Signature="<string TargetName, ? (0 | 1 | ON | OFF) IsPermanent>"
     bAllowTargetAll=false
+    bOnlyPlayerTargets=false
+    bOnlyNonAdminTargets=true
     bNotifyTargetsOnSuccess=false
     bNotifyGlobalOnSuccess=true
 }
