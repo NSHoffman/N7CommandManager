@@ -34,7 +34,7 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
     if (ExecState.GetArgC() > 0)
     {
         NewFakes = ToInt(ExecState.GetArg(ECmdArgs.ARG_NEWFAKES));
-        MaxFakesActual = Min(KFGT.MaxPlayers - (KFGT.NumPlayers - FakedPlayersNum), MaxFakes);
+        MaxFakesActual = Max(0, Min(KFGT.MaxPlayers - (KFGT.NumPlayers - FakedPlayersNum), MaxFakes));
 
         if (!IsInRange(NewFakes, MinFakes, MaxFakesActual))
         {
