@@ -6,7 +6,7 @@ enum ECmdArgs
 };
 
 var protected const int MinSpectators;
-var protected const int MaxSpectators;
+var protected config const int MaxSpectators;
 
 /** @Override */
 protected function DoAction(N7_CommandExecutionState ExecState)
@@ -27,14 +27,13 @@ protected function DoAction(N7_CommandExecutionState ExecState)
 /** @Override */
 protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 {
-    local int NewSpectators, MinSpectatorsActual;
+    local int NewSpectators;
 
     if (ExecState.GetArgC() > 0)
     {
         NewSpectators = ToInt(ExecState.GetArg(ECmdArgs.ARG_NEWSPECS));
-        MinSpectatorsActual = Max(KFGT.NumSpectators, MinSpectators);
 
-        if (!IsInRange(NewSpectators, MinSpectatorsActual, MaxSpectators))
+        if (!IsInRange(NewSpectators, MinSpectators, MaxSpectators))
         {
             return false;
         }
@@ -52,7 +51,7 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
 /** @Override */
 protected function string InvalidArgsMessage(N7_CommandExecutionState ExecState)
 {
-    return "New Spectators number must be in range from "$Max(KFGT.NumSpectators, MinSpectators)$" to "$MaxSpectators;
+    return "New Spectators number must be in range from "$MinSpectators$" to "$MaxSpectators;
 }
 
 defaultproperties

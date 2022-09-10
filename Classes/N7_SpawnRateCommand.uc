@@ -6,7 +6,7 @@ enum ECmdArgs
 };
 
 var protected const float MinRate;
-var protected const float MaxRate;
+var protected config const float MaxRate;
 
 /** @Override */
 protected function DoAction(N7_CommandExecutionState ExecState)

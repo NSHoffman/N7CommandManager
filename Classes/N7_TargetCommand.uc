@@ -5,11 +5,11 @@
 class N7_TargetCommand extends N7_Command
     abstract;
 
-var protected config const bool bAllowTargetAll;
-var protected config const bool bAllowTargetSelf;
+var protected const bool bAllowTargetAll;
+var protected const bool bAllowTargetSelf;
+var protected const bool bOnlyFirstTargetMatch;
 var protected config const bool bOnlyAliveTargets;
 var protected config const bool bOnlyDeadTargets;
-var protected config const bool bOnlyFirstTargetMatch;
 var protected config const bool bOnlyPlayerTargets;
 var protected config const bool bOnlySpectatorTargets;
 var protected config const bool bOnlyAdminTargets;

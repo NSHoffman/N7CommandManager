@@ -6,7 +6,7 @@ enum ECmdArgs
 };
 
 var protected const int MinWaveInterval;
-var protected const int MaxWaveInterval;
+var protected config const int MaxWaveInterval;
 
 /** @Override */
 protected function DoAction(N7_CommandExecutionState ExecState)

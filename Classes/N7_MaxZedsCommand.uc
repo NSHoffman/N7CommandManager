@@ -5,8 +5,8 @@ enum ECmdArgs
     ARG_MAXZEDS,
 };
 
-var protected const int MinLimit;
-var protected const int MaxLimit;
+var protected config const int MinLimit;
+var protected config const int MaxLimit;
 
 /** @Override */
 protected function DoAction(N7_CommandExecutionState ExecState)

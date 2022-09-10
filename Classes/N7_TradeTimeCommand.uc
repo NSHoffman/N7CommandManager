@@ -6,7 +6,7 @@ enum ECmdArgs
 };
 
 var protected const int MinTradeTime;
-var protected const int MaxTradeTime;
+var protected config const int MaxTradeTime;
 
 /** @Override */
 protected function DoAction(N7_CommandExecutionState ExecState)

@@ -5,8 +5,8 @@
 class N7_SizeCommand extends N7_BinaryTargetCommand
     abstract;
 
-var protected const float MinScale; 
-var protected const float MaxScale;
+var protected config const float MinScale; 
+var protected config const float MaxScale;
 
 /** @Override */
 protected function bool CheckGameState(N7_CommandExecutionState ExecState)

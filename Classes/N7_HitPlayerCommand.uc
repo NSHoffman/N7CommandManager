@@ -8,8 +8,8 @@ enum ECmdArgs_X
 };
 
 var protected const int MinDamage;
-var protected const int MaxDamage;
-var protected const int DefaultDamage;
+var protected config const int MaxDamage;
+var protected config const int DefaultDamage;
 
 var protected editconstarray Array<string> AvailableDamageTypes;
 

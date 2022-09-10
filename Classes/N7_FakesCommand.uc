@@ -6,7 +6,7 @@ enum ECmdArgs
 };
 
 var protected const int MinFakes;
-var protected const int MaxFakes;
+var protected config const int MaxFakes;
 
 /** @Override */
 protected function DoAction(N7_CommandExecutionState ExecState)

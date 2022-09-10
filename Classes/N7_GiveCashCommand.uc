@@ -1,7 +1,7 @@
 class N7_GiveCashCommand extends N7_BinaryTargetCommand;
 
 var protected const int MinCashAmount; 
-var protected const int MaxCashAmount;
+var protected config const int MaxCashAmount;
 
 /** @Override */
 protected function DoActionForSingleTarget

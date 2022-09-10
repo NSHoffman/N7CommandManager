@@ -6,7 +6,7 @@ enum ECmdArgs
 };
 
 var protected const int MinWave;
-var protected const int MaxWave;
+var protected int MaxWave;
 
 /** @Override */
 protected function DoAction(N7_CommandExecutionState ExecState)
@@ -93,6 +93,7 @@ protected function bool CheckGameState(N7_CommandExecutionState ExecState)
 protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 {
     local int WaveNum;
+    MaxWave = KFGT.FinalWave;
     WaveNum = ToInt(ExecState.GetArg(ECmdArgs.ARG_WAVE));
 
     return IsInRange(WaveNum, MinWave, MaxWave);

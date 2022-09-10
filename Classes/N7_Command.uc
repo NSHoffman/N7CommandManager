@@ -18,7 +18,7 @@ var protected const class<N7_CommandValidator> ValidatorClass;
 var protected const class<N7_CommandExecutionState> CommandStateClass;
 
 var protected editconstarray Array<string> ArgTypes;
-var protected editconstarray Array<string> Aliases;
+var protected config editconstarray Array<string> Aliases;
 
 var protected const int MinArgsNum, MaxArgsNum;
 

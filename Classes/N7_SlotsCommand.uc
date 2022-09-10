@@ -6,7 +6,7 @@ enum ECmdArgs
 };
 
 var protected const int MinSlots;
-var protected const int MaxSlots;
+var protected config const int MaxSlots;
 
 /** @Override */
 protected function DoAction(N7_CommandExecutionState ExecState)
@@ -27,14 +27,13 @@ protected function DoAction(N7_CommandExecutionState ExecState)
 /** @Override */
 protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 {
-    local int NewSlots, MinSlotsActual;
+    local int NewSlots;
 
     if (ExecState.GetArgC() > 0)
     {
         NewSlots = ToInt(ExecState.GetArg(ECmdArgs.ARG_NEWSLOTS));
-        MinSlotsActual = Max(KFGT.NumPlayers, MinSlots);
 
-        if (!IsInRange(NewSlots, MinSlotsActual, MaxSlots))
+        if (!IsInRange(NewSlots, MinSlots, MaxSlots))
         {
             return false;
         }
@@ -52,7 +51,7 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
 /** @Override */
 protected function string InvalidArgsMessage(N7_CommandExecutionState ExecState)
 {
-    return "New slots number must be in range from "$Max(KFGT.NumPlayers, MinSlots)$" to "$MaxSlots;
+    return "New slots number must be in range from "$MinSlots$" to "$MaxSlots;
 }
 
 defaultproperties

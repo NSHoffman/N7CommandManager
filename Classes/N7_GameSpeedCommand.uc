@@ -6,7 +6,7 @@ enum ECmdArgs
 };
 
 var protected const float MinGameSpeed;
-var protected const float MaxGameSpeed;
+var protected config const float MaxGameSpeed;
 
 /** @Override */
 protected function DoAction(N7_CommandExecutionState ExecState)
