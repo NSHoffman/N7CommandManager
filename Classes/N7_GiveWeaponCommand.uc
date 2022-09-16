@@ -15,7 +15,7 @@ protected function DoActionForSingleTarget
     {
         NewWeapon.GiveTo(PC.Pawn);
     }
-    N7_CommandPreservedState(ExecState).SaveString(WeaponClass.default.ItemName);
+    ExecState.SaveString(WeaponClass.default.ItemName);
 }
 
 /** @Override */
@@ -60,7 +60,10 @@ protected function string InvalidArgsMessage(N7_CommandExecutionState ExecState)
 /** @Override */
 protected function string InvalidTargetMessage(N7_CommandExecutionState ExecState)
 {
-    return "Player "$LoadTarget(ExecState)$" not found or specified weapon is already owned";
+    local string TargetName;
+    TargetName = ColorizeTarget(LoadTarget(ExecState));
+
+    return "Player "$TargetName$" not found or specified weapon is already owned";
 }
 
 /** @Override */
@@ -69,7 +72,7 @@ protected function string GetTargetSuccessMessage(N7_CommandExecutionState ExecS
     local string TargetName, WeaponName;
 
     TargetName = LoadTarget(ExecState);
-    WeaponName = N7_CommandPreservedState(ExecState).LoadString();
+    WeaponName = ColorizeEntity(ExecState.LoadString());
 
     if (TargetName ~= "all")
     {
@@ -85,14 +88,14 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
     local string TargetName, WeaponName;
 
     TargetName = LoadTarget(ExecState);
-    WeaponName = N7_CommandPreservedState(ExecState).LoadString();
+    WeaponName = ColorizeEntity(ExecState.LoadString());
 
     if (TargetName ~= "all")
     {
         return "All players have been given "$WeaponName;
     }
 
-    return TargetName$" has been given "$WeaponName;
+    return ColorizeTarget(TargetName)$" has been given "$WeaponName;
 }
 
 /** @Override */
@@ -119,6 +122,7 @@ defaultproperties
     Aliases(0)="GW"
     Aliases(1)="WEAPON"
     Aliases(2)="GIVEWEAPON"
+    MinArgsNum=1
     Signature="<string WeaponClass, ? (string TargetName | 'all')>"
     ArgTypes(0)="any"
     Description="Give Weapon"

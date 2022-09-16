@@ -6,7 +6,7 @@ enum ECmdArgs
 };
 
 var protected const int MinSlots;
-var protected config const int MaxSlots;
+var protected globalconfig const int MaxSlots;
 
 /** @Override */
 protected function DoAction(N7_CommandExecutionState ExecState)
@@ -45,7 +45,7 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 /** @Override */
 protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecState)
 {
-    return "Max Players set to "$KFGT.MaxPlayers$" by "$GetInstigatorName(ExecState);
+    return "Max Players set to "$ColorizeValue(KFGT.MaxPlayers)$" by "$ColorizeSender(ExecState);
 }
 
 /** @Override */

@@ -36,7 +36,7 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
         return "All players are in flying mode";
     }
 
-    return TargetName$" is in flying mode";
+    return ColorizeTarget(TargetName)$" is in flying mode";
 }
 
 defaultproperties

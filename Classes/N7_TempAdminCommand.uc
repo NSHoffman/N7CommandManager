@@ -66,7 +66,7 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
         return "Temporary admin access has been "$AdminAccessGrantStatus$" all players";
     }
 
-    return "Temporary admin access has been "$AdminAccessGrantStatus$" "$TargetName;
+    return "Temporary admin access has been "$AdminAccessGrantStatus$" "$ColorizeTarget(TargetName);
 }
 
 defaultproperties

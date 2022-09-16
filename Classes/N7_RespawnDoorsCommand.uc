@@ -18,7 +18,7 @@ protected function DoAction(N7_CommandExecutionState ExecState)
 /** @Override */
 protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecState)
 {
-    return "All doors have been respawned by "$GetInstigatorName(ExecState);
+    return "All doors have been respawned by "$ColorizeSender(ExecState);
 }
 
 defaultproperties

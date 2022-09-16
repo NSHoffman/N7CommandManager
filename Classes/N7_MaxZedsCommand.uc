@@ -5,8 +5,8 @@ enum ECmdArgs
     ARG_MAXZEDS,
 };
 
-var protected config const int MinLimit;
-var protected config const int MaxLimit;
+var protected globalconfig const int MinLimit;
+var protected globalconfig const int MaxLimit;
 
 /** @Override */
 protected function DoAction(N7_CommandExecutionState ExecState)
@@ -50,7 +50,7 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 /** @Override */
 protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecState)
 {
-    return "Max Zeds set to "$KFGT.MaxZombiesOnce$" by "$GetInstigatorName(ExecState);
+    return "Max Zeds set to "$ColorizeValue(KFGT.MaxZombiesOnce)$" by "$ColorizeSender(ExecState);
 }
 
 /** @Override */

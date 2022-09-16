@@ -18,7 +18,8 @@ The motivation and reasoning behind development of the command manager is that m
   * MinMax values configuration for numeric arguments
   * Rich and consistent validation for sender, targets, arguments, game state etc.
   * Structure flexible enough to allow for API extension when new commands are needed
-  * Three-leveled notification system (for senders, for targets and global)
+  * Three-level notification system (for senders, for targets and global)
+  * Color highlighting configuration capabilities for certain parts of notifications/messages
 
 ## How to use
 ### Regular Players
@@ -52,7 +53,10 @@ Mostly these would affect some parts of ZEDs, players or game state.
 
 Each command has access to `GameStateUtils` via `GSU` field which is defined in `CommandManager` file.
 
-#### `CommandExecutionState`/`CommandPreservedState`
+#### `CommandValidator`
+This class provides validation API that is used to check user input and various aspects of game state. 
+
+#### `CommandExecutionState`
 These classes keep track of command state when its execution is in progress.
 
 `CommandExecutionState` contains information about current execution, namely:
@@ -61,8 +65,7 @@ These classes keep track of command state when its execution is in progress.
   * Status and Error Code (if status is failed)
   * Command Arguments
 
-`CommandPreservedState` is the extension of `CommandExecutionState` which also allows for caching
-of some temporary values that are needed across different execution stages but need not be recalculated.
+It also allows for caching of some temporary values that are needed across different execution stages but need not be recalculated.
 It can cache:
   * a String
   * a TargetName
@@ -94,6 +97,18 @@ some game settings be it maximum players number or ZED-time status.
 
 `TargetCommand` provides extended logic for commands that affect a selection of players.
 Here resides the common logic for target validation and per-target command execution.
+
+#### `ColorManager`/`CommandMessageColors`
+These classes are responsible for coloring of messages and notifications.
+
+`ColorManager` is the class that provides color collection based on [Material Design colors](https://materialui.co/colors/).
+It also provides API for text coloring and color picking based on IDs rather than RGBA structs. 
+All color IDs follow the same structure: `<color>:<tint>`. Also `black`, `white` or `rgb(byte, byte, byte)` compliant values are supported.
+Information on both colors and tints can be found on Material Design colors page.
+
+`CommandMessageColors` is just a class that keeps configurable color IDs for various messages/notifications parts.
+It is also responsible for providing colorization API for commands.
+One is not strictly tied to the cases defined in base `CommandMessageColors` class as it can be extended and assigned to `CommandManager.ColorsClass` field.
 
 ## Contacts
 For questions/concerns/recommendations you can contact me via steam or email:

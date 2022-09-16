@@ -38,7 +38,7 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
         return "All players are in walking mode";
     }
 
-    return TargetName$" is in walking mode";
+    return ColorizeTarget(TargetName)$" is in walking mode";
 }
 
 defaultproperties

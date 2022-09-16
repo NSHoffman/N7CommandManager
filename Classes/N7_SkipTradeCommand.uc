@@ -27,7 +27,7 @@ protected function string InvalidGameStateMessage()
 /** @Override */
 protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecState)
 {
-    return "Trader skipped by "$GetInstigatorName(ExecState);
+    return "Trader skipped by "$ColorizeSender(ExecState);
 }
 
 defaultproperties

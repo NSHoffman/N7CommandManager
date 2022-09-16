@@ -6,7 +6,7 @@ enum ECmdArgs
 };
 
 var protected const float MinGameSpeed;
-var protected config const float MaxGameSpeed;
+var protected globalconfig const float MaxGameSpeed;
 
 /** @Override */
 protected function DoAction(N7_CommandExecutionState ExecState)
@@ -45,7 +45,7 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 /** @Override */
 protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecState)
 {
-    return "Game Speed set to "$KFGT.GameSpeed$" by "$GetInstigatorName(ExecState);
+    return "Game Speed set to "$ColorizeValue(KFGT.GameSpeed)$" by "$ColorizeSender(ExecState);
 }
 
 /** @Override */

@@ -34,10 +34,10 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
 {
     if (ExecState.GetArgC() == 1)
     {
-        return "All ZEDs killed by "$GetInstigatorName(ExecState);
+        return "All ZEDs killed by "$ColorizeSender(ExecState);
     }
 
-    return "ZED Squads killed by "$GetInstigatorName(ExecState);
+    return "ZED Squads killed by "$ColorizeSender(ExecState);
 }
 
 /** @Override */

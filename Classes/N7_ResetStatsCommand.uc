@@ -30,7 +30,7 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
         return "All players' stats have been reset";
     }
 
-    return TargetName$"'s stats have been reset";
+    return ColorizeTarget(TargetName)$"'s stats have been reset";
 }
 
 defaultproperties

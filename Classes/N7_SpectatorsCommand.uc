@@ -6,7 +6,7 @@ enum ECmdArgs
 };
 
 var protected const int MinSpectators;
-var protected config const int MaxSpectators;
+var protected globalconfig const int MaxSpectators;
 
 /** @Override */
 protected function DoAction(N7_CommandExecutionState ExecState)
@@ -45,7 +45,7 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 /** @Override */
 protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecState)
 {
-    return "Max Spectators set to "$KFGT.MaxSpectators$" by "$GetInstigatorName(ExecState);
+    return "Max Spectators set to "$ColorizeValue(KFGT.MaxSpectators)$" by "$ColorizeSender(ExecState);
 }
 
 /** @Override */

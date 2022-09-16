@@ -6,7 +6,7 @@ enum ECmdArgs
 };
 
 var protected const float MinRate;
-var protected config const float MaxRate;
+var protected globalconfig const float MaxRate;
 
 /** @Override */
 protected function DoAction(N7_CommandExecutionState ExecState)
@@ -45,7 +45,7 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 /** @Override */
 protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecState)
 {
-    return "Spawn Rate set to "$KFGT.KFLRules.WaveSpawnPeriod$" by "$GetInstigatorName(ExecState);
+    return "Spawn Rate set to "$ColorizeValue(KFGT.KFLRules.WaveSpawnPeriod)$" by "$ColorizeSender(ExecState);
 }
 
 /** @Override */

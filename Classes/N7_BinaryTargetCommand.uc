@@ -58,7 +58,10 @@ protected function bool ShouldBeTarget(
 /** @Override */
 protected function string InvalidTargetMessage(N7_CommandExecutionState ExecState)
 {
-    return LoadTarget(ExecState)$" is not a valid target";
+    local string TargetName;
+    TargetName = ColorizeTarget(LoadTarget(ExecState));
+    
+    return TargetName$" is not a valid target";
 }
 
 defaultproperties

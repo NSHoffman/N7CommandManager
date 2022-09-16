@@ -6,7 +6,7 @@ enum ECmdArgs
 };
 
 var protected const int MinTradeTime;
-var protected config const int MaxTradeTime;
+var protected globalconfig const int MaxTradeTime;
 
 /** @Override */
 protected function DoAction(N7_CommandExecutionState ExecState)
@@ -39,7 +39,7 @@ protected function bool CheckGameState(N7_CommandExecutionState ExecState)
 /** @Override */
 protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecState)
 {
-    return "Trade Time set to "$KFGT.WaveCountDown$"s by "$GetInstigatorName(ExecState);
+    return "Trade Time set to "$ColorizeValue(KFGT.WaveCountDown)$"s by "$ColorizeSender(ExecState);
 }
 
 /** @Override */

@@ -7,8 +7,8 @@ enum ECmdArgs
 };
 
 var protected const int MinDamage;
-var protected config const int MaxDamage;
-var protected config const int DefaultDamage;
+var protected globalconfig const int MaxDamage;
+var protected globalconfig const int DefaultDamage;
 
 var protected editconstarray Array<string> AvailableDamageTypes;
 

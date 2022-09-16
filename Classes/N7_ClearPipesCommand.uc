@@ -15,7 +15,7 @@ protected function DoAction(N7_CommandExecutionState ExecState)
 /** @Override */
 protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecState)
 {
-    return "All pipes have been removed by "$GetInstigatorName(ExecState);
+    return "All pipes have been removed by "$ColorizeSender(ExecState);
 }
 
 defaultproperties

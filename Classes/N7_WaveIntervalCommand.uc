@@ -6,7 +6,7 @@ enum ECmdArgs
 };
 
 var protected const int MinWaveInterval;
-var protected config const int MaxWaveInterval;
+var protected globalconfig const int MaxWaveInterval;
 
 /** @Override */
 protected function DoAction(N7_CommandExecutionState ExecState)
@@ -39,7 +39,7 @@ protected function DoAction(N7_CommandExecutionState ExecState)
 /** @Override */
 protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecState)
 {
-    return "Wave Interval set to "$KFGT.TimeBetweenWaves$"s by "$GetInstigatorName(ExecState);
+    return "Wave Interval set to "$ColorizeValue(KFGT.TimeBetweenWaves)$"s by "$ColorizeSender(ExecState);
 }
 
 defaultproperties

@@ -1,10 +1,19 @@
-class N7_CommandManager extends Engine.Mutator;
+class N7_CommandManager extends Engine.Mutator
+    config(N7CommandManager);
 
-var KFGameType KFGT;
+var public KFGameType KFGT;
 
 /** Class which contains some helper functions to work with game state */
-var const class<N7_GameStateUtils> GSUClass;
-var N7_GameStateUtils GSU;
+var protected const class<N7_GameStateUtils> GSUClass;
+var public N7_GameStateUtils GSU;
+
+/** Class responsible for messages/notifications coloring */
+var protected const class<N7_CommandMessageColors> ColorsClass;
+var public N7_CommandMessageColors Colors;
+
+/** Class which provides API for input validation */
+var protected const class<N7_CommandValidator> ValidatorClass;
+var public N7_CommandValidator Validator;
 
 enum ECmd
 {
@@ -135,7 +144,7 @@ var protected class<N7_Command> TempAdminCommandClass;
 var protected Array<N7_Command> Commands;
 
 /** THP Game settings */
-var protected config const bool bAllowMutate;
+var protected globalconfig const bool bAllowMutate;
 var protected bool bZedTimeDisabled;
 
 // Minimum ZED HP config that can be set when there are more players
@@ -311,6 +320,8 @@ event PostBeginPlay()
     }
 
     GSU = new(Self) GSUClass;
+    Colors = new(Self) ColorsClass;
+    Validator = new(Self) ValidatorClass;
 
     InitHelperCommands();
     InitGameSettingsCommands();
@@ -515,6 +526,8 @@ defaultproperties
     FakedPlayersNum=0
 
     GSUClass=class'N7_GameStateUtils'
+    ColorsClass=class'N7_CommandMessageColors'
+    ValidatorClass=class'N7_CommandValidator'
 
     HelpCommandClass=class'N7_HelpCommand'
     AdminHelpCommandClass=class'N7_AdminHelpCommand'

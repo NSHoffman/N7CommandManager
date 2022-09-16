@@ -8,7 +8,7 @@ protected function DoActionForSingleTarget
     local string SelectedPerk;
     local int i;
 
-    SelectedPerk = N7_CommandPreservedState(ExecState).LoadString();
+    SelectedPerk = ExecState.LoadString();
 
     for (i = 0; i < KFGT.LoadedSkills.Length; i++)
     {
@@ -38,7 +38,7 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
     {
         if (IsStringPartOf(SelectedPerk, KFGT.LoadedSkills[i].default.VeterancyName))
         {
-            N7_CommandPreservedState(ExecState).SaveString(KFGT.LoadedSkills[i].default.VeterancyName);
+            ExecState.SaveString(KFGT.LoadedSkills[i].default.VeterancyName);
             return true;
         }
     }
@@ -49,7 +49,10 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 /** @Override */
 protected function string InvalidArgsMessage(N7_CommandExecutionState ExecState)
 {
-    return "Cannot find perk \""$ExecState.GetArg(ECmdArgs.ARG_VALUE)$"\"";
+    local string InvalidPerk;
+    InvalidPerk = ColorizeValue(ExecState.GetArg(ECmdArgs.ARG_VALUE));
+
+    return "Cannot find perk "$InvalidPerk;
 }
 
 /** @Override */
@@ -62,7 +65,10 @@ protected function bool CheckIfNonAdminExecutionAllowed(N7_CommandExecutionState
 /** @Override */
 protected function string GetTargetSuccessMessage(N7_CommandExecutionState ExecState)
 {
-    return "Your perk has been changed to "$N7_CommandPreservedState(ExecState).LoadString();
+    local string SelectedPerk;
+    SelectedPerk = ColorizeValue(ExecState.LoadString());
+
+    return "Your perk has been changed to "$SelectedPerk;
 }
 
 /** @Override */
@@ -70,8 +76,8 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
 {
     local string TargetName, SelectedPerk;
     
-    TargetName = LoadTarget(ExecState);
-    SelectedPerk = N7_CommandPreservedState(ExecState).LoadString();
+    TargetName = ColorizeTarget(LoadTarget(ExecState));
+    SelectedPerk = ColorizeValue(ExecState.LoadString());
 
     return TargetName$"'s perk has been changed to "$SelectedPerk;
 }

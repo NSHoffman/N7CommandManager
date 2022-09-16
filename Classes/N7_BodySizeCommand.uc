@@ -6,7 +6,7 @@ protected function DoActionForSingleTarget
 {
     local float NewBodyScale;
 
-    NewBodyScale = N7_CommandPreservedState(ExecState).LoadNumberF();
+    NewBodyScale = ExecState.LoadNumberF();
     GSU.ResizePlayer(PC, NewBodyScale);
     AddResizedPlayer(PC, NewBodyScale);
 }
@@ -14,11 +14,15 @@ protected function DoActionForSingleTarget
 /** @Override */
 protected function string GetTargetSuccessMessage(N7_CommandExecutionState ExecState)
 {
-    local string TargetName;
-    local float NewBodyScale;
+    local string TargetName, NewBodyScale;
 
     TargetName = LoadTarget(ExecState);
-    NewBodyScale = N7_CommandPreservedState(ExecState).LoadNumberF();
+    NewBodyScale = ColorizeValue(ExecState.LoadNumberF());
+
+    if (TargetName ~= "all")
+    {
+        return "All players' body size scale is set to "$NewBodyScale;
+    } 
 
     return "Your body size scale is set to "$NewBodyScale;
 }
@@ -26,11 +30,10 @@ protected function string GetTargetSuccessMessage(N7_CommandExecutionState ExecS
 /** @Override */
 protected function string GetSenderSuccessMessage(N7_CommandExecutionState ExecState)
 {
-    local string TargetName;
-    local float NewBodyScale;
+    local string TargetName, NewBodyScale;
 
     TargetName = LoadTarget(ExecState);
-    NewBodyScale = N7_CommandPreservedState(ExecState).LoadNumberF();
+    NewBodyScale = ColorizeValue(ExecState.LoadNumberF());
 
     if (TargetName ~= "all")
     {
@@ -41,7 +44,7 @@ protected function string GetSenderSuccessMessage(N7_CommandExecutionState ExecS
         return "Your body size scale is set to "$NewBodyScale;
     } 
 
-    return TargetName$"'s body size scale is set to "$NewBodyScale;
+    return ColorizeTarget(TargetName)$"'s body size scale is set to "$NewBodyScale;
 }
 
 defaultproperties
@@ -51,5 +54,4 @@ defaultproperties
     Aliases(1)="BODYSIZE"
     Signature="<? float BodyScale, ? (string TargetName | 'all')>"
     Description="Set Player's body size scale"
-    bNotifySenderOnSuccess=true
 }

@@ -11,7 +11,7 @@ var protected editconstarray Array<string> AvailableProjTypes;
 protected function DoAction(N7_CommandExecutionState ExecState)
 {
     local string ProjType;
-    ProjType = N7_CommandPreservedState(ExecState).LoadString();
+    ProjType = ExecState.LoadString();
 
     SpawnProjectile(ExecState.GetSender(), ProjType);
 }
@@ -82,7 +82,7 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
     {
         if (IsStringPartOf(ProjType, AvailableProjTypes[i]))
         {
-            N7_CommandPreservedState(ExecState).SaveString(AvailableProjTypes[i]);
+            ExecState.SaveString(AvailableProjTypes[i]);
             return true;
         }
     }
@@ -125,7 +125,6 @@ defaultproperties
     Description="Spawn projectile"
     // bOnlyAliveSender=true
     bNotifySenderOnSuccess=false
-    CommandStateClass=class'N7_CommandPreservedState'
 
     AvailableProjTypes(0)="KFMod.FlareRevolver"
     AvailableProjTypes(1)="KFMod.HuskGun"

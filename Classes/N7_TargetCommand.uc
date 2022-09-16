@@ -8,12 +8,12 @@ class N7_TargetCommand extends N7_Command
 var protected const bool bAllowTargetAll;
 var protected const bool bAllowTargetSelf;
 var protected const bool bOnlyFirstTargetMatch;
-var protected config const bool bOnlyAliveTargets;
-var protected config const bool bOnlyDeadTargets;
-var protected config const bool bOnlyPlayerTargets;
-var protected config const bool bOnlySpectatorTargets;
-var protected config const bool bOnlyAdminTargets;
-var protected config const bool bOnlyNonAdminTargets;
+var protected globalconfig const bool bOnlyAliveTargets;
+var protected globalconfig const bool bOnlyDeadTargets;
+var protected globalconfig const bool bOnlyPlayerTargets;
+var protected globalconfig const bool bOnlySpectatorTargets;
+var protected globalconfig const bool bOnlyAdminTargets;
+var protected globalconfig const bool bOnlyNonAdminTargets;
 
 /** @Override */
 protected function DoAction(N7_CommandExecutionState ExecState)
@@ -42,13 +42,9 @@ protected function bool ShouldBeTarget(
 protected function bool VerifyTargetBySender(
     N7_CommandExecutionState ExecState, out string TargetName)
 {
-    if (ValidateTarget(ExecState, ExecState.GetSender()))
-    {
-        TargetName = ExecState.GetSender().PlayerReplicationInfo.PlayerName;
-        return true;
-    }
-
-    return false;
+    TargetName = ExecState.GetSender().PlayerReplicationInfo.PlayerName;
+    
+    return ValidateTarget(ExecState, ExecState.GetSender());
 }
 
 protected function bool VerifyTargetByName(
@@ -62,13 +58,17 @@ protected function bool VerifyTargetByName(
     }
 
     Target = FindTarget(TargetName);
-    if (Target != None && ValidateTarget(ExecState, Target))
+
+    if (Target != None)
     {
         TargetName = Target.PlayerReplicationInfo.PlayerName;
-        return true;
+    }
+    else
+    {
+        return false;
     }
 
-    return false;
+    return ValidateTarget(ExecState, Target);
 }
 
 /****************************
@@ -172,13 +172,13 @@ protected function SaveTarget(
 {
     if (bOnlyFirstTargetMatch)
     {
-        N7_CommandPreservedState(ExecState).SaveTarget(TargetName);
+        ExecState.SaveTarget(TargetName);
     }
 }
 
 protected function string LoadTarget(N7_CommandExecutionState ExecState)
 {
-    return N7_CommandPreservedState(ExecState).LoadTarget();
+    return ExecState.LoadTarget();
 }
 
 protected function PlayerController FindTarget(string TargetName)
@@ -210,5 +210,4 @@ defaultproperties
     bOnlyFirstTargetMatch=true
     bNotifySenderOnSuccess=false
     bNotifyTargetsOnSuccess=true
-    CommandStateClass=class'N7_CommandPreservedState'
 }

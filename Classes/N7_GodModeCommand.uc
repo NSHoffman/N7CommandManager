@@ -16,35 +16,37 @@ protected function DoActionForSingleTarget
             break;
     }
 
-    N7_CommandPreservedState(ExecState).SaveFlag(PC.bGodMode);
+    ExecState.SaveFlag(PC.bGodMode);
 }
 
 /** @Override */
 protected function string GetTargetSuccessMessage(N7_CommandExecutionState ExecState)
 {
-    local string TargetName;
+    local string TargetName, GodModeState;
     TargetName = LoadTarget(ExecState);
+    GodModeState = ColorizeValue(ExecState.LoadEnabled());
 
     if (TargetName ~= "all")
     {
-        return "All players' God Mode is "$N7_CommandPreservedState(ExecState).LoadEnabled();
+        return "All players' God Mode is "$GodModeState;
     }
 
-    return "God Mode is "$N7_CommandPreservedState(ExecState).LoadEnabled();
+    return "God Mode is "$GodModeState;
 }
 
 /** @Override */
 protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecState)
 {
-    local string TargetName;
+    local string TargetName, GodModeState;
     TargetName = LoadTarget(ExecState);
+    GodModeState = ColorizeValue(ExecState.LoadEnabled());
 
     if (TargetName ~= "all")
     {
-        return "All players' God Mode is "$N7_CommandPreservedState(ExecState).LoadEnabled();
+        return "All players' God Mode is "$GodModeState;
     }
 
-    return TargetName$"'s God Mode is "$N7_CommandPreservedState(ExecState).LoadEnabled();
+    return ColorizeTarget(TargetName)$"'s God Mode is "$GodModeState;
 }
 
 defaultproperties

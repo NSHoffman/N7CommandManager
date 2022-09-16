@@ -8,8 +8,8 @@ enum ECmdArgs_X
 };
 
 var protected const int MinDamage;
-var protected config const int MaxDamage;
-var protected config const int DefaultDamage;
+var protected globalconfig const int MaxDamage;
+var protected globalconfig const int DefaultDamage;
 
 var protected editconstarray Array<string> AvailableDamageTypes;
 
@@ -121,7 +121,7 @@ protected function string InvalidGameStateMessage()
 /** @Override */
 protected function string GetTargetSuccessMessage(N7_CommandExecutionState ExecState)
 {
-    return "You have been hit by "$GetInstigatorName(ExecState);
+    return "You have been hit by "$ColorizeSender(ExecState);
 }
 
 /** @Override */
@@ -132,10 +132,10 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
 
     if (TargetName ~= "all")
     {
-        return "All players have been hit by "$GetInstigatorName(ExecState);
+        return "All players have been hit by "$ColorizeSender(ExecState);
     }
 
-    return TargetName$" has been hit by "$GetInstigatorName(ExecState);
+    return ColorizeTarget(TargetName)$" has been hit by "$ColorizeSender(ExecState);
 }
 
 defaultproperties

@@ -20,13 +20,16 @@ protected function DoAction(N7_CommandExecutionState ExecState)
         SetZedTime(!IsZedTimeDisabled());
     }
 
-    N7_CommandPreservedState(ExecState).SaveFlag(!IsZedTimeDisabled());
+    ExecState.SaveFlag(!IsZedTimeDisabled());
 }
 
 /** @Override */
 protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecState)
 {
-    return "ZED-Time is "$N7_CommandPreservedState(ExecState).LoadEnabled()$" by "$GetInstigatorName(ExecState);
+    local string ZedTimeState;
+    ZedTimeState = ColorizeValue(ExecState.LoadEnabled());
+
+    return "ZED-Time is "$ZedTimeState$" by "$ColorizeSender(ExecState);
 }
 
 defaultproperties

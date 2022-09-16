@@ -36,7 +36,7 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
         return "All players are in ghost mode";
     }
 
-    return TargetName$" is in ghost mode";
+    return ColorizeTarget(TargetName)$" is in ghost mode";
 }
 
 defaultproperties
