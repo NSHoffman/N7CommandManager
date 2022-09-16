@@ -20,7 +20,7 @@ protected function DoAction(N7_CommandExecutionState ExecState)
 /** @Override */
 protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecState)
 {
-    return "All welded doors have been destroyed by "$GetInstigatorName(ExecState);
+    return "All welded doors have been destroyed by "$ColorizeSender(ExecState);
 }
 
 defaultproperties

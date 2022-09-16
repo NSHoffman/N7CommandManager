@@ -40,7 +40,10 @@ protected function bool CheckTargetCustom(
 /** @Override */
 protected function string InvalidTargetMessage(N7_CommandExecutionState ExecState)
 {
-    return "Invalid target "$LoadTarget(ExecState)$" or spectators limit reached";
+    local string TargetName;
+    TargetName = ColorizeTarget(LoadTarget(ExecState));
+
+    return "Invalid target "$TargetName$" or spectators limit reached";
 }
 
 /** @Override */
@@ -53,7 +56,7 @@ protected function string GetTargetSuccessMessage(N7_CommandExecutionState ExecS
 protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecState)
 {
     local string TargetName;
-    TargetName = LoadTarget(ExecState);
+    TargetName = ColorizeTarget(LoadTarget(ExecState));
 
     return TargetName$" has been forced to become a spectator";
 }

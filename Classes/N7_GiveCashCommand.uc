@@ -1,7 +1,7 @@
 class N7_GiveCashCommand extends N7_BinaryTargetCommand;
 
 var protected const int MinCashAmount; 
-var protected const int MaxCashAmount;
+var protected globalconfig const int MaxCashAmount;
 
 /** @Override */
 protected function DoActionForSingleTarget
@@ -19,17 +19,16 @@ protected function DoActionForSingleTarget
         CashAmount = MinCashAmount;
     }
     PC.PlayerReplicationInfo.Score += CashAmount;
-    N7_CommandPreservedState(ExecState).SaveNumber(CashAmount);
+    ExecState.SaveNumber(CashAmount);
 }
 
 /** @Override */
 protected function string GetTargetSuccessMessage(N7_CommandExecutionState ExecState)
 {
-    local string TargetName;
-    local int CashAmount;
+    local string TargetName, CashAmount;
 
     TargetName = LoadTarget(ExecState);
-    CashAmount = N7_CommandPreservedState(ExecState).LoadNumber();
+    CashAmount = ColorizeValue(ExecState.LoadNumber());
 
     if (TargetName ~= "all")
     {
@@ -42,18 +41,17 @@ protected function string GetTargetSuccessMessage(N7_CommandExecutionState ExecS
 /** @Override */
 protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecState)
 {
-    local string TargetName;
-    local int CashAmount;
+    local string TargetName, CashAmount;
 
     TargetName = LoadTarget(ExecState);
-    CashAmount = N7_CommandPreservedState(ExecState).LoadNumber();
+    CashAmount = ColorizeValue(ExecState.LoadNumber());
 
     if (TargetName ~= "all")
     {
         return "All players have been given "$CashAmount$" of dosh";
     }
 
-    return TargetName$" has been given "$CashAmount$" of dosh";
+    return ColorizeTarget(TargetName)$" has been given "$CashAmount$" of dosh";
 }
 
 defaultproperties

@@ -69,7 +69,7 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
     local string TargetName;
     local string BanSuccessMessage;
 
-    TargetName = LoadTarget(ExecState);
+    TargetName = ColorizeTarget(LoadTarget(ExecState));
     BanSuccessMessage = TargetName$" was banned";
 
     if (ToBool(ExecState.GetArg(ECmdArgs_X.ARG_PERMANENT)))

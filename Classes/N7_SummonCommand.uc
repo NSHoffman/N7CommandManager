@@ -8,11 +8,11 @@ protected function DoActionForSingleTarget
     local KFMonster SpawnedZed;
 
     TargetZedClass = class<KFMonster>(
-        DynamicLoadObject(N7_CommandPreservedState(ExecState).LoadString(), class'Class')
+        DynamicLoadObject(ExecState.LoadString(), class'Class')
     );
 
     SpawnedZed = Spawn(TargetZedClass,,, PC.Pawn.Location + 72 * Vector(PC.Rotation) + vect(0, 0, 1) * 15);
-    N7_CommandPreservedState(ExecState).SaveString(TargetZedClass.default.MenuName);
+    ExecState.SaveString(TargetZedClass.default.MenuName);
     
     if (SpawnedZed == None)
     {
@@ -38,13 +38,13 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
     {
         if (IsStringPartOf(TargetZed, KFGT.MonsterCollection.default.MonsterClasses[i].MClassName))
         {
-            N7_CommandPreservedState(ExecState).SaveString(KFGT.MonsterCollection.default.MonsterClasses[i].MClassName);
+            ExecState.SaveString(KFGT.MonsterCollection.default.MonsterClasses[i].MClassName);
             return true;
         }
 
         if (IsStringPartOf(TargetZed, KFGT.MonsterCollection.default.EndGameBossClass))
         {
-            N7_CommandPreservedState(ExecState).SaveString(KFGT.MonsterCollection.default.EndGameBossClass);
+            ExecState.SaveString(KFGT.MonsterCollection.default.EndGameBossClass);
             return true;
         }
     }
@@ -61,25 +61,25 @@ protected function string InvalidGameStateMessage()
 /** @Override */
 protected function string RuntimeErrorMessage(N7_CommandExecutionState ExecState)
 {
-    return "Could not summon "$N7_CommandPreservedState(ExecState).LoadString();
+    return "Could not summon "$ColorizeValue(ExecState.LoadString());
 }
 
 /** @Override */
 protected function string InvalidArgsMessage(N7_CommandExecutionState ExecState)
 {
-    return "Cannot find ZED with class "$ExecState.GetArg(ECmdArgs.ARG_VALUE);
+    return "Cannot find ZED with class "$ColorizeValue(ExecState.GetArg(ECmdArgs.ARG_VALUE));
 }
 
 /** @Override */
 protected function string GetSenderSuccessMessage(N7_CommandExecutionState ExecState)
 {
-    return N7_CommandPreservedState(ExecState).LoadString()$" has been spawned";
+    return ColorizeValue(ExecState.LoadString())$" has been spawned";
 }
 
 /** @Override */
 protected function string GetTargetSuccessMessage(N7_CommandExecutionState ExecState)
 {
-    return N7_CommandPreservedState(ExecState).LoadString()$" has been spawned next to you";
+    return ColorizeValue(ExecState.LoadString())$" has been spawned next to you";
 }
 
 defaultproperties

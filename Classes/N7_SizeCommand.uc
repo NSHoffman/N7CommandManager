@@ -5,8 +5,8 @@
 class N7_SizeCommand extends N7_BinaryTargetCommand
     abstract;
 
-var protected const float MinScale; 
-var protected const float MaxScale;
+var protected globalconfig const float MinScale; 
+var protected globalconfig const float MaxScale;
 
 /** @Override */
 protected function bool CheckGameState(N7_CommandExecutionState ExecState)
@@ -30,7 +30,7 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
         return false; 
     }
 
-    N7_CommandPreservedState(ExecState).SaveNumberF(NewScale);
+    ExecState.SaveNumberF(NewScale);
 
     return true;
 }
@@ -58,4 +58,5 @@ defaultproperties
     MinScale=0.1
     MaxScale=5.0
     bOnlyAliveTargets=true
+    bNotifySenderOnSuccess=true
 }

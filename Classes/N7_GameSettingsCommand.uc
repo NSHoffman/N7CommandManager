@@ -9,5 +9,4 @@ defaultproperties
 {
     bNotifySenderOnSuccess=false
     bNotifyGlobalOnSuccess=true
-    CommandStateClass=class'N7_CommandPreservedState'
 }

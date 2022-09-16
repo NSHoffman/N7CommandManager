@@ -65,7 +65,7 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
         return "All players have been respawned";
     }
 
-    return TargetName$" has been respawned";
+    return ColorizeTarget(TargetName)$" has been respawned";
 }
 
 defaultproperties

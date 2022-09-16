@@ -17,7 +17,10 @@ protected function bool CheckIfNonAdminExecutionAllowed(N7_CommandExecutionState
 /** @Override */
 protected function string GetTargetSuccessMessage(N7_CommandExecutionState ExecState)
 {
-    return "Your name has been changed to "$ExecState.GetArg(ECmdArgs.ARG_VALUE);
+    local string NewName;
+    NewName = ColorizeValue(ExecState.GetArg(ECmdArgs.ARG_VALUE));
+
+    return "Your name has been changed to "$NewName;
 }
 
 /** @Override */
@@ -25,8 +28,8 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
 {
     local string OldName, NewName;
     
-    OldName = LoadTarget(ExecState);
-    NewName = ExecState.GetArg(ECmdArgs.ARG_VALUE);
+    OldName = ColorizeTarget(LoadTarget(ExecState));
+    NewName = ColorizeValue(ExecState.GetArg(ECmdArgs.ARG_VALUE));
 
     return OldName$"'s name has been changed to "$NewName;
 }

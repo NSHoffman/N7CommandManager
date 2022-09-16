@@ -36,7 +36,7 @@ protected function string InvalidGameStateMessage()
 /** @Override */
 protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecState)
 {
-    return "Game forcibly started by "$GetInstigatorName(ExecState);
+    return "Game forcibly started by "$ColorizeSender(ExecState);
 }
 
 defaultproperties

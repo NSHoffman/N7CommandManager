@@ -36,7 +36,7 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
         return "All players are in spider mode";
     }
 
-    return TargetName$" is in spider mode";
+    return ColorizeTarget(TargetName)$" is in spider mode";
 }
 
 defaultproperties

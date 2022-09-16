@@ -6,7 +6,7 @@ enum ECmdArgs
 };
 
 var protected const int MinWave;
-var protected const int MaxWave;
+var protected int MaxWave;
 
 /** @Override */
 protected function DoAction(N7_CommandExecutionState ExecState)
@@ -79,7 +79,7 @@ protected function DoAction(N7_CommandExecutionState ExecState)
         KFGT.WaveNum = WaveNum - 2;
         KFGRI.WaveNumber = Max(KFGT.WaveNum, 0);
     }
-    N7_CommandPreservedState(ExecState).SaveNumber(WaveNum);
+    ExecState.SaveNumber(WaveNum);
 }
 
 /** @Override */
@@ -93,6 +93,7 @@ protected function bool CheckGameState(N7_CommandExecutionState ExecState)
 protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 {
     local int WaveNum;
+    MaxWave = KFGT.FinalWave;
     WaveNum = ToInt(ExecState.GetArg(ECmdArgs.ARG_WAVE));
 
     return IsInRange(WaveNum, MinWave, MaxWave);
@@ -101,7 +102,10 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 /** @Override */
 protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecState)
 {
-    return "Wave set to "$N7_CommandPreservedState(ExecState).LoadNumber()$" by "$GetInstigatorName(ExecState);
+    local string StyledWaveNum;
+    StyledWaveNum = ColorizeValue(ExecState.LoadNumber());
+
+    return "Wave set to "$StyledWaveNum$" by "$ColorizeSender(ExecState);
 }
 
 /** @Override */

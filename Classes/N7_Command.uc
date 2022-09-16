@@ -1,5 +1,6 @@
 class N7_Command extends Core.Object within N7_CommandManager
-    abstract;
+    abstract
+    config(N7CommandManager);
 
 const ERRNO_NONE        = 0;
 const ERRNO_NOGAMETYPE  = 1;
@@ -14,11 +15,10 @@ const ERRNO_INVALTARGET = 9;
 const ERRNO_CUSTOM      = 10;
 const ERRNO_RUNTIME     = 11;
 
-var protected const class<N7_CommandValidator> ValidatorClass;
 var protected const class<N7_CommandExecutionState> CommandStateClass;
 
 var protected editconstarray Array<string> ArgTypes;
-var protected editconstarray Array<string> Aliases;
+var protected globalconfig editconstarray Array<string> Aliases;
 
 var protected const int MinArgsNum, MaxArgsNum;
 
@@ -36,8 +36,9 @@ var protected const bool bUseTargets;
 var protected const bool bOnlyPlayerSender;
 var protected const bool bOnlyAliveSender;
 
-var protected config const bool bAdminOnly;
-var protected config const bool bDisableNotifications;
+var protected globalconfig const bool bAdminOnly;
+var protected globalconfig const bool bDisableColoring;
+var protected globalconfig const bool bDisableNotifications;
 
 /****************************
  *  PUBLIC INTERFACE
@@ -49,7 +50,7 @@ public final function Execute(
     local N7_CommandExecutionState ExecState;
 
     ExecState = new(Self) CommandStateClass;
-    ExecState.InitCommandState(Sender, Args);
+    ExecState.Initialize(Sender, Args);
 
     Validate(ExecState);
 
@@ -82,9 +83,8 @@ public final function GetHelp(PlayerController PC)
         {
             HelpMessage $= "/";
         }
-    }
-    HelpMessage $= " "$Signature$" - "$Description;
-    
+    }    
+    HelpMessage $= " "$ColorizeSignature(Signature)$" - "$Description;
     SendMessage(PC, HelpMessage);
 }
 
@@ -485,17 +485,59 @@ protected function bool ShouldBeTarget(
 }
 
 /****************************
+ *  COLOR HIGHLIGTHING
+ ****************************/
+
+protected final function string ColorizeMain(string Text)
+{
+    return Colors.ColorizeMain(Text, bDisableColoring);
+}
+
+protected final function string ColorizeSender(N7_CommandExecutionState ExecState)
+{
+    return Colors.ColorizeSender(
+        ExecState.GetSender().PlayerReplicationInfo.PlayerName, 
+        bDisableColoring
+    );
+}
+
+protected final function string ColorizeTarget(string TargetName)
+{
+    return Colors.ColorizeTarget(TargetName, bDisableColoring);
+}
+
+protected final function string ColorizeEntity(string EntityName)
+{
+    return Colors.ColorizeEntity(EntityName, bDisableColoring);
+}
+
+protected final function string ColorizeValue(coerce string Value)
+{
+    return Colors.ColorizeValue(Value, bDisableColoring);
+}
+
+protected final function string ColorizeSignature(string Signature)
+{
+    return Colors.ColorizeSignature(Signature, bDisableColoring);
+}
+
+protected final function string ColorizeEmphasis(string Text)
+{
+    return Colors.ColorizeEmphasis(Text, bDisableColoring);
+}
+
+protected final function string ColorizeError(string Text)
+{
+    return Colors.ColorizeError(Text, bDisableColoring);
+}
+
+/****************************
  *  NOTIFICATIONS
  ****************************/
 
-protected final function SendMessage(PlayerController PC, string Message)
+protected final event SendMessage(PlayerController PC, string Message)
 {
-    PC.ClientMessage(Message);
-}
-
-protected final function string GetInstigatorName(N7_CommandExecutionState ExecState)
-{
-    return ExecState.GetSender().PlayerReplicationInfo.PlayerName;
+    PC.TeamMessage(None, ColorizeMain(Message), 'Event');
 }
 
 protected final function NotifyOnSuccess(N7_CommandExecutionState ExecState)
@@ -621,7 +663,7 @@ protected function string GetErrorMessage(N7_CommandExecutionState ExecState)
 
 protected final function string Error(string Message)
 {
-    return "Error: "$Message;
+    return ColorizeError("Error: ")$Message;
 }
 
 protected final function string NoGameTypeMessage()
@@ -733,57 +775,57 @@ protected final function bool ToBool(string Arg)
 
 protected final function int GetMaxAcceptableStringLength()
 {
-    return ValidatorClass.static.GetMaxAcceptableStringLength();
+    return Validator.GetMaxAcceptableStringLength();
 }
 
 protected final function bool IsEmptyString(string Str)
 {
-    return ValidatorClass.static.IsEmptyString(Str);
+    return Validator.IsEmptyString(Str);
 }
 
 protected final function bool IsValidLengthString(string Str)
 {
-    return ValidatorClass.static.IsValidLengthString(Str);
+    return Validator.IsValidLengthString(Str);
 }
 
 protected final function bool IsStringPartOf(string SubStr, string SupStr)
 {
-    return ValidatorClass.static.IsStringPartOf(SubStr, SupStr);
+    return Validator.IsStringPartOf(SubStr, SupStr);
 }
 
 protected final function bool IsLetter(string Str)
 {
-    return ValidatorClass.static.IsLetter(Str);
+    return Validator.IsLetter(Str);
 }
 
 protected final function bool IsWord(string Str)
 {
-    return ValidatorClass.static.IsWord(Str);
+    return Validator.IsWord(Str);
 }
 
 protected final function bool IsSwitchOnValue(string Value)
 {
-    return ValidatorClass.static.IsSwitchOnValue(Value);
+    return Validator.IsSwitchOnValue(Value);
 }
 
 protected final function bool IsSwitchOffValue(string Value)
 {
-    return ValidatorClass.static.IsSwitchOffValue(Value);
+    return Validator.IsSwitchOffValue(Value);
 }
 
 protected final function bool IsSwitchValue(string Value)
 {
-    return ValidatorClass.static.IsSwitchValue(Value);
+    return Validator.IsSwitchValue(Value);
 }
 
 protected final function bool IsDigit(string Str)
 {
-    return ValidatorClass.static.IsDigit(Str);
+    return Validator.IsDigit(Str);
 }
 
 protected final function bool IsNumber(string Str)
 {
-    return ValidatorClass.static.IsNumber(Str);
+    return Validator.IsNumber(Str);
 }
 
 protected final function bool IsInRange(
@@ -791,7 +833,7 @@ protected final function bool IsInRange(
     int Start, 
     optional int End)
 {
-    return ValidatorClass.static.IsInRange(Number, Start, End);
+    return Validator.IsInRange(Number, Start, End);
 }
 
 protected final function bool IsInRangeF(
@@ -799,37 +841,37 @@ protected final function bool IsInRangeF(
     float Start, 
     optional float End)
 {
-    return ValidatorClass.static.IsInRangeF(Number, Start, End);
+    return Validator.IsInRangeF(Number, Start, End);
 }
 
 protected final function bool IsPlayer(Controller C)
 {
-    return ValidatorClass.static.IsPlayer(C);
+    return Validator.IsPlayer(C);
 }
 
 protected final function bool IsSpectator(PlayerController PC)
 {
-    return ValidatorClass.static.IsSpectator(PC);
+    return Validator.IsSpectator(PC);
 }
 
 protected final function bool IsAlive(PlayerController PC)
 {
-    return ValidatorClass.static.IsAlive(PC);
+    return Validator.IsAlive(PC);
 }
 
 protected final function bool IsAdmin(PlayerController PC)
 {
-    return ValidatorClass.static.IsAdmin(PC);
+    return Validator.IsAdmin(PC);
 }
 
 protected final function bool IsTempAdmin(PlayerController PC)
 {
-    return ValidatorClass.static.IsTempAdmin(PC);
+    return Validator.IsTempAdmin(PC);
 }
 
 protected final function bool IsWebAdmin(PlayerController PC)
 {
-    return ValidatorClass.static.IsWebAdmin(PC);
+    return Validator.IsWebAdmin(PC);
 }
 
 defaultproperties
@@ -837,15 +879,15 @@ defaultproperties
     MinArgsNum=0
     MaxArgsNum=0
     bAdminOnly=false
+    bUseTargets=false
     bOnlyPlayerSender=true
     bOnlyAliveSender=false
-    bNotifyOnError=true
     bNotifySenderOnSuccess=true
     bNotifyTargetsOnSuccess=false
     bNotifyGlobalOnSuccess=false
     bNotifyAdminsOnlyOnSuccess=false
+    bNotifyOnError=true
+    bDisableColoring=false
     bDisableNotifications=false
-    bUseTargets=false
     CommandStateClass=class'N7_CommandExecutionState'
-    ValidatorClass=class'N7_CommandValidator'
 }

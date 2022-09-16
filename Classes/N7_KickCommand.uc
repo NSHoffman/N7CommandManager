@@ -28,7 +28,7 @@ protected function bool CheckTargetCustom(
 protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecState)
 {
     local string TargetName;
-    TargetName = LoadTarget(ExecState);
+    TargetName = ColorizeTarget(LoadTarget(ExecState));
 
     return TargetName$" was kicked";
 }

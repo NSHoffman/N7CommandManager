@@ -15,27 +15,27 @@ var protected const int MaxAcceptableStringLength;
  * STRING VALIDATION
  *********************************/
 
-static function bool IsEmptyString(string Str)
+public function bool IsEmptyString(string Str)
 {
     return Str == "";
 }
 
-static function int GetMaxAcceptableStringLength()
+public function int GetMaxAcceptableStringLength()
 {
     return default.MaxAcceptableStringLength;
 }
 
-static function bool IsValidLengthString(string Str)
+public function bool IsValidLengthString(string Str)
 {
     return Len(Str) <= default.MaxAcceptableStringLength;
 }
 
-static function bool IsStringPartOf(string SubStr, string SupStr)
+public function bool IsStringPartOf(string SubStr, string SupStr)
 {
     return InStr(Caps(SupStr), Caps(SubStr)) >= 0;
 }
 
-static function bool IsLetter(string Str)
+public function bool IsLetter(string Str)
 {
     local string Ch;
     Ch = Mid(Str, 0, 1);
@@ -44,7 +44,7 @@ static function bool IsLetter(string Str)
         || IsInRange(Asc(Ch), default.MinLowercaseLetterCode, default.MaxLowercaseLetterCode);
 }
 
-static function bool IsWord(string Str)
+public function bool IsWord(string Str)
 {
     local int i;
 
@@ -59,7 +59,7 @@ static function bool IsWord(string Str)
     return true;
 }
 
-static function bool IsDigit(string Str)
+public function bool IsDigit(string Str)
 {
     local string Ch;
     Ch = Mid(Str, 0, 1);
@@ -67,7 +67,7 @@ static function bool IsDigit(string Str)
     return IsInRange(Asc(Ch), default.MinDigitCode, default.MaxDigitCode);
 }
 
-static function bool IsNumber(string Str)
+public function bool IsNumber(string Str)
 {
     local int i;
     local string Ch;
@@ -101,17 +101,17 @@ static function bool IsNumber(string Str)
     return true;
 }
 
-static function bool IsSwitchOnValue(string Value)
+public function bool IsSwitchOnValue(string Value)
 {
     return Value ~= "ON" || Value ~= "1";
 }
 
-static function bool IsSwitchOffValue(string Value)
+public function bool IsSwitchOffValue(string Value)
 {
     return Value ~= "OFF" || Value ~= "0";
 }
 
-static function bool IsSwitchValue(string Value)
+public function bool IsSwitchValue(string Value)
 {
     return IsSwitchOnValue(Value) || IsSwitchOffValue(Value);
 }
@@ -120,7 +120,7 @@ static function bool IsSwitchValue(string Value)
  * NUMBER VALIDATION
  *********************************/
 
-static function bool IsInRange(
+public function bool IsInRange(
     coerce int Number, 
     int Start, 
     optional int End)
@@ -133,7 +133,7 @@ static function bool IsInRange(
     return Number >= Start;
 }
 
-static function bool IsInRangeF(
+public function bool IsInRangeF(
     coerce float Number, 
     float Start, 
     optional float End)
@@ -150,17 +150,17 @@ static function bool IsInRangeF(
  * GAME OBJECTS VALIDATION
  *********************************/
 
-static function bool IsPlayer(Controller C)
+public function bool IsPlayer(Controller C)
 {
     return PlayerController(C) != None;
 }
 
-static function bool IsSpectator(PlayerController PC)
+public function bool IsSpectator(PlayerController PC)
 {
     return PC.PlayerReplicationInfo.bOnlySpectator;
 }
 
-static function bool IsAlive(PlayerController PC)
+public function bool IsAlive(PlayerController PC)
 {
     return !PC.PlayerReplicationInfo.bIsSpectator 
         && !PC.PlayerReplicationInfo.bOutOfLives 
@@ -172,17 +172,17 @@ static function bool IsAlive(PlayerController PC)
  * Original admin access implies that EITHER bAdmin OR bSilentAdmin is true depending on how user logs in 
  * Temporary admin access requires BOTH flags to be true so that these access types can be differentiated
  */
-static function bool IsAdmin(PlayerController PC)
+public function bool IsAdmin(PlayerController PC)
 {
     return PC.PlayerReplicationInfo.bAdmin ^^ PC.PlayerReplicationInfo.bSilentAdmin;
 }
 
-static function bool IsTempAdmin(PlayerController PC)
+public function bool IsTempAdmin(PlayerController PC)
 {
     return PC.PlayerReplicationInfo.bAdmin && PC.PlayerReplicationInfo.bSilentAdmin;
 }
 
-static function bool IsWebAdmin(PlayerController PC)
+public function bool IsWebAdmin(PlayerController PC)
 {
     return PC.PlayerReplicationInfo.PlayerName == "WebAdmin";
 }

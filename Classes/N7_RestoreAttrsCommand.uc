@@ -19,12 +19,12 @@ protected function DoActionForSingleTarget
             if (IsSwitchOnValue(ExecState.GetArg(ECmdArgs.ARG_FLAG)))
             {
                 AddRestoredPlayer(PC);
-                N7_CommandPreservedState(ExecState).SaveFlag(true);
+                ExecState.SaveFlag(true);
             }
             else
             {
                 RemoveRestoredPlayer(PC);
-                N7_CommandPreservedState(ExecState).SaveFlag(false);
+                ExecState.SaveFlag(false);
             }
             break;
     }
@@ -82,7 +82,7 @@ protected function string GetTargetSuccessMessage(N7_CommandExecutionState ExecS
         return "Your attributes have been restored";
     }
 
-    return "Attribute restoration is "$N7_CommandPreservedState(ExecState).LoadEnabled();
+    return "Attribute restoration is "$ColorizeValue(ExecState.LoadEnabled());
 }
 
 defaultproperties

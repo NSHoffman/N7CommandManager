@@ -1,7 +1,7 @@
 class N7_SlapCommand extends N7_UnaryTargetCommand;
 
-var protected config const int SlapDamage;
-var protected config const int SlapDamageForce;
+var protected globalconfig const int SlapDamage;
+var protected globalconfig const int SlapDamageForce;
 
 /** @Override */
 protected function DoActionForSingleTarget
@@ -38,7 +38,7 @@ protected function string InvalidGameStateMessage()
 /** @Override */
 protected function string GetTargetSuccessMessage(N7_CommandExecutionState ExecState)
 {
-    return "You have been slapped by "$GetInstigatorName(ExecState);
+    return "You have been slapped by "$ColorizeSender(ExecState);
 }
 
 /** @Override */
@@ -49,10 +49,10 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
 
     if (TargetName ~= "all")
     {
-        return "All players have been slapped by "$GetInstigatorName(ExecState);
+        return "All players have been slapped by "$ColorizeSender(ExecState);
     }
 
-    return TargetName$" has been slapped by "$GetInstigatorName(ExecState);
+    return ColorizeTarget(TargetName)$" has been slapped by "$ColorizeSender(ExecState);
 }
 
 defaultproperties

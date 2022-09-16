@@ -15,7 +15,7 @@ protected function DoAction(N7_CommandExecutionState ExecState)
 /** @Override */
 protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecState)
 {
-    return "Wave restarted by "$GetInstigatorName(ExecState);
+    return "Wave restarted by "$ColorizeSender(ExecState);
 }
 
 /** @Override */

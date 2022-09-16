@@ -43,7 +43,7 @@ protected function DoAction(N7_CommandExecutionState ExecState)
             }
         }
 
-        N7_CommandPreservedState(ExecState).SaveString("welded");
+        ExecState.SaveString("welded");
     }
     else if (IsSwitchOffValue(Flag))
     {
@@ -55,14 +55,17 @@ protected function DoAction(N7_CommandExecutionState ExecState)
             }
         }
 
-        N7_CommandPreservedState(ExecState).SaveString("unwelded");
+        ExecState.SaveString("unwelded");
     }
 }
 
 /** @Override */
 protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecState)
 {
-    return "All doors are "$N7_CommandPreservedState(ExecState).LoadString()$" by "$GetInstigatorName(ExecState);
+    local string DoorsState;
+    DoorsState = ColorizeValue(ExecState.LoadString());
+
+    return "All doors are "$DoorsState$" by "$ColorizeSender(ExecState);
 }
 
 defaultproperties

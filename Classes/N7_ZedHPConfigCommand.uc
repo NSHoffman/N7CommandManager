@@ -6,7 +6,7 @@ enum ECmdArgs
 };
 
 var protected const int MinLimit;
-var protected const int MaxLimit;
+var protected globalconfig const int MaxLimit;
 
 /** @Override */
 protected function DoAction(N7_CommandExecutionState ExecState)
@@ -41,7 +41,7 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 
         if (!IsInRange(NewHPConfig, MinLimitActual, MaxLimit))
         {
-            N7_CommandPreservedState(ExecState).SaveMinLimit(MinLimitActual);
+            ExecState.SaveMinLimit(MinLimitActual);
             return false;
         }
     }
@@ -52,13 +52,13 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 /** @Override */
 protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecState)
 {
-    return "HP Config set to "$GSU.GetFinalZedHPConfig()$" by "$GetInstigatorName(ExecState);
+    return "HP Config set to "$ColorizeValue(GSU.GetFinalZedHPConfig())$" by "$ColorizeSender(ExecState);
 }
 
 /** @Override */
 protected function string InvalidArgsMessage(N7_CommandExecutionState ExecState)
 {
-    return "HP config must be in range from "$N7_CommandPreservedState(ExecState).LoadMinLimit()$" to "$MaxLimit;
+    return "HP config must be in range from "$ExecState.LoadMinLimit()$" to "$MaxLimit;
 }
 
 defaultproperties
