@@ -18,7 +18,7 @@ const ERRNO_RUNTIME     = 11;
 var protected const class<N7_CommandExecutionState> CommandStateClass;
 
 var protected editconstarray Array<string> ArgTypes;
-var protected globalconfig editconstarray Array<string> Aliases;
+var protected config editconstarray Array<string> Aliases;
 
 var protected const int MinArgsNum, MaxArgsNum;
 
@@ -36,9 +36,9 @@ var protected const bool bUseTargets;
 var protected const bool bOnlyPlayerSender;
 var protected const bool bOnlyAliveSender;
 
-var protected globalconfig const bool bAdminOnly;
-var protected globalconfig const bool bDisableColoring;
-var protected globalconfig const bool bDisableNotifications;
+var protected config const bool bAdminOnly;
+var protected config const bool bDisableColoring;
+var protected config const bool bDisableNotifications;
 
 /****************************
  *  PUBLIC INTERFACE

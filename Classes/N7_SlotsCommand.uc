@@ -5,8 +5,8 @@ enum ECmdArgs
     ARG_NEWSLOTS,
 };
 
-var protected const int MinSlots;
-var protected globalconfig const int MaxSlots;
+var protected const int MinLimit;
+var protected config const int MaxLimit;
 
 /** @Override */
 protected function DoAction(N7_CommandExecutionState ExecState)
@@ -33,7 +33,7 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
     {
         NewSlots = ToInt(ExecState.GetArg(ECmdArgs.ARG_NEWSLOTS));
 
-        if (!IsInRange(NewSlots, MinSlots, MaxSlots))
+        if (!IsInRange(NewSlots, MinLimit, MaxLimit))
         {
             return false;
         }
@@ -51,13 +51,13 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
 /** @Override */
 protected function string InvalidArgsMessage(N7_CommandExecutionState ExecState)
 {
-    return "New slots number must be in range from "$MinSlots$" to "$MaxSlots;
+    return "New slots number must be in range from "$MinLimit$" to "$MaxLimit;
 }
 
 defaultproperties
 {
-    MinSlots=1
-    MaxSlots=10
+    MinLimit=1
+    MaxLimit=10
     MinArgsNum=0
     MaxArgsNum=1
     Aliases(0)="SLOT"

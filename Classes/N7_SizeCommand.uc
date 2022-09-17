@@ -5,8 +5,8 @@
 class N7_SizeCommand extends N7_BinaryTargetCommand
     abstract;
 
-var protected globalconfig const float MinScale; 
-var protected globalconfig const float MaxScale;
+var protected config const float MinLimit; 
+var protected config const float MaxLimit;
 
 /** @Override */
 protected function bool CheckGameState(N7_CommandExecutionState ExecState)
@@ -25,7 +25,7 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
         NewScale = 1.0;
     }
 
-    if (!IsInRangeF(NewScale, MinScale, MaxScale))
+    if (!IsInRangeF(NewScale, MinLimit, MaxLimit))
     {
         return false; 
     }
@@ -44,7 +44,7 @@ protected function string InvalidGameStateMessage()
 /** @Override */
 protected function string InvalidArgsMessage(N7_CommandExecutionState ExecState)
 {
-    return "New draw scale must be in range from "$MinScale$" to "$MaxScale;
+    return "New draw scale must be in range from "$MinLimit$" to "$MaxLimit;
 }
 
 /** @Override */
@@ -55,8 +55,8 @@ protected function string InvalidTargetMessage(N7_CommandExecutionState ExecStat
 
 defaultproperties
 {
-    MinScale=0.1
-    MaxScale=5.0
+    MinLimit=0.1
+    MaxLimit=5.0
     bOnlyAliveTargets=true
     bNotifySenderOnSuccess=true
 }

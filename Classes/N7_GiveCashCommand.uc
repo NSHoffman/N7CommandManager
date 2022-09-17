@@ -1,7 +1,7 @@
 class N7_GiveCashCommand extends N7_BinaryTargetCommand;
 
-var protected const int MinCashAmount; 
-var protected globalconfig const int MaxCashAmount;
+var protected const int MinLimit; 
+var protected config const int MaxLimit;
 
 /** @Override */
 protected function DoActionForSingleTarget
@@ -10,13 +10,13 @@ protected function DoActionForSingleTarget
     local int CashAmount;
     CashAmount = ToInt(ExecState.GetArg(ECmdArgs.ARG_VALUE));
 
-    if (!IsInRange(CashAmount, MinCashAmount, MaxCashAmount) && IsInRange(CashAmount, MinCashAmount))
+    if (!IsInRange(CashAmount, MinLimit, MaxLimit) && IsInRange(CashAmount, MinLimit))
     {
-        CashAmount = MaxCashAmount;
+        CashAmount = MaxLimit;
     }
-    else if (!IsInRange(CashAmount, MinCashAmount))
+    else if (!IsInRange(CashAmount, MinLimit))
     {
-        CashAmount = MinCashAmount;
+        CashAmount = MinLimit;
     }
     PC.PlayerReplicationInfo.Score += CashAmount;
     ExecState.SaveNumber(CashAmount);
@@ -58,13 +58,13 @@ defaultproperties
 {
     bAdminOnly=true
     MinArgsNum=1
+    MinLimit=1
+    MaxLimit=50000
     Aliases(0)="GC"
     Aliases(1)="GD"
     Aliases(2)="CASH"
     Aliases(3)="DOSH"
     Signature="<int Amount, ? (string TargetName | 'all')>"
     Description="Give Money"
-    MinCashAmount=1
-    MaxCashAmount=50000
     bNotifyGlobalOnSuccess=true
 }

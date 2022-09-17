@@ -7,9 +7,9 @@ enum ECmdArgs_X
     ARG_DAMAGE,
 };
 
-var protected const int MinDamage;
-var protected globalconfig const int MaxDamage;
-var protected globalconfig const int DefaultDamage;
+var protected const int MinLimit;
+var protected config const int MaxLimit;
+var protected config const int DefaultDamage;
 
 var protected editconstarray Array<string> AvailableDamageTypes;
 
@@ -91,7 +91,7 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
     {
         PlayerDamage = ToInt(ExecState.GetArg(ECmdArgs_X.ARG_DAMAGE));
 
-        if (!IsInRange(PlayerDamage, MinDamage, MaxDamage))
+        if (!IsInRange(PlayerDamage, MinLimit, MaxLimit))
         {
             return false;
         }
@@ -109,7 +109,7 @@ protected function bool CheckGameState(N7_CommandExecutionState ExecState)
 /** @Override */
 protected function string InvalidArgsMessage(N7_CommandExecutionState ExecState)
 {
-    return "You must provide valid DamageType and Damage value between "$MinDamage$" and "$MaxDamage;
+    return "You must provide valid DamageType and Damage value between "$MinLimit$" and "$MaxLimit;
 }
 
 /** @Override */
@@ -143,13 +143,13 @@ defaultproperties
     bAdminOnly=true
     MinArgsNum=0
     MaxArgsNum=3
+    MinLimit=0
+    MaxLimit=10000
+    DefaultDamage=10
     Aliases(0)="HITP"
     ArgTypes(0)="any"
     ArgTypes(1)="word"
     ArgTypes(2)="number"
-    MinDamage=0
-    MaxDamage=10000
-    DefaultDamage=10
     AvailableDamageTypes(0)="hit"
     AvailableDamageTypes(1)="frag"
     AvailableDamageTypes(2)="fire"

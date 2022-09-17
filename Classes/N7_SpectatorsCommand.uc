@@ -5,8 +5,8 @@ enum ECmdArgs
     ARG_NEWSPECS,
 };
 
-var protected const int MinSpectators;
-var protected globalconfig const int MaxSpectators;
+var protected const int MinLimit;
+var protected config const int MaxLimit;
 
 /** @Override */
 protected function DoAction(N7_CommandExecutionState ExecState)
@@ -33,7 +33,7 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
     {
         NewSpectators = ToInt(ExecState.GetArg(ECmdArgs.ARG_NEWSPECS));
 
-        if (!IsInRange(NewSpectators, MinSpectators, MaxSpectators))
+        if (!IsInRange(NewSpectators, MinLimit, MaxLimit))
         {
             return false;
         }
@@ -51,13 +51,13 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
 /** @Override */
 protected function string InvalidArgsMessage(N7_CommandExecutionState ExecState)
 {
-    return "New Spectators number must be in range from "$MinSpectators$" to "$MaxSpectators;
+    return "New Spectators number must be in range from "$MinLimit$" to "$MaxLimit;
 }
 
 defaultproperties
 {
-    MinSpectators=0
-    MaxSpectators=10
+    MinLimit=0
+    MaxLimit=10
     MinArgsNum=0
     MaxArgsNum=1
     Aliases(0)="SPEC"

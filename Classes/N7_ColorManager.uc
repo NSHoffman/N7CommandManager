@@ -11,30 +11,30 @@ struct ColorPalette
     var Color A100, A200, A400, A700;
 };
 
-var protected globalconfig const ColorPalette Reds;
-var protected globalconfig const ColorPalette Pinks;
-var protected globalconfig const ColorPalette Purples;
-var protected globalconfig const ColorPalette DeepPurples;
-var protected globalconfig const ColorPalette Indigos;
-var protected globalconfig const ColorPalette Blues;
-var protected globalconfig const ColorPalette LightBlues;
-var protected globalconfig const ColorPalette Cyans;
-var protected globalconfig const ColorPalette Teals;
-var protected globalconfig const ColorPalette Greens;
-var protected globalconfig const ColorPalette LightGreens;
-var protected globalconfig const ColorPalette Limes;
-var protected globalconfig const ColorPalette Yellows;
-var protected globalconfig const ColorPalette Ambers;
-var protected globalconfig const ColorPalette Oranges;
-var protected globalconfig const ColorPalette DeepOranges;
-var protected globalconfig const ColorPalette Browns;
-var protected globalconfig const ColorPalette Greys;
-var protected globalconfig const ColorPalette BlueGreys;
+var protected config const ColorPalette Reds;
+var protected config const ColorPalette Pinks;
+var protected config const ColorPalette Purples;
+var protected config const ColorPalette DeepPurples;
+var protected config const ColorPalette Indigos;
+var protected config const ColorPalette Blues;
+var protected config const ColorPalette LightBlues;
+var protected config const ColorPalette Cyans;
+var protected config const ColorPalette Teals;
+var protected config const ColorPalette Greens;
+var protected config const ColorPalette LightGreens;
+var protected config const ColorPalette Limes;
+var protected config const ColorPalette Yellows;
+var protected config const ColorPalette Ambers;
+var protected config const ColorPalette Oranges;
+var protected config const ColorPalette DeepOranges;
+var protected config const ColorPalette Browns;
+var protected config const ColorPalette Greys;
+var protected config const ColorPalette BlueGreys;
 
 var protected const Color White;
 var protected const Color Black;
 
-var protected globalconfig const Color DefaultColor;
+var protected config const Color DefaultColor;
 
 /****************************
  *  PUBLIC INTERFACE

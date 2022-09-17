@@ -5,8 +5,8 @@ enum ECmdArgs
     ARG_NEWFAKES,
 };
 
-var protected const int MinFakes;
-var protected globalconfig const int MaxFakes;
+var protected const int MinLimit;
+var protected config const int MaxLimit;
 
 /** @Override */
 protected function DoAction(N7_CommandExecutionState ExecState)
@@ -29,17 +29,14 @@ protected function DoAction(N7_CommandExecutionState ExecState)
 /** @Override */
 protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 {
-    local int NewFakes, MaxFakesActual;
+    local int NewFakes;
 
     if (ExecState.GetArgC() > 0)
     {
         NewFakes = ToInt(ExecState.GetArg(ECmdArgs.ARG_NEWFAKES));
-        MaxFakesActual = Max(0, Min(KFGT.MaxPlayers - (KFGT.NumPlayers - FakedPlayersNum), MaxFakes));
 
-        if (!IsInRange(NewFakes, MinFakes, MaxFakesActual))
+        if (!IsInRange(NewFakes, MinLimit, MaxLimit))
         {
-            ExecState.SaveMaxLimit(MaxFakesActual);
-
             return false;
         }
     }
@@ -59,13 +56,13 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
 /** @Override */
 protected function string InvalidArgsMessage(N7_CommandExecutionState ExecState)
 {
-    return "Faked players number must be in range from "$MinFakes$" to "$ExecState.LoadMaxLimit();
+    return "Faked players number must be in range from "$MinLimit$" to "$MaxLimit;
 }
 
 defaultproperties
 {
-    MinFakes=0
-    MaxFakes=10
+    MinLimit=0
+    MaxLimit=10
     MinArgsNum=0
     MaxArgsNum=1
     Aliases(0)="FAKE"
