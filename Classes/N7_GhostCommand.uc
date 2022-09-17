@@ -4,10 +4,10 @@ class N7_GhostCommand extends N7_MovementModeCommand;
 protected function DoActionForSingleTarget
     (N7_CommandExecutionState ExecState, PlayerController PC)
 {
-    PC.Pawn.bAmbientCreature = true;
+    PC.Pawn.bAmbientCreature = True;
     PC.Pawn.UnderWaterTime = -1.0;
-    PC.Pawn.SetCollision(false, false, false);
-    PC.Pawn.bCollideWorld = false;
+    PC.Pawn.SetCollision(False, False, False);
+    PC.Pawn.bCollideWorld = False;
     PC.GotoState('PlayerFlying');
 }
 

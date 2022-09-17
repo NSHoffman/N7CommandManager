@@ -27,7 +27,7 @@ protected function DoAction(N7_CommandExecutionState ExecState)
         HitNormal, 
         Sender.ViewTarget.Location + 10000 * Vector(Sender.Rotation), 
         Sender.ViewTarget.Location,
-        true
+        True
     );
 
     if (ExecState.GetArgC() > 0)
@@ -95,7 +95,7 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
             ZedDamageType != AvailableDamageTypes[1] && 
             ZedDamageType != AvailableDamageTypes[2])
         {
-            return false;
+            return False;
         }
     }
 
@@ -105,11 +105,11 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 
         if (!IsInRange(ZedDamage, MinLimit, MaxLimit))
         {
-            return false;
+            return False;
         }
     }
 
-    return true;
+    return True;
 }
 
 /** @Override */
@@ -133,7 +133,7 @@ defaultproperties
     AvailableDamageTypes(2)="fire"
     Signature="<? string DamageType, ? int Damage>"
     Description="Damage Zed being looked at. Available Damage types: hit, frag, fire"
-    bOnlyAliveSender=true
-    bOnlyPlayerSender=true
-    bNotifySenderOnSuccess=false
+    bOnlyAliveSender=True
+    bOnlyPlayerSender=True
+    bNotifySenderOnSuccess=False
 }

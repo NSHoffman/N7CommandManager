@@ -39,17 +39,17 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
         if (IsStringPartOf(TargetZed, KFGT.MonsterCollection.default.MonsterClasses[i].MClassName))
         {
             ExecState.SaveString(KFGT.MonsterCollection.default.MonsterClasses[i].MClassName);
-            return true;
+            return True;
         }
 
         if (IsStringPartOf(TargetZed, KFGT.MonsterCollection.default.EndGameBossClass))
         {
             ExecState.SaveString(KFGT.MonsterCollection.default.EndGameBossClass);
-            return true;
+            return True;
         }
     }
 
-    return false;
+    return False;
 }
 
 /** @Override */
@@ -84,12 +84,12 @@ protected function string GetTargetSuccessMessage(N7_CommandExecutionState ExecS
 
 defaultproperties
 {
-    bAdminOnly=true
+    bAdminOnly=True
     MinArgsNum=1
     Aliases(0)="SUMMON"
     ArgTypes(0)="any"
     Signature="<string ZedClass, ? string TargetName>"
     Description="Spawn ZED next to a player"
-    bAllowTargetAll=false
-    bOnlyAliveTargets=true
+    bAllowTargetAll=False
+    bOnlyAliveTargets=True
 }

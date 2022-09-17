@@ -52,11 +52,11 @@ public function bool IsWord(string Str)
     {
         if (!IsLetter(Mid(Str, i, 1)))
         {
-            return false;
+            return False;
         }
     }
 
-    return true;
+    return True;
 }
 
 public function bool IsDigit(string Str)
@@ -79,26 +79,26 @@ public function bool IsNumber(string Str)
 
         if (Asc(Ch) == CHR_DOT && !bFloatingPointFound)
         {
-            bFloatingPointFound = true;
+            bFloatingPointFound = True;
             continue;
         }
         else if (Asc(Ch) == CHR_DOT)
         {
-            return false;
+            return False;
         }
 
         if (Asc(Ch) == CHR_MINUS && i == 0 && Len(Str) > 0)
         {
-            return false;
+            return False;
         }
 
         if (!IsDigit(Ch))
         {
-            return false;
+            return False;
         }
     }
 
-    return true;
+    return True;
 }
 
 public function bool IsSwitchOnValue(string Value)
@@ -169,8 +169,8 @@ public function bool IsAlive(PlayerController PC)
 }
 
 /** 
- * Original admin access implies that EITHER bAdmin OR bSilentAdmin is true depending on how user logs in 
- * Temporary admin access requires BOTH flags to be true so that these access types can be differentiated
+ * Original admin access implies that EITHER bAdmin OR bSilentAdmin is True depending on how user logs in 
+ * Temporary admin access requires BOTH flags to be True so that these access types can be differentiated
  */
 public function bool IsAdmin(PlayerController PC)
 {

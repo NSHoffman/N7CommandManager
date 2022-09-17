@@ -40,11 +40,11 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 
         if (!IsInRange(NewMaxZeds, MinLimit, MaxLimit))
         {
-            return false;
+            return False;
         }
     }
 
-    return true;
+    return True;
 }
 
 /** @Override */

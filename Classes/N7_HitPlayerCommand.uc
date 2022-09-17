@@ -83,7 +83,7 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
             PlayerDamageType != AvailableDamageTypes[2] &&
             PlayerDamageType != AvailableDamageTypes[3])
         {
-            return false;
+            return False;
         }
     }
 
@@ -93,11 +93,11 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 
         if (!IsInRange(PlayerDamage, MinLimit, MaxLimit))
         {
-            return false;
+            return False;
         }
     }
 
-    return true;
+    return True;
 }
 
 /** @Override */
@@ -140,7 +140,7 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
 
 defaultproperties
 {
-    bAdminOnly=true
+    bAdminOnly=True
     MinArgsNum=0
     MaxArgsNum=3
     MinLimit=0
@@ -156,6 +156,6 @@ defaultproperties
     AvailableDamageTypes(3)="vomit"
     Signature="<? string TargetName, ? string DamageType, ? int Damage>"
     Description="Damage Player. Available Damage types: hit, frag, fire, vomit"
-    bOnlyAliveTargets=true
-    bNotifyGlobalOnSuccess=true
+    bOnlyAliveTargets=True
+    bNotifyGlobalOnSuccess=True
 }

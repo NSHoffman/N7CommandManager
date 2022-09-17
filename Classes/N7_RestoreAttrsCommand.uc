@@ -19,12 +19,12 @@ protected function DoActionForSingleTarget
             if (IsSwitchOnValue(ExecState.GetArg(ECmdArgs.ARG_FLAG)))
             {
                 AddRestoredPlayer(PC);
-                ExecState.SaveFlag(true);
+                ExecState.SaveFlag(True);
             }
             else
             {
                 RemoveRestoredPlayer(PC);
-                ExecState.SaveFlag(false);
+                ExecState.SaveFlag(False);
             }
             break;
     }
@@ -56,10 +56,10 @@ protected function bool CheckTargets(N7_CommandExecutionState ExecState)
             return VerifyTargetBySender(ExecState, TargetName);
 
         case 1:
-            return true;
+            return True;
     }
 
-    return false;
+    return False;
 }
 
 /** @Override */

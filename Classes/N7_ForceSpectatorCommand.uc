@@ -4,7 +4,7 @@ class N7_ForceSpectatorCommand extends N7_UnaryTargetCommand;
 protected function DoActionForSingleTarget
     (N7_CommandExecutionState ExecState, PlayerController PC)
 {
-    PC.PlayerReplicationInfo.bOnlySpectator = true;
+    PC.PlayerReplicationInfo.bOnlySpectator = True;
     KFGT.NumSpectators++;
     KFGT.NumPlayers--;
 
@@ -63,12 +63,12 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
 
 defaultproperties
 {
-    bAdminOnly=true
+    bAdminOnly=True
     Aliases(0)="FSPEC"
     Aliases(1)="FORCESPEC"
     Description="Force player to become a spectator"
     Signature="<? string TargetName>"
-    bAllowTargetAll=false
-    bOnlyNonAdminTargets=true
-    bNotifyGlobalOnSuccess=true
+    bAllowTargetAll=False
+    bOnlyNonAdminTargets=True
+    bNotifyGlobalOnSuccess=True
 }

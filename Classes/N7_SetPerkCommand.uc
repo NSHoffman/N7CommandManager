@@ -39,11 +39,11 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
         if (IsStringPartOf(SelectedPerk, KFGT.LoadedSkills[i].default.VeterancyName))
         {
             ExecState.SaveString(KFGT.LoadedSkills[i].default.VeterancyName);
-            return true;
+            return True;
         }
     }
 
-    return false;
+    return False;
 }
 
 /** @Override */
@@ -91,6 +91,6 @@ defaultproperties
     Aliases(2)="SETPERK"
     Signature="<string Perk, adminonly ? string TargetName>"
     Description="Set Perk. Admin access allows for changing other players perks"
-    bAllowTargetAll=false
-    bNotifyGlobalOnSuccess=true
+    bAllowTargetAll=False
+    bNotifyGlobalOnSuccess=True
 }

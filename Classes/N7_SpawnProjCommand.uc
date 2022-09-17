@@ -83,11 +83,11 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
         if (IsStringPartOf(ProjType, AvailableProjTypes[i]))
         {
             ExecState.SaveString(AvailableProjTypes[i]);
-            return true;
+            return True;
         }
     }
 
-    return false;
+    return False;
 }
 
 /** @Override */
@@ -116,15 +116,15 @@ public function GetExtendedHelp(PlayerController PC)
 
 defaultproperties
 {
-    bAdminOnly=true
+    bAdminOnly=True
     MinArgsNum=1
     MaxArgsNum=1
     ArgTypes(0)="any"
     Aliases(0)="PROJ"
     Signature="<string ProjType>"
     Description="Spawn projectile"
-    // bOnlyAliveSender=true
-    bNotifySenderOnSuccess=false
+    // bOnlyAliveSender=True
+    bNotifySenderOnSuccess=False
 
     AvailableProjTypes(0)="KFMod.FlareRevolver"
     AvailableProjTypes(1)="KFMod.HuskGun"

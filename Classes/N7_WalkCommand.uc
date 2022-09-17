@@ -4,12 +4,12 @@ class N7_WalkCommand extends N7_MovementModeCommand;
 protected function DoActionForSingleTarget
     (N7_CommandExecutionState ExecState, PlayerController PC)
 {
-    PC.Pawn.bAmbientCreature = false;
+    PC.Pawn.bAmbientCreature = False;
     PC.Pawn.UnderWaterTime = PC.Pawn.default.UnderWaterTime;
-    PC.Pawn.SetCollision(true, true, true);
+    PC.Pawn.SetCollision(True, True, True);
     PC.Pawn.SetPhysics(PHYS_Walking);
-    PC.Pawn.bCollideWorld = true;
-    PC.Pawn.bCanJump = true;
+    PC.Pawn.bCollideWorld = True;
+    PC.Pawn.bCanJump = True;
     PC.GotoState('PlayerWalking');
 }
 

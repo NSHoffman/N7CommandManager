@@ -56,7 +56,7 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
 
 defaultproperties
 {
-    bAdminOnly=true
+    bAdminOnly=True
     MinArgsNum=1
     MinLimit=1
     MaxLimit=50000
@@ -66,5 +66,5 @@ defaultproperties
     Aliases(3)="DOSH"
     Signature="<int Amount, ? (string TargetName | 'all')>"
     Description="Give Money"
-    bNotifyGlobalOnSuccess=true
+    bNotifyGlobalOnSuccess=True
 }

@@ -35,11 +35,11 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 
         if (!IsInRangeF(NewSpawnRate, MinLimit, MaxLimit))
         {
-            return false;
+            return False;
         }
     }
 
-    return true;
+    return True;
 }
 
 /** @Override */

@@ -4,7 +4,7 @@ class N7_ReadyAllCommand extends N7_UnaryTargetCommand;
 protected function DoActionForSingleTarget
     (N7_CommandExecutionState ExecState, PlayerController PC)
 {
-    PC.PlayerReplicationInfo.bReadyToPlay = true;
+    PC.PlayerReplicationInfo.bReadyToPlay = True;
 }
 
 /** @Override */
@@ -18,7 +18,7 @@ protected function bool ShouldBeTarget(
 /** @Override */
 protected function bool CheckTargets(N7_CommandExecutionState ExecState)
 {
-    return true;
+    return True;
 }
 
 /** @Override */
@@ -49,6 +49,6 @@ defaultproperties
     Aliases(3)="READYALL"
     Signature="<>"
     Description="Force ready upon all players"
-    bNotifyTargetsOnSuccess=false
-    bNotifyGlobalOnSuccess=true
+    bNotifyTargetsOnSuccess=False
+    bNotifyGlobalOnSuccess=True
 }

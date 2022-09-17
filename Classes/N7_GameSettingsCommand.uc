@@ -7,6 +7,6 @@ class N7_GameSettingsCommand extends N7_Command
 
 defaultproperties
 {
-    bNotifySenderOnSuccess=false
-    bNotifyGlobalOnSuccess=true
+    bNotifySenderOnSuccess=False
+    bNotifyGlobalOnSuccess=True
 }

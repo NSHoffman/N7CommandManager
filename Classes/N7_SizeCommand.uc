@@ -27,12 +27,12 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 
     if (!IsInRangeF(NewScale, MinLimit, MaxLimit))
     {
-        return false; 
+        return False; 
     }
 
     ExecState.SaveNumberF(NewScale);
 
-    return true;
+    return True;
 }
 
 /** @Override */
@@ -57,6 +57,6 @@ defaultproperties
 {
     MinLimit=0.1
     MaxLimit=5.0
-    bOnlyAliveTargets=true
-    bNotifySenderOnSuccess=true
+    bOnlyAliveTargets=True
+    bNotifySenderOnSuccess=True
 }

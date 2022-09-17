@@ -42,11 +42,11 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
         if (!IsInRange(NewHPConfig, MinLimitActual, MaxLimit))
         {
             ExecState.SaveMinLimit(MinLimitActual);
-            return false;
+            return False;
         }
     }
 
-    return true;
+    return True;
 }
 
 /** @Override */

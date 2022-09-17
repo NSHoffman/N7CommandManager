@@ -8,7 +8,7 @@ protected function bool ShouldDisplayHelpForCommand(N7_Command Command)
 
 defaultproperties
 {
-    bAdminOnly=true
+    bAdminOnly=True
     Aliases(0)="AHELP"
     Aliases(1)="ADMINHELP"
     Description="Show a list of commands available to admins only or display info about one specific command"

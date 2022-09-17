@@ -7,20 +7,20 @@ protected function DoActionForSingleTarget
     local bool bWaveInProgress;
     bWaveInProgress = Invasion(Level.Game).bWaveInProgress;
 
-    PC.PlayerReplicationInfo.bOutOfLives = false;
+    PC.PlayerReplicationInfo.bOutOfLives = False;
     PC.PlayerReplicationInfo.NumLives = 0;
 
     PC.PlayerReplicationInfo.Score = Max(KFGT.MinRespawnCash, int(PC.PlayerReplicationInfo.Score));
 
     PC.GotoState('PlayerWaiting');
     PC.SetViewTarget(PC);
-    PC.ClientSetBehindView(false);
-    PC.bBehindView = false;
+    PC.ClientSetBehindView(False);
+    PC.bBehindView = False;
     PC.ClientSetViewTarget(PC.Pawn);
 
     if (bWaveInProgress)
     {
-        Invasion(Level.Game).bWaveInProgress = false;
+        Invasion(Level.Game).bWaveInProgress = False;
     }
     PC.ServerRestartPlayer();
 
@@ -74,6 +74,6 @@ defaultproperties
     Aliases(1)="RESPAWN"
     Description="Respawn Player"
     Signature="<? (string TargetName | 'all')>"
-    bOnlyDeadTargets=true
-    bNotifyGlobalOnSuccess=true
+    bOnlyDeadTargets=True
+    bNotifyGlobalOnSuccess=True
 }

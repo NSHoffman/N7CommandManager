@@ -35,15 +35,15 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
 
 defaultproperties
 {
-    bAdminOnly=true
+    bAdminOnly=True
     MinArgsNum=1
     MaxArgsNum=1
     Aliases(0)="KICK"
     Description="Kick Player"
     Signature="<string TargetName>"
-    bAllowTargetAll=false
-    bOnlyPlayerTargets=false
-    bOnlyNonAdminTargets=true
-    bNotifyTargetsOnSuccess=false
-    bNotifyGlobalOnSuccess=true
+    bAllowTargetAll=False
+    bOnlyPlayerTargets=False
+    bOnlyNonAdminTargets=True
+    bNotifyTargetsOnSuccess=False
+    bNotifyGlobalOnSuccess=True
 }

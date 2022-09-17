@@ -52,7 +52,7 @@ protected function bool ShouldBeTarget(
             return AcceptTargetByName(ExecState, PC, TargetName);
     }
 
-    return false;
+    return False;
 }
 
 /** @Override */

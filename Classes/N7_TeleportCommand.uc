@@ -13,7 +13,7 @@ protected function DoAction(N7_CommandExecutionState ExecState)
         HitNormal, 
         Sender.ViewTarget.Location + 10000 * Vector(Sender.Rotation), 
         Sender.ViewTarget.Location, 
-        true);
+        True);
 
     if (HitActor != None)
     {
@@ -24,7 +24,7 @@ protected function DoAction(N7_CommandExecutionState ExecState)
         HitLocation = Sender.ViewTarget.Location + 10000 * Vector(Sender.Rotation);
     }
     Sender.ViewTarget.SetLocation(HitLocation);
-    Sender.ViewTarget.PlayTeleportEffect(false, true);
+    Sender.ViewTarget.PlayTeleportEffect(False, True);
 }
 
 /** @Override */
@@ -41,11 +41,11 @@ protected function string InvalidGameStateMessage()
 
 defaultproperties
 {
-    bAdminOnly=true
+    bAdminOnly=True
     Aliases(0)="TP"
     Aliases(1)="TELEPORT"
     Signature="<>"
     Description="Teleport to the position being looked at"
-    bOnlyAliveSender=true
-    bNotifySenderOnSuccess=false
+    bOnlyAliveSender=True
+    bNotifySenderOnSuccess=False
 }

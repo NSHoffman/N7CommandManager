@@ -7,7 +7,7 @@ protected function DoAction(N7_CommandExecutionState ExecState)
 
     foreach DynamicActors(class'PipeBombProjectile', PipeBomb)
     {
-        PipeBomb.bHidden = true;
+        PipeBomb.bHidden = True;
         PipeBomb.Destroyed();
     }
 }

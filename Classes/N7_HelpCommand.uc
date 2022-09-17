@@ -48,7 +48,7 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
         return RequestedCommand != None && ShouldDisplayHelpForCommand(RequestedCommand);
     }
 
-    return true;
+    return True;
 }
 
 protected function bool ShouldDisplayHelpForCommand(N7_Command Command)
@@ -85,6 +85,6 @@ defaultproperties
     ArgTypes(0)="word"
     Signature="<? string Command>"
     Description="Show list of commands available to players or display extended info about one specific command"
-    bNotifySenderOnSuccess=false
-    bOnlyPlayerSender=false
+    bNotifySenderOnSuccess=False
+    bOnlyPlayerSender=False
 }

@@ -82,16 +82,16 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
 
 defaultproperties
 {
-    bAdminOnly=true
+    bAdminOnly=True
     MinArgsNum=1
     MaxArgsNum=2
     ArgTypes(1)="switch"
     Aliases(0)="BAN"
     Description="Ban player for the time of current session or permanently"
     Signature="<string TargetName, ? (0 | 1 | ON | OFF) IsPermanent>"
-    bAllowTargetAll=false
-    bOnlyPlayerTargets=false
-    bOnlyNonAdminTargets=true
-    bNotifyTargetsOnSuccess=false
-    bNotifyGlobalOnSuccess=true
+    bAllowTargetAll=False
+    bOnlyPlayerTargets=False
+    bOnlyNonAdminTargets=True
+    bNotifyTargetsOnSuccess=False
+    bNotifyGlobalOnSuccess=True
 }

@@ -56,6 +56,6 @@ defaultproperties
     ArgTypes(0)="switch"
     Signature="<? (0 | 1 | ON | OFF) Flag, ? (string TargetName | 'all')>"
     Description="Toggle God Mode"
-    bAdminOnly=true
-    bNotifyGlobalOnSuccess=true
+    bAdminOnly=True
+    bNotifyGlobalOnSuccess=True
 }
