@@ -20,8 +20,8 @@ protected function DoActionForSingleTarget
          * Setting both bAdmin and bSilentAdmin 
          * Is a hack which allows to tell temp admin access
          */
-        PC.PlayerReplicationInfo.bAdmin = true;
-        PC.PlayerReplicationInfo.bSilentAdmin = true;
+        PC.PlayerReplicationInfo.bAdmin = True;
+        PC.PlayerReplicationInfo.bSilentAdmin = True;
         PC.AddCheats();
     }
     else
@@ -71,15 +71,15 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
 
 defaultproperties
 {
-    bAdminOnly=true
+    bAdminOnly=True
     MinArgsNum=2
     MaxArgsNum=2
     ArgTypes(1)="switch"
     Aliases(0)="TEMPADMIN"
     Description="Grant temporary admin access to players"
     Signature="<string TargetName, (0 | 1 | ON | OFF)>"
-    bAllowTargetSelf=false
-    bOnlyPlayerTargets=false
-    bOnlyNonAdminTargets=true
-    bNotifyGlobalOnSuccess=true
+    bAllowTargetSelf=False
+    bOnlyPlayerTargets=False
+    bOnlyNonAdminTargets=True
+    bNotifyGlobalOnSuccess=True
 }

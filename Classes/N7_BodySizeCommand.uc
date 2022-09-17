@@ -49,7 +49,7 @@ protected function string GetSenderSuccessMessage(N7_CommandExecutionState ExecS
 
 defaultproperties
 {
-    bAdminOnly=true
+    bAdminOnly=True
     Aliases(0)="BODY"
     Aliases(1)="BODYSIZE"
     Signature="<? float BodyScale, ? (string TargetName | 'all')>"

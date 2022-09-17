@@ -196,7 +196,7 @@ protected static function bool IsByte(string ByteStr)
 
     if (Len(ByteStr) <= 0 || Len(ByteStr) > 3)
     {
-        return false;
+        return False;
     }
 
     for (i = 0; i < Len(ByteStr); i++)
@@ -205,16 +205,16 @@ protected static function bool IsByte(string ByteStr)
 
         if (Char < "0" || Char > "9")
         {
-            return false;
+            return False;
         }
     }
 
     if (int(ByteStr) < 0 || int(ByteStr) > 255)
     {
-        return false;
+        return False;
     }
 
-    return true;
+    return True;
 }
 
 protected static function bool IsRGBFormatColor(string ColorStr)

@@ -114,7 +114,7 @@ public final function Initialize(
 
     Sender = InitSender;
     ErrNo = ERRNO_NONE;
-    bStopTargetSearch = false;
+    bStopTargetSearch = False;
 
     SetInitializedStatus();
 }
@@ -150,16 +150,16 @@ public final function bool IsTarget(PlayerController PC)
     {
         if (Targets[i] == PC)
         {
-            return true;
+            return True;
         }
     }
 
-    return false;
+    return False;
 }
 
 public final function StopTargetSearch()
 {
-    bStopTargetSearch = true;
+    bStopTargetSearch = True;
 }
 
 /****************************

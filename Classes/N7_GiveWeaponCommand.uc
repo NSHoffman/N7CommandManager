@@ -35,7 +35,7 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
         }
     }
 
-    return false;
+    return False;
 }
 
 /** @Override */
@@ -118,7 +118,7 @@ protected function Cleanup()
 
 defaultproperties
 {
-    bAdminOnly=true
+    bAdminOnly=True
     Aliases(0)="GW"
     Aliases(1)="WEAPON"
     Aliases(2)="GIVEWEAPON"
@@ -126,8 +126,8 @@ defaultproperties
     Signature="<string WeaponClass, ? (string TargetName | 'all')>"
     ArgTypes(0)="any"
     Description="Give Weapon"
-    bOnlyAliveTargets=true
-    bNotifyGlobalOnSuccess=true
+    bOnlyAliveTargets=True
+    bNotifyGlobalOnSuccess=True
 
     AvailableWeaponClasses(0)="KFMod.AA12AutoShotgun"
     AvailableWeaponClasses(1)="KFMod.AK47AssaultRifle"

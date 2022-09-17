@@ -35,11 +35,11 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 
         if (!IsInRangeF(NewGameSpeed, MinLimit, MaxLimit))
         {
-            return false;
+            return False;
         }
     }
 
-    return true;
+    return True;
 }
 
 /** @Override */
@@ -56,7 +56,7 @@ protected function string InvalidArgsMessage(N7_CommandExecutionState ExecState)
 
 defaultproperties
 {
-    bAdminOnly=true
+    bAdminOnly=True
     MinLimit=0.25
     MaxLimit=10.0
     MinArgsNum=0

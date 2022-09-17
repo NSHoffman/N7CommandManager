@@ -81,7 +81,7 @@ public final function KillZed(KFMonster TargetMonster, optional bool bDestroyNex
     
     if (bDestroyNextTick)
     {
-        TargetMonster.bDestroyNextTick = true;
+        TargetMonster.bDestroyNextTick = True;
     }
 }
 
@@ -169,7 +169,7 @@ public final function RestorePlayerAttributes(PlayerController PC)
 
 public final function StopZedTime()
 {
-    KFGT.bZEDTimeActive = false;
+    KFGT.bZEDTimeActive = False;
     KFGT.LastZedTimeEvent = Level.TimeSeconds;
     KFGT.CurrentZEDTimeDuration = 0.0;
     KFGT.SetGameSpeed(1.0);
@@ -181,13 +181,13 @@ public final function DoWaveEnd()
     local Controller C;
     local KFDoorMover KFDM;
 
-    KFGT.bDidTraderMovingMessage = false;
-    KFGT.bDidMoveTowardTraderMessage = false;
+    KFGT.bDidTraderMovingMessage = False;
+    KFGT.bDidMoveTowardTraderMessage = False;
 
-    KFGT.bWaveInProgress = false;
-    KFGT.bWaveBossInProgress = false;
-    KFGT.bNotifiedLastManStanding = false;
-    KFGameReplicationInfo(KFGT.GameReplicationInfo).bWaveInProgress = false;
+    KFGT.bWaveInProgress = False;
+    KFGT.bWaveBossInProgress = False;
+    KFGT.bNotifiedLastManStanding = False;
+    KFGameReplicationInfo(KFGT.GameReplicationInfo).bWaveInProgress = False;
 
     KFGT.WaveCountDown = Max(KFGT.TimeBetweenWaves, 1);
     KFGameReplicationInfo(KFGT.GameReplicationInfo).TimeToNextWave = KFGT.WaveCountDown;
@@ -196,10 +196,10 @@ public final function DoWaveEnd()
     {
         if (KFPlayerController(C) != None && KFPlayerReplicationInfo(C.PlayerReplicationInfo) != None)
         {
-            C.PlayerReplicationInfo.bOutOfLives = false;
+            C.PlayerReplicationInfo.bOutOfLives = False;
             C.PlayerReplicationInfo.NumLives = 1;
 
-            KFPlayerController(C).bChangedVeterancyThisWave = false;
+            KFPlayerController(C).bChangedVeterancyThisWave = False;
 
             if (KFPlayerReplicationInfo(C.PlayerReplicationInfo).ClientVeteranSkill != KFPlayerController(C).SelectedVeterancy)
             {
@@ -212,18 +212,18 @@ public final function DoWaveEnd()
 
                 PlayerController(C).GotoState('PlayerWaiting');
                 PlayerController(C).SetViewTarget(C);
-                PlayerController(C).ClientSetBehindView(false);
-                PlayerController(C).bBehindView = false;
+                PlayerController(C).ClientSetBehindView(False);
+                PlayerController(C).bBehindView = False;
                 PlayerController(C).ClientSetViewTarget(C.Pawn);
 
                 C.ServerReStartPlayer();
             }
 
-            KFPlayerController(C).bSpawnedThisWave = false;
+            KFPlayerController(C).bSpawnedThisWave = False;
         }
     }
 
-    KFGT.bUpdateViewTargs = true;
+    KFGT.bUpdateViewTargs = True;
 
     foreach DynamicActors(class'KFDoorMover', KFDM)
     {

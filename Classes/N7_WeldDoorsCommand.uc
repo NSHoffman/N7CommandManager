@@ -20,7 +20,7 @@ protected function DoAction(N7_CommandExecutionState ExecState)
     {
         foreach DynamicActors(class'KFUseTrigger', KFUT)
         {
-            bTriggerDoorsClosed = true;
+            bTriggerDoorsClosed = True;
 
             for (i = 0; i < KFUT.DoorOwners.Length; i++)
             {
@@ -39,7 +39,7 @@ protected function DoAction(N7_CommandExecutionState ExecState)
 
             if (bTriggerDoorsClosed)
             {
-                KFUT.AddWeld(KFUT.MaxWeldStrength, false, None);
+                KFUT.AddWeld(KFUT.MaxWeldStrength, False, None);
             }
         }
 
@@ -51,7 +51,7 @@ protected function DoAction(N7_CommandExecutionState ExecState)
         {
             if (!KFDM.bDoorIsDead) 
             {
-                KFDM.MyTrigger.UnWeld(KFDM.WeldStrength, false, None);
+                KFDM.MyTrigger.UnWeld(KFDM.WeldStrength, False, None);
             }
         }
 

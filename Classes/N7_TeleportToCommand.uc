@@ -8,7 +8,7 @@ protected function DoActionForSingleTarget
 
     TpLocation = PC.Pawn.Location;
     ExecState.GetSender().ViewTarget.SetLocation(TpLocation + 72 * Vector(ExecState.GetSender().Rotation) + vect(0, 0, 1) * 15);
-    ExecState.GetSender().ViewTarget.PlayTeleportEffect(false, true);
+    ExecState.GetSender().ViewTarget.PlayTeleportEffect(False, True);
 }
 
 /** @Override */
@@ -25,12 +25,12 @@ protected function string InvalidGameStateMessage()
 
 defaultproperties
 {
-    bAdminOnly=true
+    bAdminOnly=True
     Aliases(0)="TPP"
     Aliases(1)="TELEPORTP"
     ArgTypes(0)="any"
     Signature="<? string TargetName>"
     Description="Teleport to another player"
-    bOnlyAliveTargets=true
-    bNotifySenderOnSuccess=false
+    bOnlyAliveTargets=True
+    bNotifySenderOnSuccess=False
 }

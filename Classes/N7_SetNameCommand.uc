@@ -45,6 +45,6 @@ defaultproperties
     ArgTypes(1)="any"
     Signature="<string Name, adminonly ? string TargetName>"
     Description="Change Player's name. Admin access allows for changing other players names"
-    bNotifyGlobalOnSuccess=true
-    bAllowTargetAll=false
+    bNotifyGlobalOnSuccess=True
+    bAllowTargetAll=False
 }

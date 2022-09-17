@@ -103,11 +103,11 @@ public final function bool HasAlias(string Alias)
     {
         if (Alias ~= Aliases[i])
         {
-            return true;
+            return True;
         }
     }
 
-    return false;
+    return False;
 }
 
 /****************************
@@ -291,22 +291,22 @@ protected final function bool CheckGameType()
 
 protected function bool CheckGameState(N7_CommandExecutionState ExecState)
 {
-    return true;
+    return True;
 }
 
 protected function bool CheckSender(N7_CommandExecutionState ExecState)
 {
     if ((bOnlyAliveSender || !IsAdmin(ExecState.GetSender())) && IsSpectator(ExecState.GetSender()) && bOnlyPlayerSender)
     {
-        return false;
+        return False;
     }
 
     if (bOnlyAliveSender && !IsAlive(ExecState.GetSender()))
     {
-        return false;
+        return False;
     }
 
-    return true;
+    return True;
 }
 
 protected final function bool CheckActionProcessing(N7_CommandExecutionState ExecState)
@@ -342,11 +342,11 @@ protected final function bool CheckArgsLength(N7_CommandExecutionState ExecState
     {
         if (IsEmptyString(ExecState.GetArg(i)) || !IsValidLengthString(ExecState.GetArg(i)))
         {
-            return false;
+            return False;
         }
     }
 
-    return true;
+    return True;
 }
 
 protected final function bool CheckArgTypes(N7_CommandExecutionState ExecState)
@@ -363,21 +363,21 @@ protected final function bool CheckArgTypes(N7_CommandExecutionState ExecState)
             case "number":
                 if (!IsNumber(CurrentArg))
                 {
-                    return false;
+                    return False;
                 }
                 break;
 
             case "word":
                 if (!IsWord(CurrentArg))
                 {
-                    return false;
+                    return False;
                 }
                 break;
 
             case "switch":
                 if (!IsSwitchValue(CurrentArg))
                 {
-                    return false;
+                    return False;
                 }
                 break;
 
@@ -386,28 +386,28 @@ protected final function bool CheckArgTypes(N7_CommandExecutionState ExecState)
         }
     }
 
-    return true;
+    return True;
 }
 
 protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 {
-    return true;
+    return True;
 }
 
 protected function bool CheckTargets(N7_CommandExecutionState ExecState)
 {
-    return true;
+    return True;
 }
 
 /** Special check in case a command requires admin access under certain circumstances */
 protected function bool CheckIfNonAdminExecutionAllowed(N7_CommandExecutionState ExecState)
 {
-    return true;
+    return True;
 }
 
 protected function bool CheckCustom(N7_CommandExecutionState ExecState)
 {
-    return true;
+    return True;
 }
 
 /****************************
@@ -481,7 +481,7 @@ protected function bool ShouldBeTarget(
     N7_CommandExecutionState ExecState, 
     PlayerController PC)
 {
-    return false;
+    return False;
 }
 
 /****************************
@@ -759,11 +759,11 @@ protected final function bool ToBool(string Arg)
 {
     if (IsSwitchOnValue(Arg))
     {
-        return true;
+        return True;
     }
     else if (IsSwitchOffValue(Arg))
     {
-        return false;
+        return False;
     }
     
     return bool(Arg);
@@ -878,16 +878,16 @@ defaultproperties
 {
     MinArgsNum=0
     MaxArgsNum=0
-    bAdminOnly=false
-    bUseTargets=false
-    bOnlyPlayerSender=true
-    bOnlyAliveSender=false
-    bNotifySenderOnSuccess=true
-    bNotifyTargetsOnSuccess=false
-    bNotifyGlobalOnSuccess=false
-    bNotifyAdminsOnlyOnSuccess=false
-    bNotifyOnError=true
-    bDisableColoring=false
-    bDisableNotifications=false
+    bAdminOnly=False
+    bUseTargets=False
+    bOnlyPlayerSender=True
+    bOnlyAliveSender=False
+    bNotifySenderOnSuccess=True
+    bNotifyTargetsOnSuccess=False
+    bNotifyGlobalOnSuccess=False
+    bNotifyAdminsOnlyOnSuccess=False
+    bNotifyOnError=True
+    bDisableColoring=False
+    bDisableNotifications=False
     CommandStateClass=class'N7_CommandExecutionState'
 }

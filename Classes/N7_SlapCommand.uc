@@ -57,7 +57,7 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
 
 defaultproperties
 {
-    bAdminOnly=true
+    bAdminOnly=True
     MinArgsNum=0
     MaxArgsNum=1
     Aliases(0)="SLAP"
@@ -66,6 +66,6 @@ defaultproperties
     Description="Slap Player"
     SlapDamage=5
     SlapDamageForce=150000
-    bOnlyAliveTargets=true
-    bNotifyGlobalOnSuccess=true
+    bOnlyAliveTargets=True
+    bNotifyGlobalOnSuccess=True
 }

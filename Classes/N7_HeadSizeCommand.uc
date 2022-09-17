@@ -45,7 +45,7 @@ protected function string GetSenderSuccessMessage(N7_CommandExecutionState ExecS
 
 defaultproperties
 {
-    bAdminOnly=true
+    bAdminOnly=True
     Aliases(0)="HEAD"
     Aliases(1)="HEADSIZE"
     Signature="<? float HeadScale, ? (string TargetName | 'all')>"

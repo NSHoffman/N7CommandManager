@@ -31,7 +31,7 @@ protected function bool ShouldBeTarget(
     N7_CommandExecutionState ExecState, 
     PlayerController PC)
 {
-    return true;
+    return True;
 }
 
 /****************************
@@ -54,7 +54,7 @@ protected function bool VerifyTargetByName(
 
     if (bAllowTargetAll && TargetName ~= "all")
     {
-        return true;
+        return True;
     }
 
     Target = FindTarget(TargetName);
@@ -65,7 +65,7 @@ protected function bool VerifyTargetByName(
     }
     else
     {
-        return false;
+        return False;
     }
 
     return ValidateTarget(ExecState, Target);
@@ -91,7 +91,7 @@ protected function bool AcceptTargetByName(
 {
     if (bAllowTargetAll && TargetName ~= "all" && ValidateTarget(ExecState, Target))
     {
-        return true;
+        return True;
     }
     else if (ValidateTarget(ExecState, Target) && IsStringPartOf(TargetName, Target.PlayerReplicationInfo.PlayerName))
     {
@@ -100,10 +100,10 @@ protected function bool AcceptTargetByName(
             ExecState.StopTargetSearch();
         }
         
-        return true;
+        return True;
     }
 
-    return false;
+    return False;
 }
 
 /****************************
@@ -160,7 +160,7 @@ protected final function bool CheckTargetHealth(
 protected function bool CheckTargetCustom(
     N7_CommandExecutionState ExecState, PlayerController Target)
 {
-    return true;
+    return True;
 }
 
 /****************************
@@ -198,16 +198,16 @@ protected function PlayerController FindTarget(string TargetName)
 
 defaultproperties
 {
-    bUseTargets=true
-    bAllowTargetAll=true
-    bAllowTargetSelf=true
-    bOnlyAliveTargets=false
-    bOnlyDeadTargets=false
-    bOnlyPlayerTargets=true
-    bOnlySpectatorTargets=false
-    bOnlyAdminTargets=false
-    bOnlyNonAdminTargets=false
-    bOnlyFirstTargetMatch=true
-    bNotifySenderOnSuccess=false
-    bNotifyTargetsOnSuccess=true
+    bUseTargets=True
+    bAllowTargetAll=True
+    bAllowTargetSelf=True
+    bOnlyAliveTargets=False
+    bOnlyDeadTargets=False
+    bOnlyPlayerTargets=True
+    bOnlySpectatorTargets=False
+    bOnlyAdminTargets=False
+    bOnlyNonAdminTargets=False
+    bOnlyFirstTargetMatch=True
+    bNotifySenderOnSuccess=False
+    bNotifyTargetsOnSuccess=True
 }

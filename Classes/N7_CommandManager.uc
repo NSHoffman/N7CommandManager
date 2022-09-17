@@ -328,7 +328,7 @@ event PostBeginPlay()
     InitGameplayCommands();
     InitPlayerCommands();
 
-    SetTimer(1.0, true);
+    SetTimer(1.0, True);
 }
 
 event Tick(float DeltaTime)
@@ -360,7 +360,7 @@ event Timer()
 
     /** 
      * Constantly delaying next ZED-Time event
-     * so that it will never occur if bZedTimeDisabled is true
+     * so that it will never occur if bZedTimeDisabled is True
      */
     if (IsZedTimeDisabled())
     {
@@ -401,7 +401,7 @@ public function bool CheckReplacement(Actor Other, out byte bSuperRelevant)
         Zed.HeadHealth = GSU.GetZedModifiedHeadHealth(Zed);
     }
 
-    return true;
+    return True;
 }
 
 public function Mutate(string MutateString, PlayerController Sender)
@@ -519,8 +519,8 @@ defaultproperties
     FriendlyName="N7 Three Hundred Pounds Command Manager"
     Description="Mutate API for more sophisticated game settings and event triggering."
 
-    bAllowMutate=true
-    bZedTimeDisabled=false
+    bAllowMutate=True
+    bZedTimeDisabled=False
     ZedHPConfig=1
     ZedHPConfigThreshold=6
     FakedPlayersNum=0

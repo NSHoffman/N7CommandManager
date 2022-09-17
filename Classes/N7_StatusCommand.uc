@@ -21,6 +21,6 @@ defaultproperties
     Aliases(0)="STATUS"
     Signature="<>"
     Description="Display current game settings"
-    bNotifySenderOnSuccess=false
-    bOnlyPlayerSender=false
+    bNotifySenderOnSuccess=False
+    bOnlyPlayerSender=False
 }

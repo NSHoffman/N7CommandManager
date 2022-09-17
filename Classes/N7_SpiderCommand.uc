@@ -4,10 +4,10 @@ class N7_SpiderCommand extends N7_MovementModeCommand;
 protected function DoActionForSingleTarget
     (N7_CommandExecutionState ExecState, PlayerController PC)
 {
-    PC.Pawn.bAmbientCreature = false;
+    PC.Pawn.bAmbientCreature = False;
     PC.Pawn.UnderWaterTime = PC.Pawn.default.UnderWaterTime;
-    PC.Pawn.SetCollision(true, true, true);
-    PC.Pawn.bCollideWorld = true;
+    PC.Pawn.SetCollision(True, True, True);
+    PC.Pawn.bCollideWorld = True;
     PC.GotoState('PlayerSpidering');
 }
 

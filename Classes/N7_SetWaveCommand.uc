@@ -18,15 +18,15 @@ protected function DoAction(N7_CommandExecutionState ExecState)
 
     KFGRI = KFGameReplicationInfo(Level.Game.GameReplicationInfo);
 
-    GSU.KillAllZeds(true);
+    GSU.KillAllZeds(True);
     GSU.StopZedTime();
 
     /** Restarting when the entire squad is wiped out */
     if (KFGT.bGameEnded && KFGRI.EndGameType == 1)
     {
         KFGT.Reset();
-        KFGT.VotingHandler.SetTimer(0, false);
-        KFGT.bGameRestarted = false;
+        KFGT.VotingHandler.SetTimer(0, False);
+        KFGT.bGameRestarted = False;
 
         KFGRI.Reset();
         KFGRI.EndGameType = 0;
@@ -44,8 +44,8 @@ protected function DoAction(N7_CommandExecutionState ExecState)
         {
             if (PlayerController(C) != None)
             {
-                PlayerController(C).bBehindView = false;
-                PlayerController(C).ClientSetBehindView(false);
+                PlayerController(C).bBehindView = False;
+                PlayerController(C).ClientSetBehindView(False);
                 PlayerController(C).SetViewTarget(C.Pawn);
                 PlayerController(C).ClientSetViewTarget(C.Pawn);
             }

@@ -32,7 +32,7 @@ var public config const string Error;
 public final function string ColorizeMain(
     string Text, bool bDisableColoring)
 {
-    return Colorize(Text, EColorTypes.CT_Main, bDisableColoring, true);
+    return Colorize(Text, EColorTypes.CT_Main, bDisableColoring, True);
 }
 
 public final function string ColorizeSender(
