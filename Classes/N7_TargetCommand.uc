@@ -8,12 +8,12 @@ class N7_TargetCommand extends N7_Command
 var protected const bool bAllowTargetAll;
 var protected const bool bAllowTargetSelf;
 var protected const bool bOnlyFirstTargetMatch;
-var protected globalconfig const bool bOnlyAliveTargets;
-var protected globalconfig const bool bOnlyDeadTargets;
-var protected globalconfig const bool bOnlyPlayerTargets;
-var protected globalconfig const bool bOnlySpectatorTargets;
-var protected globalconfig const bool bOnlyAdminTargets;
-var protected globalconfig const bool bOnlyNonAdminTargets;
+var protected config const bool bOnlyAliveTargets;
+var protected config const bool bOnlyDeadTargets;
+var protected config const bool bOnlyPlayerTargets;
+var protected config const bool bOnlySpectatorTargets;
+var protected config const bool bOnlyAdminTargets;
+var protected config const bool bOnlyNonAdminTargets;
 
 /** @Override */
 protected function DoAction(N7_CommandExecutionState ExecState)

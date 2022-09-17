@@ -5,8 +5,8 @@ enum ECmdArgs
     ARG_SPAWNRATE,
 };
 
-var protected const float MinRate;
-var protected globalconfig const float MaxRate;
+var protected const float MinLimit;
+var protected config const float MaxLimit;
 
 /** @Override */
 protected function DoAction(N7_CommandExecutionState ExecState)
@@ -33,7 +33,7 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
     {
         NewSpawnRate = ToFloat(ExecState.GetArg(ECmdArgs.ARG_SPAWNRATE));
 
-        if (!IsInRangeF(NewSpawnRate, MinRate, MaxRate))
+        if (!IsInRangeF(NewSpawnRate, MinLimit, MaxLimit))
         {
             return false;
         }
@@ -51,13 +51,13 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
 /** @Override */
 protected function string InvalidArgsMessage(N7_CommandExecutionState ExecState)
 {
-    return "Spawn Rate number must be in range from "$MinRate$" to "$MaxRate;
+    return "Spawn Rate number must be in range from "$MinLimit$" to "$MaxLimit;
 }
 
 defaultproperties
 {
-    MinRate=0.0
-    MaxRate=10.0
+    MinLimit=0.0
+    MaxLimit=10.0
     MinArgsNum=0
     MaxArgsNum=1
     Aliases(0)="SR"

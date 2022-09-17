@@ -144,7 +144,7 @@ var protected class<N7_Command> TempAdminCommandClass;
 var protected Array<N7_Command> Commands;
 
 /** THP Game settings */
-var protected globalconfig const bool bAllowMutate;
+var protected config const bool bAllowMutate;
 var protected bool bZedTimeDisabled;
 
 // Minimum ZED HP config that can be set when there are more players

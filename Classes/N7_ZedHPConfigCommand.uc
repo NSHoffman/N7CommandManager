@@ -6,7 +6,7 @@ enum ECmdArgs
 };
 
 var protected const int MinLimit;
-var protected globalconfig const int MaxLimit;
+var protected config const int MaxLimit;
 
 /** @Override */
 protected function DoAction(N7_CommandExecutionState ExecState)

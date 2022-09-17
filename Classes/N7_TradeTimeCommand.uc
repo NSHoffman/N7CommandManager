@@ -5,8 +5,8 @@ enum ECmdArgs
     ARG_NEWTIME,
 };
 
-var protected const int MinTradeTime;
-var protected globalconfig const int MaxTradeTime;
+var protected const int MinLimit;
+var protected config const int MaxLimit;
 
 /** @Override */
 protected function DoAction(N7_CommandExecutionState ExecState)
@@ -15,17 +15,17 @@ protected function DoAction(N7_CommandExecutionState ExecState)
 
     NewTradeTime = ToInt(ExecState.GetArg(ECmdArgs.ARG_NEWTIME));
 
-    if (IsInRange(NewTradeTime, MinTradeTime, MaxTradeTime))
+    if (IsInRange(NewTradeTime, MinLimit, MaxLimit))
     {
         KFGT.WaveCountDown = NewTradeTime; 
     }
-    else if (IsInRange(NewTradeTime, MinTradeTime))
+    else if (IsInRange(NewTradeTime, MinLimit))
     {
-        KFGT.WaveCountDown = MaxTradeTime;
+        KFGT.WaveCountDown = MaxLimit;
     }
     else
     {
-        KFGT.WaveCountDown = MinTradeTime;
+        KFGT.WaveCountDown = MinLimit;
     }
 }
 
@@ -50,10 +50,10 @@ protected function string InvalidGameStateMessage()
 
 defaultproperties
 {
+    MinLimit=6
+    MaxLimit=3600
     MinArgsNum=1
     MaxArgsNum=1
-    MinTradeTime=6
-    MaxTradeTime=3600
     Aliases(0)="TT"
     Aliases(1)="TRADE"
     Aliases(2)="SETTRADE"

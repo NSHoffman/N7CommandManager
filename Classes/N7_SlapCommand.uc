@@ -1,7 +1,7 @@
 class N7_SlapCommand extends N7_UnaryTargetCommand;
 
-var protected globalconfig const int SlapDamage;
-var protected globalconfig const int SlapDamageForce;
+var protected config const int SlapDamage;
+var protected config const int SlapDamageForce;
 
 /** @Override */
 protected function DoActionForSingleTarget

@@ -6,9 +6,9 @@ enum ECmdArgs
     ARG_DAMAGE,
 };
 
-var protected const int MinDamage;
-var protected globalconfig const int MaxDamage;
-var protected globalconfig const int DefaultDamage;
+var protected const int MinLimit;
+var protected config const int MaxLimit;
+var protected config const int DefaultDamage;
 
 var protected editconstarray Array<string> AvailableDamageTypes;
 
@@ -103,7 +103,7 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
     {
         ZedDamage = ToInt(ExecState.GetArg(ECmdArgs.ARG_DAMAGE));
 
-        if (!IsInRange(ZedDamage, MinDamage, MaxDamage))
+        if (!IsInRange(ZedDamage, MinLimit, MaxLimit))
         {
             return false;
         }
@@ -115,18 +115,18 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 /** @Override */
 protected function string InvalidArgsMessage(N7_CommandExecutionState ExecState)
 {
-    return "You must provide valid DamageType and Damage value between "$MinDamage$" and "$MaxDamage;
+    return "You must provide valid DamageType and Damage value between "$MinLimit$" and "$MaxLimit;
 }
 
 defaultproperties
 {
+    MinLimit=0
+    MaxLimit=100000
     MinArgsNum=0
     MaxArgsNum=2
     Aliases(0)="HITZ"
     ArgTypes(0)="word"
     ArgTypes(1)="number"
-    MinDamage=0
-    MaxDamage=100000
     DefaultDamage=10000
     AvailableDamageTypes(0)="hit"
     AvailableDamageTypes(1)="frag"

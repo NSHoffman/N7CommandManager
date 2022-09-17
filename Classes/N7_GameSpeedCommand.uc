@@ -5,8 +5,8 @@ enum ECmdArgs
     ARG_NEWSPEED,
 };
 
-var protected const float MinGameSpeed;
-var protected globalconfig const float MaxGameSpeed;
+var protected const float MinLimit;
+var protected config const float MaxLimit;
 
 /** @Override */
 protected function DoAction(N7_CommandExecutionState ExecState)
@@ -33,7 +33,7 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
     {
         NewGameSpeed = ToInt(ExecState.GetArg(ECmdArgs.ARG_NEWSPEED));
 
-        if (!IsInRangeF(NewGameSpeed, MinGameSpeed, MaxGameSpeed))
+        if (!IsInRangeF(NewGameSpeed, MinLimit, MaxLimit))
         {
             return false;
         }
@@ -51,14 +51,14 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
 /** @Override */
 protected function string InvalidArgsMessage(N7_CommandExecutionState ExecState)
 {
-    return "New Game Speed must be in range from "$MinGameSpeed$" to "$MaxGameSpeed;
+    return "New Game Speed must be in range from "$MinLimit$" to "$MaxLimit;
 }
 
 defaultproperties
 {
     bAdminOnly=true
-    MinGameSpeed=0.25
-    MaxGameSpeed=10.0
+    MinLimit=0.25
+    MaxLimit=10.0
     MinArgsNum=0
     MaxArgsNum=1
     Aliases(0)="GS"

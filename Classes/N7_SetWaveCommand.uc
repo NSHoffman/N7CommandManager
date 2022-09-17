@@ -5,8 +5,8 @@ enum ECmdArgs
     ARG_WAVE,
 };
 
-var protected const int MinWave;
-var protected int MaxWave;
+var protected const int MinLimit;
+var protected int MaxLimit;
 
 /** @Override */
 protected function DoAction(N7_CommandExecutionState ExecState)
@@ -93,10 +93,10 @@ protected function bool CheckGameState(N7_CommandExecutionState ExecState)
 protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 {
     local int WaveNum;
-    MaxWave = KFGT.FinalWave;
+    MaxLimit = KFGT.FinalWave;
     WaveNum = ToInt(ExecState.GetArg(ECmdArgs.ARG_WAVE));
 
-    return IsInRange(WaveNum, MinWave, MaxWave);
+    return IsInRange(WaveNum, MinLimit, MaxLimit);
 }
 
 /** @Override */
@@ -117,13 +117,13 @@ protected function string InvalidGameStateMessage()
 /** @Override */
 protected function string InvalidArgsMessage(N7_CommandExecutionState ExecState)
 {
-    return "Wave number must be in range from "$MinWave$" to "$MaxWave;
+    return "Wave number must be in range from "$MinLimit$" to "$MaxLimit;
 }
 
 defaultproperties
 {
-    MinWave=1
-    MaxWave=11
+    MinLimit=1
+    MaxLimit=11
     MinArgsNum=1
     MaxArgsNum=1
     Aliases(0)="WN"

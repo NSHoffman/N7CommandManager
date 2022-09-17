@@ -16,14 +16,14 @@ enum EColorTypes
     CT_Error,
 };
 
-var public globalconfig const string Main;
-var public globalconfig const string Sender;
-var public globalconfig const string Target;
-var public globalconfig const string Entity;
-var public globalconfig const string Value;
-var public globalconfig const string Signature;
-var public globalconfig const string Emphasis;
-var public globalconfig const string Error;
+var public config const string Main;
+var public config const string Sender;
+var public config const string Target;
+var public config const string Entity;
+var public config const string Value;
+var public config const string Signature;
+var public config const string Emphasis;
+var public config const string Error;
 
 /****************************
  *  PUBLIC INTERFACE

@@ -33,33 +33,35 @@ Admins can use all of the regular commands + bunch of commands with admin-only a
 The list of available commands for admins can be requested via `mutate ahelp` or `mutate adminhelp` (check `N7_AdminHelpCommand` aliases).
 To get information or (if available) some extended details regarding specific admin command one can use `mutate ahelp [command]`.
 
+> [`CONFIG.md`](./CONFIG.md) contains basic guidelines for command settings configuration
+
 ### Developers/Modders
 For those who want to extend the existing API there is some more information in terms of internal structure of the command manager.
 
-#### `CommandManager`
+#### `N7_CommandManager`
 This is the entry file, the mutator itself that dispatches incoming `mutate` requests.
-Each of the available commands must be specified as a part of `CommandManager.Commands` array. Initialization takes place in one of the command initializing methods:
+Each of the available commands must be specified as a part of `N7_CommandManager.Commands` array. Initialization takes place in one of the command initializing methods:
   * `InitHelperCommands()`
   * `InitGameSettingsCommands()`
   * `InitGameplayCommands()`
   * `InitPlayerCommands()`
 
 The distinction between commands initialized in these methods is purely aesthetic, just visual grouping. 
-Furthermore, each command must be stated in `enum ECmd` to have its own index in `CommandManager.Commands` array.  
+Furthermore, each command must be stated in `enum ECmd` to have its own index in `N7_CommandManager.Commands` array.  
 
-#### `GameStateUtils`
+#### `N7_GameStateUtils`
 This file contains some useful methods that can be applied in variety of commands and take significant number of code lines.
 Mostly these would affect some parts of ZEDs, players or game state.
 
-Each command has access to `GameStateUtils` via `GSU` field which is defined in `CommandManager` file.
+Each command has access to `N7_GameStateUtils` via `GSU` field which is defined in `N7_CommandManager` file.
 
-#### `CommandValidator`
+#### `N7_CommandValidator`
 This class provides validation API that is used to check user input and various aspects of game state. 
 
-#### `CommandExecutionState`
+#### `N7_CommandExecutionState`
 These classes keep track of command state when its execution is in progress.
 
-`CommandExecutionState` contains information about current execution, namely:
+`N7_CommandExecutionState` contains information about current execution, namely:
   * The Sender
   * Targets (if there are any)
   * Status and Error Code (if status is failed)
@@ -67,48 +69,47 @@ These classes keep track of command state when its execution is in progress.
 
 It also allows for caching of some temporary values that are needed across different execution stages but need not be recalculated.
 It can cache:
-  * a String
-  * a TargetName
-  * an Integer
-  * a Float
-  * a Boolean flag
-  * and some more value types...
+  * String
+  * TargetName
+  * Integer
+  * Float
+  * Boolean
 
-#### `Command`
+#### `N7_Command`
 Base class for all commands. Each new command must be derived from this class to inherit the base execution flow.
 The execution flow consists of 5 stages:
-  1. `CommandExecutionState` Initialization - Execution State literally gets its initial values.
+  1. `N7_CommandExecutionState` Initialization - Execution State literally gets its initial values.
   2. Arguments validation - Multi-step validation process when lots of conditions get checked (Gametype, Sender, Game State, Admin Access Restrictions etc.)
   3. Action Processing - Desired effects/actions are applied.
   4. Success/Error Notification - Depending on notification settings a selection of actors are notified about execution status.
-  5. Optional Cleanup - If any values not related to `CommandExecutionState`/`CommandPreservedState` were used to keep track of execution progress those need to be reset.
+  5. Optional Cleanup - If any values not related to `N7_CommandExecutionState` were used to keep track of execution progress those need to be reset.
 
 This flow is `final` and cannot be altered in subclasses.
 Usually one might want to override the following methods to alter the command execution:
-  * `Check...(CommandExecutionState)`   - Checker methods.
-  * `DoAction(CommandExecutionState)`   - This is where the actual action logic resides.
-  * `Notify...(CommandExecutionState)`  - Notifications.
+  * `Check...(N7_CommandExecutionState)`   - Checker methods.
+  * `DoAction(N7_CommandExecutionState)`   - This is where the actual action logic resides.
+  * `Notify...(N7_CommandExecutionState)`  - Notifications.
 
-#### `GameSettingsCommand`/`TargetCommand` etc.
-Classes derived from `Command` which provide common logic for specified sets of commands.
+#### `N7_GameSettingsCommand`/`N7_TargetCommand` etc.
+Classes derived from `N7_Command` which provide common logic for specified sets of commands.
 
-`GameSettingsCommand` provides some configuration and settings for commands whose sole purpose is to change
+`N7_GameSettingsCommand` provides some configuration and settings for commands whose sole purpose is to change
 some game settings be it maximum players number or ZED-time status.
 
-`TargetCommand` provides extended logic for commands that affect a selection of players.
+`N7_TargetCommand` provides extended logic for commands that affect a selection of players.
 Here resides the common logic for target validation and per-target command execution.
 
-#### `ColorManager`/`CommandMessageColors`
+#### `N7_ColorManager`/`N7_CommandMessageColors`
 These classes are responsible for coloring of messages and notifications.
 
-`ColorManager` is the class that provides color collection based on [Material Design colors](https://materialui.co/colors/).
+`N7_ColorManager` is the class that provides color collection based on [Material Design colors](https://materialui.co/colors/).
 It also provides API for text coloring and color picking based on IDs rather than RGBA structs. 
 All color IDs follow the same structure: `<color>:<tint>`. Also `black`, `white` or `rgb(byte, byte, byte)` compliant values are supported.
 Information on both colors and tints can be found on Material Design colors page.
 
-`CommandMessageColors` is just a class that keeps configurable color IDs for various messages/notifications parts.
+`N7_CommandMessageColors` is just a class that keeps configurable color IDs for various messages/notifications parts.
 It is also responsible for providing colorization API for commands.
-One is not strictly tied to the cases defined in base `CommandMessageColors` class as it can be extended and assigned to `CommandManager.ColorsClass` field.
+One is not strictly tied to the cases defined in base `N7_CommandMessageColors` class as it can be extended and assigned to `N7_CommandManager.ColorsClass` field.
 
 ## Contacts
 For questions/concerns/recommendations you can contact me via steam or email:
