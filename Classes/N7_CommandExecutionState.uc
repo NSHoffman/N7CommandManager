@@ -99,7 +99,7 @@ public final function bool ShouldStopTargetSearch()
  ****************************/
 
 public final function Initialize(
-    PlayerController InitSender, Array<string> InitArgs)
+    PlayerController InitSender, Array<string> InitArgs, int MaxArgsNum)
 {
     local int i;
 
@@ -109,6 +109,11 @@ public final function Initialize(
         {
             Args[Args.Length] = InitArgs[i];
             InitialArgs[InitialArgs.Length] = InitArgs[i];
+        }
+
+        if (Args.Length >= MaxArgsNum)
+        {
+            break;
         }
     }
 
