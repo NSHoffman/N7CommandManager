@@ -145,7 +145,7 @@ var protected Array<N7_Command> Commands;
 
 /** THP Game settings */
 var protected config const bool bAllowMutate;
-var protected bool bZedTimeDisabled;
+var protected bool bZedTimeEnabled;
 
 // Minimum ZED HP config that can be set when there are more players
 var protected const int ZedHPConfigThreshold;
@@ -173,14 +173,14 @@ public final function bool IsMutateAllowed()
     return bAllowMutate;
 }
 
-public final function bool IsZedTimeDisabled()
+public final function bool IsZedTimeEnabled()
 {
-    return bZedTimeDisabled;
+    return bZedTimeEnabled;
 }
 
 public final function SetZedTime(bool Flag)
 {
-    bZedTimeDisabled = Flag;
+    bZedTimeEnabled = Flag;
 }
 
 public final function int GetZedHPConfig()
@@ -360,9 +360,9 @@ event Timer()
 
     /** 
      * Constantly delaying next ZED-Time event
-     * so that it will never occur if bZedTimeDisabled is True
+     * so that it will never occur if bZedTimeEnabled is False
      */
-    if (IsZedTimeDisabled())
+    if (!IsZedTimeEnabled())
     {
         KFGT.LastZedTimeEvent = Level.TimeSeconds;
     }
@@ -520,7 +520,7 @@ defaultproperties
     Description="Mutate API for more sophisticated game settings and event triggering."
 
     bAllowMutate=True
-    bZedTimeDisabled=False
+    bZedTimeEnabled=True
     ZedHPConfig=1
     ZedHPConfigThreshold=6
     FakedPlayersNum=0

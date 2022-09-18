@@ -50,7 +50,7 @@ public final function Execute(
     local N7_CommandExecutionState ExecState;
 
     ExecState = new(Self) CommandStateClass;
-    ExecState.Initialize(Sender, Args);
+    ExecState.Initialize(Sender, Args, MaxArgsNum);
 
     Validate(ExecState);
 
@@ -69,26 +69,6 @@ public final function Execute(
     }
     Cleanup();
 }
-
-public final function GetHelp(PlayerController PC)
-{
-    local int i;
-    local string HelpMessage;
-
-    for (i = 0; i < Aliases.Length; i++)
-    {
-        HelpMessage $= Aliases[i];
-
-        if (i + 1 < Aliases.Length)
-        {
-            HelpMessage $= "/";
-        }
-    }    
-    HelpMessage $= " "$ColorizeSignature(Signature)$" - "$Description;
-    SendMessage(PC, HelpMessage);
-}
-
-public function GetExtendedHelp(PlayerController PC);
 
 public final function bool IsAdminOnly()
 {
@@ -729,6 +709,36 @@ protected function string RuntimeErrorMessage(N7_CommandExecutionState ExecState
 protected final function string UnexpectedErrorMessage()
 {
     return "Unexpected Error";
+}
+
+/****************************
+ *  HELP UTILS
+ ****************************/
+
+protected final function Help(PlayerController PC)
+{
+    local int i;
+    local string HelpMessage;
+
+    for (i = 0; i < Aliases.Length; i++)
+    {
+        HelpMessage $= Caps(Aliases[i]);
+
+        if (i + 1 < Aliases.Length)
+        {
+            HelpMessage $= "/";
+        }
+    }    
+    HelpMessage $= " "$ColorizeSignature(Signature)$" - "$Description;
+    SendMessage(PC, HelpMessage);
+}
+
+protected function ExtendedHelp(PlayerController PC);
+
+protected function HelpSectionSeparator(
+    PlayerController PC, string SectionTitle)
+{
+    SendMessage(PC, ColorizeEmphasis("========== "$Caps(SectionTitle)$" =========="));
 }
 
 /****************************

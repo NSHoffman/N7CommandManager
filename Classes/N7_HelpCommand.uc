@@ -19,7 +19,7 @@ protected function DoAction(N7_CommandExecutionState ExecState)
             {
                 if (Commands[i] != None && ShouldDisplayHelpForCommand(Commands[i]))
                 {
-                    Commands[i].GetHelp(ExecState.GetSender());
+                    Commands[i].Help(ExecState.GetSender());
                 }
             }
             break;
@@ -28,8 +28,8 @@ protected function DoAction(N7_CommandExecutionState ExecState)
             CommandString = ExecState.GetArg(ECmdArgs.ARG_COMMAND);
             RequestedCommand = GetCommand(CommandString);
 
-            RequestedCommand.GetHelp(ExecState.GetSender());
-            RequestedCommand.GetExtendedHelp(ExecState.GetSender());
+            RequestedCommand.Help(ExecState.GetSender());
+            RequestedCommand.ExtendedHelp(ExecState.GetSender());
             break;
     }
 }

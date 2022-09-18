@@ -8,19 +8,19 @@ enum ECmdArgs
 /** @Override */
 protected function DoAction(N7_CommandExecutionState ExecState)
 {
-    local bool bShouldEnableZedTime;
+    local bool bEnableZedTime;
 
     if (ExecState.GetArgC() == 1)
     {
-        bShouldEnableZedTime = ToBool(ExecState.GetArg(ECmdArgs.ARG_FLAG));
-        SetZedTime(bShouldEnableZedTime);
+        bEnableZedTime = ToBool(ExecState.GetArg(ECmdArgs.ARG_FLAG));
+        SetZedTime(bEnableZedTime);
     }
     else
     {
-        SetZedTime(!IsZedTimeDisabled());
+        SetZedTime(!IsZedTimeEnabled());
     }
 
-    ExecState.SaveFlag(!IsZedTimeDisabled());
+    ExecState.SaveFlag(IsZedTimeEnabled());
 }
 
 /** @Override */

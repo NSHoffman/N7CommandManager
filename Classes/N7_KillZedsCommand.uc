@@ -1,4 +1,4 @@
-class N7_KillZedsCommand extends N7_GameSettingsCommand;
+class N7_KillZedsCommand extends N7_Command;
 
 enum ECmdArgs
 {
@@ -26,7 +26,7 @@ protected function DoAction(N7_CommandExecutionState ExecState)
 protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 {
     return ExecState.GetArgC() == 0 
-        || ExecState.GetArgC() == 1 && Locs(ExecState.GetArg(ECmdArgs.ARG_TARGET)) == "all";
+        || ExecState.GetArgC() == 1 && ExecState.GetArg(ECmdArgs.ARG_TARGET) ~= "all";
 }
 
 /** @Override */
@@ -53,6 +53,8 @@ defaultproperties
     Aliases(0)="KZ"
     Aliases(1)="KILLZEDS"
     ArgTypes(0)="word"
-    Signature="<? string 'all'>"
+    Signature="<? 'all'>"
     Description="Kill ZEDs"
+    bNotifySenderOnSuccess=False
+    bNotifyGlobalOnSuccess=True
 }
