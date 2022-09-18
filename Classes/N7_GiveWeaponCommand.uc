@@ -99,10 +99,10 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
 }
 
 /** @Override */
-public function GetExtendedHelp(PlayerController PC)
+protected function ExtendedHelp(PlayerController PC)
 {
     local int i;
-    SendMessage(PC, "========== AVAILABLE WEAPON CLASSES ==========");
+    HelpSectionSeparator(PC, "Available Weapon Classes");
 
     for (i = 0; i < AvailableWeaponClasses.Length; i++)
     {

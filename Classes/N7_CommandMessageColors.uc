@@ -116,11 +116,11 @@ defaultproperties
     ColorManager=class'N7_ColorManager'
 
     Main="white"
-    Signature="white"
     Sender="white"
     Target="white"
     Entity="white"
     Value="white"
+    Signature="white"
     Emphasis="white"
     Error="white"
 }

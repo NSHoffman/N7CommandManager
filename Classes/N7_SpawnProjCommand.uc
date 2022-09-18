@@ -103,10 +103,10 @@ protected function string InvalidArgsMessage(N7_CommandExecutionState ExecState)
 }
 
 /** @Override */
-public function GetExtendedHelp(PlayerController PC)
+protected function ExtendedHelp(PlayerController PC)
 {
     local int i;
-    SendMessage(PC, "========== AVAILABLE PROJECTILES ==========");
+    HelpSectionSeparator(PC, "Available Projectiles");
 
     for (i = 0; i < AvailableProjTypes.Length; i++)
     {
