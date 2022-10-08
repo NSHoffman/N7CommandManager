@@ -8,13 +8,13 @@ protected function DoActionForSingleTarget
     (N7_CommandExecutionState ExecState, PlayerController PC)
 {
     local Weapon NewWeapon;
-
     NewWeapon = PC.Pawn.Spawn(WeaponClass);
 
     if (NewWeapon != None)
     {
         NewWeapon.GiveTo(PC.Pawn);
     }
+
     ExecState.SaveString(WeaponClass.default.ItemName);
 }
 
