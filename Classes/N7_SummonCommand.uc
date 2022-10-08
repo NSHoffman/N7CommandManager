@@ -82,6 +82,19 @@ protected function string GetTargetSuccessMessage(N7_CommandExecutionState ExecS
     return ColorizeValue(ExecState.LoadString())$" has been spawned next to you";
 }
 
+/** @Override */
+protected function ExtendedHelp(PlayerController PC)
+{
+    local int i;
+    HelpSectionSeparator(PC, "Available ZEDs");
+
+    for (i = 0; i < KFGT.MonsterCollection.default.MonsterClasses.Length; i++)
+    {
+        SendMessage(PC, KFGT.MonsterCollection.default.MonsterClasses[i].MClassName);
+    }
+    SendMessage(PC, KFGT.MonsterCollection.default.EndGameBossClass);
+}
+
 defaultproperties
 {
     bAdminOnly=True
