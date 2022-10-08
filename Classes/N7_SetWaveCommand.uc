@@ -64,12 +64,12 @@ protected function DoAction(N7_CommandExecutionState ExecState)
      * KFGRI.WaveNumber is the wave number displayed in HUD, byte value that gets incremented in the default HUD
      * Under different conditions different wave setting setup is required
      */
-    if (bTradeTime && KFGT.WaveCountDown >= 5)
+    if (bTradeTime && KFGT.WaveCountDown > 5)
     {
         KFGT.WaveNum = WaveNum - 1;
         KFGRI.WaveNumber = Max(KFGT.WaveNum - 1, 0);
     }
-    else if (bTradeTime && KFGT.WaveCountDown < 5)
+    else if (bTradeTime && KFGT.WaveCountDown <= 5)
     {
         KFGT.WaveNum = WaveNum - 1;
         KFGRI.WaveNumber = KFGT.WaveNum;
@@ -93,7 +93,7 @@ protected function bool CheckGameState(N7_CommandExecutionState ExecState)
 protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 {
     local int WaveNum;
-    MaxLimit = KFGT.FinalWave;
+    MaxLimit = KFGT.FinalWave + 1;
     WaveNum = ToInt(ExecState.GetArg(ECmdArgs.ARG_WAVE));
 
     return IsInRange(WaveNum, MinLimit, MaxLimit);
