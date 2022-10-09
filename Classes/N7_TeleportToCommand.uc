@@ -32,5 +32,6 @@ defaultproperties
     Signature="<? string TargetName>"
     Description="Teleport to another player"
     bOnlyAliveTargets=True
+    bOnlyAliveSender=True
     bNotifySenderOnSuccess=False
 }

@@ -46,5 +46,6 @@ defaultproperties
     Signature="<string Name, adminonly ? string TargetName>"
     Description="Change Player's name. Admin access allows for changing other players names"
     bNotifyGlobalOnSuccess=True
+    bOnlyPlayerSender=False
     bAllowTargetAll=False
 }

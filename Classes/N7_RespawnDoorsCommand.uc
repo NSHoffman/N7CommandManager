@@ -27,4 +27,5 @@ defaultproperties
     Aliases(1)="RESPAWNDOORS"
     Signature="<>"
     Description="Respawn all doors"
+    bOnlyAliveSender=True
 }

@@ -134,6 +134,5 @@ defaultproperties
     Signature="<? string DamageType, ? int Damage>"
     Description="Damage Zed being looked at. Available Damage types: hit, frag, fire"
     bOnlyAliveSender=True
-    bOnlyPlayerSender=True
     bNotifySenderOnSuccess=False
 }

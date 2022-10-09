@@ -34,7 +34,7 @@ defaultproperties
 {
     MinArgsNum=0
     MaxArgsNum=0
-    Aliases(0)="SKIP"
+    Aliases=("SKIP")
     Signature="<>"
     Description="Skip trader time"
 }
