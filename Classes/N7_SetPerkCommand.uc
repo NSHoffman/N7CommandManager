@@ -5,54 +5,40 @@ protected function DoActionForSingleTarget
     (N7_CommandExecutionState ExecState, PlayerController PC)
 {
     local class<KFVeterancyTypes> SelectedPerkClass;
-    local string SelectedPerk;
-    local int i;
+    local int PerkIndex;
 
-    SelectedPerk = ExecState.LoadString();
+    PerkIndex = ToInt(ExecState.GetArg(ECmdArgs.ARG_VALUE));
+    SelectedPerkClass = KFGT.default.LoadedSkills[PerkIndex];
 
-    for (i = 0; i < KFGT.LoadedSkills.Length; i++)
-    {
-        if (IsStringPartOf(SelectedPerk, KFGT.LoadedSkills[i].default.VeterancyName))
-        {
-            SelectedPerkClass = KFGT.LoadedSkills[i];
-        }
-    }
+    ExecState.SaveString(SelectedPerkClass.default.VeterancyName);
 
+    KFPlayerController(PC).default.SelectedVeterancy = SelectedPerkClass;
     KFPlayerController(PC).SetSelectedVeterancy(SelectedPerkClass);
+
     KFPlayerReplicationInfo(PC.PlayerReplicationInfo).ClientVeteranSkill = SelectedPerkClass;
     KFPlayerReplicationInfo(PC.PlayerReplicationInfo).ClientVeteranSkillLevel = 
         KFSteamStatsAndAchievements(PC.SteamStatsAndAchievements).PerkHighestLevelAvailable(SelectedPerkClass.default.PerkIndex);
 
     KFHumanPawn(PC.Pawn).VeterancyChanged();
+    PC.SaveConfig();
 }
 
 /** @Override */
 protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 {
-    local string SelectedPerk;
-    local int i;
+    local int PerkIndex;
+    PerkIndex = ToInt(ExecState.GetArg(ECmdArgs.ARG_VALUE));
 
-    SelectedPerk = ExecState.GetArg(ECmdArgs.ARG_VALUE);
-
-    for (i = 0; i < KFGT.LoadedSkills.Length; i++)
-    {
-        if (IsStringPartOf(SelectedPerk, KFGT.LoadedSkills[i].default.VeterancyName))
-        {
-            ExecState.SaveString(KFGT.LoadedSkills[i].default.VeterancyName);
-            return True;
-        }
-    }
-
-    return False;
+    return IsInRange(PerkIndex, 0, KFGT.default.LoadedSkills.Length - 1);
 }
 
 /** @Override */
 protected function string InvalidArgsMessage(N7_CommandExecutionState ExecState)
 {
-    local string InvalidPerk;
-    InvalidPerk = ColorizeValue(ExecState.GetArg(ECmdArgs.ARG_VALUE));
+    local string PerkIndex;
+    PerkIndex = ColorizeValue(ExecState.GetArg(ECmdArgs.ARG_VALUE));
 
-    return "Cannot find perk "$InvalidPerk;
+    return "Cannot find perk with index "$PerkIndex;
 }
 
 /** @Override */
@@ -82,14 +68,29 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
     return TargetName$"'s perk has been changed to "$SelectedPerk;
 }
 
+/** @Override */
+protected function ExtendedHelp(PlayerController PC)
+{
+    local int i;
+    local class<KFVeterancyTypes> CurrentPerk;
+
+    HelpSectionSeparator(PC, "Available Perks");
+
+    for (i = 0; i < KFGT.default.LoadedSkills.Length; i++)
+    {
+        CurrentPerk = KFGT.default.LoadedSkills[i];
+        SendMessage(PC, CurrentPerk.default.PerkIndex$" - "$CurrentPerk.default.VeterancyName);
+    }
+}
+
 defaultproperties
 {
     MinArgsNum=1
-    ArgTypes(0)="any"
+    ArgTypes(0)="number"
     Aliases(0)="SP"
     Aliases(1)="PERK"
     Aliases(2)="SETPERK"
-    Signature="<string Perk, adminonly ? string TargetName>"
+    Signature="<int PerkIndex, adminonly ? string TargetName>"
     Description="Set Perk. Admin access allows for changing other players perks"
     bAllowTargetAll=False
     bNotifyGlobalOnSuccess=True

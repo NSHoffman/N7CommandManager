@@ -71,28 +71,26 @@ public function bool IsNumber(string Str)
 {
     local int i;
     local string Ch;
-    local bool bFloatingPointFound;
+    local bool bFloatingPointFound, bValidMinus;
 
     for (i = 0; i < Len(Str); i++)
     {
         Ch = Mid(Str, i, 1);
 
-        if (Asc(Ch) == CHR_DOT && !bFloatingPointFound)
-        {
-            bFloatingPointFound = True;
-            continue;
-        }
-        else if (Asc(Ch) == CHR_DOT)
-        {
-            return False;
-        }
+        bValidMinus = Asc(Ch) == CHR_MINUS && i == 0;
 
-        if (Asc(Ch) == CHR_MINUS && i == 0 && Len(Str) > 0)
+        if (Asc(Ch) == CHR_DOT)
         {
-            return False;
+            if (!bFloatingPointFound)
+            {
+                bFloatingPointFound = True;
+            }
+            else
+            {
+                return False;
+            }
         }
-
-        if (!IsDigit(Ch))
+        else if (!IsDigit(Ch) && !bValidMinus)
         {
             return False;
         }

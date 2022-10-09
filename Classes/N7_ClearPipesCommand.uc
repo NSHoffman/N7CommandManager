@@ -13,6 +13,18 @@ protected function DoAction(N7_CommandExecutionState ExecState)
 }
 
 /** @Override */
+protected function bool CheckGameState(N7_CommandExecutionState ExecState)
+{
+    return KFGT.IsInState('MatchInProgress') && KFGT.WaveCountDown > 0;
+}
+
+/** @Override */
+protected function string InvalidGameStateMessage()
+{
+    return "Pipes can be removed only during trade time";
+}
+
+/** @Override */
 protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecState)
 {
     return "All pipes have been removed by "$ColorizeSender(ExecState);
