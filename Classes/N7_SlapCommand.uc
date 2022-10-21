@@ -26,7 +26,7 @@ protected function DoActionForSingleTarget
 /** @Override */
 protected function bool CheckGameState(N7_CommandExecutionState ExecState)
 {
-    return KFGT.IsInState('MatchInProgress');
+    return !KFGT.IsInState('PendingMatch');
 }
 
 /** @Override */

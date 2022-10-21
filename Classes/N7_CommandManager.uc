@@ -1,11 +1,8 @@
 class N7_CommandManager extends Engine.Mutator
+    dependson(N7_ResizedPlayersModel)
     config(N7CommandManager);
 
 var public KFGameType KFGT;
-
-/** Class which contains some helper functions to work with game state */
-var protected const class<N7_GameStateUtils> GSUClass;
-var public N7_GameStateUtils GSU;
 
 /** Class responsible for messages/notifications coloring */
 var protected const class<N7_CommandMessageColors> ColorsClass;
@@ -14,6 +11,23 @@ var public N7_CommandMessageColors Colors;
 /** Class which provides API for input validation */
 var protected const class<N7_CommandValidator> ValidatorClass;
 var public N7_CommandValidator Validator;
+
+/** Class which contains some helper functions to work with game state */
+var protected const class<N7_GameStateUtils> GSUClass;
+var public N7_GameStateUtils GSU;
+
+/** Models */
+var protected const class<N7_RestoredPlayersModel> RestoredPlayersModelClass;
+var public N7_RestoredPlayersModel RestoredPlayersModel;
+
+var protected const class<N7_ResizedPlayersModel> ResizedPlayersModelClass;
+var public N7_ResizedPlayersModel ResizedPlayersModel;
+
+var protected const class<N7_HPConfigModel> HPConfigModelClass;
+var public N7_HPConfigModel HPConfigModel;
+
+var protected const class<N7_FakedPlayersModel> FakedPlayersModelClass;
+var public N7_FakedPlayersModel FakedPlayersModel;
 
 enum ECmd
 {
@@ -71,6 +85,7 @@ enum ECmd
     CMD_KICK,
     CMD_BAN,
     CMD_TEMPADMIN,
+    CMD_BOOST,
 };
 
 /*********************************
@@ -139,6 +154,7 @@ var protected class<N7_Command> ForceSpectatorCommandClass;
 var protected class<N7_Command> KickCommandClass;
 var protected class<N7_Command> BanCommandClass;
 var protected class<N7_Command> TempAdminCommandClass;
+var protected class<N7_Command> BoostCommandClass;
 
 /** Commands List */
 var protected Array<N7_Command> Commands;
@@ -147,21 +163,7 @@ var protected Array<N7_Command> Commands;
 var protected config const bool bAllowMutate;
 var protected bool bZedTimeEnabled;
 
-// Minimum ZED HP config that can be set when there are more players
-var protected const int ZedHPConfigThreshold;
-var protected int ZedHPConfig;
-var protected int FakedPlayersNum;
-
-// Players whose attributes get restored on a regular basis
-var protected Array<PlayerController> RestoredPlayers;
-
-// Players whose body size scaling needs to be tracked
-struct ResizedPlayer
-{
-    var PlayerController PC;
-    var float ResizeMultiplier;
-};
-var protected Array<ResizedPlayer> ResizedPlayers;
+var protected float LastAttributeRestoreTime;
 var protected float NextResizedPlayersRefreshTime;
 
 /*********************************
@@ -183,129 +185,6 @@ public final function SetZedTime(bool Flag)
     bZedTimeEnabled = Flag;
 }
 
-public final function int GetZedHPConfig()
-{
-    return ZedHPConfig;
-}
-
-public final function int GetZedHPConfigThreshold()
-{
-    return ZedHPConfigThreshold;
-}
-
-public final function SetZedHPConfig(int NewZedHPConfig)
-{
-    ZedHPConfig = NewZedHPConfig;
-}
-
-public final function int GetFakedPlayersNum()
-{
-    return FakedPlayersNum;
-}
-
-public final function SetFakedPlayersNum(int NewFakedPlayersNum)
-{
-    FakedPlayersNum = NewFakedPlayersNum;
-}
-
-public final function Array<PlayerController> GetRestoredPlayers()
-{
-    return RestoredPlayers;
-}
-
-public final function RefreshRestoredPlayers()
-{
-    local PlayerController CurrentPC;
-    local int i;
-
-    while (i < RestoredPlayers.Length)
-    {
-        CurrentPC = RestoredPlayers[i];
-        if (CurrentPC == None)
-        {
-            RestoredPlayers.Remove(i, 1);
-            break;
-        }
-        i++;
-    }
-}
-
-public final function AddRestoredPlayer(PlayerController PC)
-{
-    local PlayerController CurrentPC;
-    local int i;
-
-    for (i = 0; i < RestoredPlayers.Length; i++)
-    {
-        CurrentPC = RestoredPlayers[i];
-        if (CurrentPC == PC)
-        {
-            return;
-        }
-    }
-
-    RestoredPlayers[RestoredPlayers.Length] = PC;
-}
-
-public final function RemoveRestoredPlayer(PlayerController PC)
-{
-    local PlayerController CurrentPC;
-    local int i;
-
-    for (i = 0; i < RestoredPlayers.Length; i++)
-    {
-        CurrentPC = RestoredPlayers[i];
-        if (CurrentPC == PC)
-        {
-            RestoredPlayers.Remove(i, 1);
-            return;
-        }
-    }
-}
-
-public final function Array<ResizedPlayer> GetResizedPlayers()
-{
-    return ResizedPlayers;
-}
-
-public final function RefreshResizedPlayers()
-{
-    local int i;
-
-    while (i < ResizedPlayers.Length)
-    {
-        if (ResizedPlayers[i].PC == None || 
-            ResizedPlayers[i].PC.Pawn == None || 
-            ResizedPlayers[i].PC.Pawn.Health <= 0 || 
-            ResizedPlayers[i].ResizeMultiplier == 1.0)
-        {
-            ResizedPlayers.Remove(i, 1);
-            break;
-        }
-        i++;
-    }
-}
-
-public final function AddResizedPlayer(PlayerController PC, float ResizeMultiplier)
-{
-    local ResizedPlayer NewPlayer;
-    local int i;
-
-    NewPlayer.PC = PC;
-    NewPlayer.ResizeMultiplier = ResizeMultiplier;
-
-    for (i = 0; i < ResizedPlayers.Length; i++)
-    {
-        if (ResizedPlayers[i].PC == PC)
-        {
-            ResizedPlayers[i].ResizeMultiplier = ResizeMultiplier;
-            return;
-        }
-    }
-
-    ResizedPlayers[ResizedPlayers.Length] = NewPlayer;
-}
-
 /*********************************
  * EVENTS
  *********************************/
@@ -319,9 +198,14 @@ event PostBeginPlay()
         Destroy();
     }
 
-    GSU = new(Self) GSUClass;
-    Colors = new(Self) ColorsClass;
-    Validator = new(Self) ValidatorClass;
+    GSU         = new(Self) GSUClass;
+    Colors      = new(Self) ColorsClass;
+    Validator   = new(Self) ValidatorClass;
+
+    HPConfigModel           = new(Self) HPConfigModelClass;
+    FakedPlayersModel       = new(Self) FakedPlayersModelClass;
+    RestoredPlayersModel    = new(Self) RestoredPlayersModelClass;
+    ResizedPlayersModel     = new(Self) ResizedPlayersModelClass;
 
     InitHelperCommands();
     InitGameSettingsCommands();
@@ -333,10 +217,23 @@ event PostBeginPlay()
 
 event Tick(float DeltaTime)
 {
+    local PlayerController PC;
+    local bool bWaveEnd, bWaveStart; 
+    local Array<N7_ResizedPlayersModel.ResizedPlayer> ResizedPlayers;
     local int i;
 
+    /**
+     * Keeping players' bodies resized
+     */
+    ResizedPlayers = GetResizedPlayers();
     if (ResizedPlayers.Length > 0)
     {
+        if (Level.TimeSeconds >= NextResizedPlayersRefreshTime)
+        {
+            RefreshResizedPlayers();
+            NextResizedPlayersRefreshTime = Level.TimeSeconds + 2.0;
+        }
+
         for (i = 0; i < ResizedPlayers.Length; i++)
         {
             if (ResizedPlayers[i].PC != None)
@@ -344,20 +241,42 @@ event Tick(float DeltaTime)
                 GSU.ResizePlayer(ResizedPlayers[i].PC, ResizedPlayers[i].ResizeMultiplier);
             }
         }
+    }
 
-        if (Level.TimeSeconds >= NextResizedPlayersRefreshTime)
+    /**
+     * Keeping players' attributes restored
+     */
+    if (GetRestoredPlayers().Length > 0 && Level.TimeSeconds - LastAttributeRestoreTime > 2.0)
+    {
+        bWaveEnd = (KFGT.bWaveInProgress || KFGT.bWaveBossInProgress)
+            && KFGT.NumMonsters <= 0
+            && KFGT.TotalMaxMonsters <= 0;
+
+        bWaveStart = (KFGT.bTradingDoorsOpen || !KFGT.bWaveInProgress && !KFGT.bWaveBossInProgress)
+            && KFGT.WaveCountDown <= 1;
+
+        if (bWaveStart || bWaveEnd)
         {
-            RefreshResizedPlayers();
-            NextResizedPlayersRefreshTime = Level.TimeSeconds + 1;
+            RefreshRestoredPlayers();
+
+            for (i = 0; i < GetRestoredPlayers().Length; i++)
+            {
+                PC = GetRestoredPlayers()[i];
+                GSU.RestorePlayerAttributes(PC);
+
+                if (PC.Pawn != None && PC.Pawn.Health > 0)
+                {
+                    PC.ClientMessage("Your attributes have been restored");
+                }
+            }
+
+            LastAttributeRestoreTime = Level.TimeSeconds;
         }
     }
 }
 
 event Timer()
 {
-    local PlayerController PC;
-    local int i;
-
     /** 
      * Constantly delaying next ZED-Time event
      * so that it will never occur if bZedTimeEnabled is False
@@ -366,39 +285,56 @@ event Timer()
     {
         KFGT.LastZedTimeEvent = Level.TimeSeconds;
     }
-
-    if (KFGT.WaveCountDown == KFGT.TimeBetweenWaves || KFGT.WaveCountDown == 5)
-    {
-        RefreshRestoredPlayers();
-
-        for (i = 0; i < RestoredPlayers.Length; i++)
-        {
-            PC = RestoredPlayers[i];
-            GSU.RestorePlayerAttributes(PC);
-
-            if (PC.Pawn != None && PC.Pawn.Health > 0)
-            {
-                PC.ClientMessage("Your attributes have been restored");
-            }
-        }
-    }
 }
 
 public function bool CheckReplacement(Actor Other, out byte bSuperRelevant)
 {
     local KFMonster Zed;
+    local PlayerController PC;
+    local int ZedHealthDesired, ZedHeadHealthDesired;
 
     /** 
      * Changing Monsters HP modifiers depending on
      * current HP config and number of players alive
+     *
+     * The code in CheckReplacement() gets executed before
+     * KFMonster::PostBeginPlay() and thus to get the correct health value
+     * we need to divide the desired ZED hp by the modifier that is going
+     * to be applied in KFMonster::PostBeginPlay() so that it can be multiplied back
      */
     if (KFMonster(Other) != None)
     {
         Zed = KFMonster(Other);
 
-        Zed.Health = GSU.GetZedModifiedHealth(Zed);
-        Zed.HealthMax = GSU.GetZedModifiedHealth(Zed);
-        Zed.HeadHealth = GSU.GetZedModifiedHeadHealth(Zed);
+        ZedHealthDesired = GetZedModifiedHealth(Zed);
+        ZedHeadHealthDesired = GetZedModifiedHeadHealth(Zed);
+
+        Zed.HealthMax = ZedHealthDesired 
+            / Zed.NumPlayersHealthModifer() 
+            / Zed.DifficultyHealthModifer();
+        
+        Zed.Health = Zed.HealthMax;
+
+        Zed.HeadHealth = ZedHeadHealthDesired 
+            / Zed.NumPlayersHeadHealthModifer() 
+            / Zed.DifficultyHeadHealthModifer();
+    }
+
+    /** 
+     * When new players join the game, they might be added to attribute restoration list
+     * That happens in case if all other players already have attribute restoration enabled
+     */
+    if (PlayerController(Other) != None)
+    {
+        RefreshRestoredPlayers();
+        PC = PlayerController(Other);
+
+        if (KFGT.NumPlayers > 0 &&
+            FindRestoredPlayer(PC) == None &&
+            GetRestoredPlayers().Length == KFGT.NumPlayers)
+        {
+            AddRestoredPlayer(PC);
+        }
     }
 
     return True;
@@ -492,6 +428,96 @@ protected function InitPlayerCommands()
     Commands[ECmd.CMD_KICK]         = new(Self) KickCommandClass;
     Commands[ECmd.CMD_BAN]          = new(Self) BanCommandClass;
     Commands[ECmd.CMD_TEMPADMIN]    = new(Self) TempAdminCommandClass;
+    Commands[ECmd.CMD_BOOST]        = new(Self) BoostCommandClass;
+}
+
+/*********************************
+ * MODELS API
+ *********************************/
+
+public final function int GetZedHPConfig()
+{
+    return HPConfigModel.GetZedHPConfig();
+}
+
+public final function int GetZedHPConfigThreshold()
+{
+    return HPConfigModel.GetZedHPConfigThreshold();
+}
+
+public final function int GetAlivePlayersNum()
+{
+    return HPConfigModel.GetAlivePlayersNum();
+}
+
+public final function int GetZedModifiedHealth(KFMonster Zed)
+{
+    return HPConfigModel.GetZedModifiedHealth(Zed);
+}
+
+public final function int GetZedModifiedHeadHealth(KFMonster Zed)
+{
+    return HPConfigModel.GetZedModifiedHeadHealth(Zed);
+}
+
+public final function int GetFakedPlayersNum()
+{
+    return FakedPlayersModel.GetFakedPlayersNum();
+}
+
+public final function int GetRealPlayersNum()
+{
+    return FakedPlayersModel.GetRealPlayersNum();
+}
+
+public final function SetFakedPlayersNum(int NewFakedPlayersNum)
+{
+    FakedPlayersModel.SetFakedPlayersNum(NewFakedPlayersNum);
+}
+
+public final function Array<PlayerController> GetRestoredPlayers()
+{
+    return RestoredPlayersModel.GetRestoredPlayers();
+}
+
+public final function RefreshRestoredPlayers()
+{
+    RestoredPlayersModel.RefreshRestoredPlayers();
+}
+
+public final function AddRestoredPlayer(PlayerController PC)
+{
+    RestoredPlayersModel.AddRestoredPlayer(PC);
+}
+
+public final function RemoveRestoredPlayer(PlayerController PC)
+{
+    RestoredPlayersModel.RemoveRestoredPlayer(PC);
+}
+
+public final function PlayerController FindRestoredPlayer(PlayerController PC)
+{
+    return RestoredPlayersModel.FindRestoredPlayer(PC);
+}
+
+public final function Array<N7_ResizedPlayersModel.ResizedPlayer> GetResizedPlayers()
+{
+    return ResizedPlayersModel.GetResizedPlayers();
+}
+
+public final function RefreshResizedPlayers()
+{
+    ResizedPlayersModel.RefreshResizedPlayers();
+}
+
+public final function AddResizedPlayer(PlayerController PC, float ResizeMultiplier)
+{
+    ResizedPlayersModel.AddResizedPlayer(PC, ResizeMultiplier);
+}
+
+public final function RemoveResizedPlayer(PlayerController PC)
+{
+    ResizedPlayersModel.RemoveResizedPlayer(PC);
 }
 
 /*********************************
@@ -516,18 +542,20 @@ protected final function int GetCommandIndex(string Alias)
 defaultproperties 
 {
     GroupName="KF-N7CommandManager"
-    FriendlyName="N7 Three Hundred Pounds Command Manager"
+    FriendlyName="N7 Command Manager"
     Description="Mutate API for more sophisticated game settings and event triggering."
 
     bAllowMutate=True
     bZedTimeEnabled=True
-    ZedHPConfig=1
-    ZedHPConfigThreshold=6
-    FakedPlayersNum=0
 
     GSUClass=class'N7_GameStateUtils'
     ColorsClass=class'N7_CommandMessageColors'
     ValidatorClass=class'N7_CommandValidator'
+
+    HPConfigModelClass=class'N7_HPConfigModel'
+    FakedPlayersModelClass=class'N7_FakedPlayersModel'
+    RestoredPlayersModelClass=class'N7_RestoredPlayersModel'
+    ResizedPlayersModelClass=class'N7_ResizedPlayersModel'
 
     HelpCommandClass=class'N7_HelpCommand'
     AdminHelpCommandClass=class'N7_AdminHelpCommand'
@@ -579,4 +607,5 @@ defaultproperties
     KickCommandClass=class'N7_KickCommand'
     BanCommandClass=class'N7_BanCommand'
     TempAdminCommandClass=class'N7_TempAdminCommand'
+    BoostCommandClass=class'N7_BoostCommand'
 }

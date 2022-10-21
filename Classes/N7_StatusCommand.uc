@@ -6,8 +6,8 @@ protected function DoActionForSingleTarget
 {
     ExecState.SaveFlag(IsZedTimeEnabled());
 
-    SendMessage(PC, "MZ - "$KFGT.MaxZombiesOnce$" | "$"SR - "$KFGT.KFLRules.WaveSpawnPeriod$" | "$"HP - "$GSU.GetFinalZedHPConfig()$" | "$"ZT - "$ExecState.LoadSwitch(True));
-    SendMessage(PC, "SLOTS - "$KFGT.MaxPlayers$" | "$"SPECS - "$KFGT.MaxSpectators$" | "$"FAKES - "$FakedPlayersNum);
+    SendMessage(PC, "MZ - "$KFGT.MaxZombiesOnce$" | "$"SR - "$KFGT.KFLRules.WaveSpawnPeriod$" | "$"HP - "$GetZedHPConfig()$" | "$"ZT - "$ExecState.LoadSwitch(True));
+    SendMessage(PC, "SLOTS - "$KFGT.MaxPlayers$" | "$"SPECS - "$KFGT.MaxSpectators$" | "$"FAKES - "$GetFakedPlayersNum());
 }
 
 /** @Override */

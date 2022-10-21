@@ -23,7 +23,7 @@ protected function DoAction(N7_CommandExecutionState ExecState)
     }
 
     SetFakedPlayersNum(NewFakes);
-    KFGT.NumPlayers = GSU.GetRealPlayersNum() + GetFakedPlayersNum();
+    KFGT.NumPlayers = GetRealPlayersNum() + GetFakedPlayersNum();
 }
 
 /** @Override */

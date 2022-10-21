@@ -32,10 +32,10 @@ protected function string GetTargetSuccessMessage(N7_CommandExecutionState ExecS
 
     if (TargetName ~= "all")
     {
-        return "All players have been given "$CashAmount$" of dosh";
+        return "All players have been doshed up by "$CashAmount$" pounds";
     }
 
-    return "You have been given "$CashAmount$" of dosh";
+    return "You have been doshed up by "$CashAmount$" pounds";
 }
 
 /** @Override */
@@ -48,10 +48,10 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
 
     if (TargetName ~= "all")
     {
-        return "All players have been given "$CashAmount$" of dosh";
+        return "All players have been doshed up by "$CashAmount$" pounds";
     }
 
-    return ColorizeTarget(TargetName)$" has been given "$CashAmount$" of dosh";
+    return ColorizeTarget(TargetName)$" has been doshed up by "$CashAmount$" pounds";
 }
 
 defaultproperties

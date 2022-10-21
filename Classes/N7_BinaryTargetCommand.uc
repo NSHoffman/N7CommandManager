@@ -25,6 +25,7 @@ protected function bool CheckTargets(N7_CommandExecutionState ExecState)
             break;
 
         case 2:
+        default:
             TargetName = ExecState.GetArg(ECmdArgs.ARG_TARGETNAME);
             bValidTarget = VerifyTargetByName(ExecState, TargetName);
             break;
@@ -48,6 +49,7 @@ protected function bool ShouldBeTarget(
             return AcceptTargetBySender(ExecState, PC, TargetName);
 
         case 2:
+        default:
             TargetName = ExecState.GetArg(ECmdArgs.ARG_TARGETNAME);
             return AcceptTargetByName(ExecState, PC, TargetName);
     }

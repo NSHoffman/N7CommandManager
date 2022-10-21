@@ -15,7 +15,7 @@ protected function DoAction(N7_CommandExecutionState ExecState)
 
     if (ExecState.GetArgC() > 0)
     {
-        NewGameSpeed = ToInt(ExecState.GetArg(ECmdArgs.ARG_NEWSPEED));
+        NewGameSpeed = ToFloat(ExecState.GetArg(ECmdArgs.ARG_NEWSPEED));
         KFGT.SetGameSpeed(NewGameSpeed);
     }
     else
@@ -31,7 +31,7 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 
     if (ExecState.GetArgC() > 0)
     {
-        NewGameSpeed = ToInt(ExecState.GetArg(ECmdArgs.ARG_NEWSPEED));
+        NewGameSpeed = ToFloat(ExecState.GetArg(ECmdArgs.ARG_NEWSPEED));
 
         if (!IsInRangeF(NewGameSpeed, MinLimit, MaxLimit))
         {
