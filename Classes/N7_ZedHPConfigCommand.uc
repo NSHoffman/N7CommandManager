@@ -22,7 +22,7 @@ protected function DoAction(N7_CommandExecutionState ExecState)
         NewHPConfig = 1;
     }
 
-    SetZedHPConfig(NewHPConfig);
+    HPConfigModel.SetZedHPConfig(NewHPConfig);
 }
 
 /** @Override */
@@ -35,8 +35,8 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
         NewHPConfig = ToInt(ExecState.GetArg(ECmdArgs.ARG_HPCONFIG));
 
         MinLimitActual = Min(
-            ZedHPConfigThreshold, 
-            Max(MinLimit, GSU.GetAlivePlayersNum())
+            GetZedHPConfigThreshold(),
+            Max(MinLimit, GetAlivePlayersNum())
         );
 
         if (!IsInRange(NewHPConfig, MinLimitActual, MaxLimit))
@@ -52,7 +52,7 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 /** @Override */
 protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecState)
 {
-    return "HP Config set to "$ColorizeValue(GSU.GetFinalZedHPConfig())$" by "$ColorizeSender(ExecState);
+    return "HP Config set to "$ColorizeValue(GetZedHPConfig())$" by "$ColorizeSender(ExecState);
 }
 
 /** @Override */

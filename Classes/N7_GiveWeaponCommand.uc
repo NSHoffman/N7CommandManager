@@ -188,7 +188,7 @@ defaultproperties
     AvailableWeaponClasses(56)="KFMod.NeonKrissMMedicGun"
     AvailableWeaponClasses(57)="KFMod.NeonKSGShotgun"
     AvailableWeaponClasses(58)="KFMod.NeonSCARMK17AssaultRifle"
-    AvailableWeaponClasses(59)="KFMod.PipeBombShrapnel"
+    AvailableWeaponClasses(59)="KFMod.PipeBombExplosive"
     AvailableWeaponClasses(60)="KFMod.SCARMK17AssaultRifle"
     AvailableWeaponClasses(61)="KFMod.Scythe"
     AvailableWeaponClasses(62)="KFMod.SealSquealHarpoonBomber"

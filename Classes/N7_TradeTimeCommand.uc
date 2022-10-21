@@ -14,19 +14,7 @@ protected function DoAction(N7_CommandExecutionState ExecState)
     local int NewTradeTime;
 
     NewTradeTime = ToInt(ExecState.GetArg(ECmdArgs.ARG_NEWTIME));
-
-    if (IsInRange(NewTradeTime, MinLimit, MaxLimit))
-    {
-        KFGT.WaveCountDown = NewTradeTime; 
-    }
-    else if (IsInRange(NewTradeTime, MinLimit))
-    {
-        KFGT.WaveCountDown = MaxLimit;
-    }
-    else
-    {
-        KFGT.WaveCountDown = MinLimit;
-    }
+    KFGT.WaveCountDown = FClamp(NewTradeTime, MinLimit, MaxLimit);
 }
 
 /** @Override */

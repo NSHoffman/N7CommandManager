@@ -1,54 +1,6 @@
 class N7_GameStateUtils extends Core.Object within N7_CommandManager;
 
 /****************************
- *  SETTINGS ACCESSORS
- ****************************/
-
-public final function int GetAlivePlayersNum()
-{
-    local Controller C;
-    local int AlivePlayersNum;
-
-    for (C = Level.ControllerList; C != None; C = C.NextController)
-    {
-        if ((C.IsA('PlayerController') || C.IsA('xBot')) && C.Pawn != None && C.Pawn.Health > 0)
-        { 
-            AlivePlayersNum++;
-        }
-    }
-    return AlivePlayersNum;
-}
-
-public final function int GetRealPlayersNum()
-{
-    local Controller C;
-    local int RealPlayersNum;
-
-    for (C = Level.ControllerList; C != None; C = C.NextController)
-    {
-        if ((C.IsA('PlayerController') || C.IsA('xBot')) && MessagingSpectator(C) == None)
-        {
-            RealPlayersNum++;
-        }
-    }
-    return RealPlayersNum;
-}
-
-public final function int GetFinalZedHPConfig()
-{
-    local int AlivePlayersNum;
-
-    AlivePlayersNum = GetAlivePlayersNum();
-
-    if (AlivePlayersNum >= GetZedHPConfigThreshold())
-    {
-        return GetZedHPConfig();
-    }
-
-    return Max(AlivePlayersNum, GetZedHPConfig());
-}
-
-/****************************
  *  ZEDS RELATED UTILS
  ****************************/
 
@@ -85,38 +37,6 @@ public final function KillZed(KFMonster TargetMonster, optional bool bDestroyNex
     }
 }
 
-public final function int GetZedModifiedHealth(KFMonster Zed)
-{
-    local float ZedRawHealth, ZedHealthModifiedByDifficulty, ZedModifiedHealth;
-
-    ZedRawHealth = Zed.default.Health;
-    ZedHealthModifiedByDifficulty = ZedRawHealth * Zed.DifficultyHealthModifer();
-    ZedModifiedHealth = ZedHealthModifiedByDifficulty * GetZedHPModifierByPlayers(Zed);
-
-    return ZedModifiedHealth;
-}
-
-public final function int GetZedModifiedHeadHealth(KFMonster Zed)
-{
-    local float ZedRawHeadHealth, ZedHeadHealthModifiedByDifficulty, ZedModifiedHeadHealth;
-
-    ZedRawHeadHealth = Zed.default.HeadHealth;
-    ZedHeadHealthModifiedByDifficulty = ZedRawHeadHealth * Zed.DifficultyHeadHealthModifer();
-    ZedModifiedHeadHealth = ZedHeadHealthModifiedByDifficulty * GetZedHeadHPModifierByPlayers(Zed);
-
-    return ZedModifiedHeadHealth;
-}
-
-protected final function float GetZedHPModifierByPlayers(KFMonster Zed)
-{
-    return 1.0 + Zed.PlayerCountHealthScale * FMax(GetFinalZedHPConfig() - 1.0, 0);
-}
-
-protected final function float GetZedHeadHPModifierByPlayers(KFMonster Zed)
-{
-    return 1.0 + Zed.PlayerNumHeadHealthScale * FMax(GetFinalZedHPConfig() - 1.0, 0);
-}
-
 /****************************
  *  PLAYERS RELATED UTILS
  ****************************/
@@ -130,16 +50,19 @@ public final function ResizePlayer(
         if (!PC.Pawn.bIsCrouched && !PC.Pawn.bWantsToCrouch)
         {
             PC.Pawn.SetCollisionSize(
-                PC.Pawn.default.CollisionRadius * ResizeMultiplier,
-                PC.Pawn.default.CollisionHeight * ResizeMultiplier
+                PC.Pawn.default.CollisionRadius * PC.Pawn.DrawScale,
+                PC.Pawn.default.CollisionHeight * PC.Pawn.DrawScale
             );
         }
         else
         {
-            PC.Pawn.CrouchRadius = PC.Pawn.default.CrouchRadius * ResizeMultiplier;
-            PC.Pawn.CrouchHeight = PC.Pawn.default.CrouchHeight * ResizeMultiplier;
-            PC.Pawn.BaseEyeHeight = FMin(0.8 * PC.Pawn.default.CrouchHeight, PC.Pawn.default.CrouchHeight - 10);
+            PC.Pawn.BaseEyeHeight = FMin(
+                0.8 * PC.Pawn.default.CrouchHeight, 
+                PC.Pawn.default.CrouchHeight - 10
+            );
         }
+        PC.Pawn.CrouchRadius = PC.Pawn.default.CrouchRadius * PC.Pawn.DrawScale;
+        PC.Pawn.CrouchHeight = PC.Pawn.default.CrouchHeight * PC.Pawn.DrawScale;
     }
 }
 
@@ -149,7 +72,7 @@ public final function RestorePlayerAttributes(PlayerController PC)
 
     if (PC != None && PC.Pawn != None && PC.Pawn.Health > 0)
     {
-        PC.Pawn.Health = PC.Pawn.default.HealthMax;
+        PC.Pawn.Health = Max(PC.Pawn.Health, PC.Pawn.default.HealthMax);
         PC.Pawn.AddShieldStrength(100);
         
         for (Inv = PC.Pawn.Inventory; Inv != None; Inv = Inv.Inventory)

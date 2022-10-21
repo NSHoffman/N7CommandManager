@@ -5,10 +5,17 @@ protected function DoActionForSingleTarget
     (N7_CommandExecutionState ExecState, PlayerController PC)
 {
     local float NewBodyScale;
-
     NewBodyScale = ExecState.LoadNumberF();
+
     GSU.ResizePlayer(PC, NewBodyScale);
-    AddResizedPlayer(PC, NewBodyScale);
+    if (NewBodyScale != 1.0)
+    {
+        AddResizedPlayer(PC, NewBodyScale);
+    }
+    else
+    {
+        RemoveResizedPlayer(PC);
+    }
 }
 
 /** @Override */

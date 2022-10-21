@@ -9,7 +9,7 @@ class N7_MovementModeCommand extends N7_UnaryTargetCommand
 /** @Override */
 protected function bool CheckGameState(N7_CommandExecutionState ExecState)
 {
-    return KFGT.IsInState('MatchInProgress');
+    return !KFGT.IsInState('PendingMatch');
 }
 
 /** @Override */
