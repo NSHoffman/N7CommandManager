@@ -252,8 +252,9 @@ event Tick(float DeltaTime)
             && KFGT.NumMonsters <= 0
             && KFGT.TotalMaxMonsters <= 0;
 
-        bWaveStart = (KFGT.bTradingDoorsOpen || !KFGT.bWaveInProgress && !KFGT.bWaveBossInProgress)
-            && KFGT.WaveCountDown <= 1;
+        bWaveStart = KFGT.WaveCountDown == 1
+            && !KFGT.bWaveInProgress 
+            && !KFGT.bWaveBossInProgress;
 
         if (bWaveStart || bWaveEnd)
         {
