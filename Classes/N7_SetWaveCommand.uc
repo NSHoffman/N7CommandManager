@@ -52,11 +52,8 @@ protected function DoAction(N7_CommandExecutionState ExecState)
         }
     }
 
-    /** 
-     * Pre-first wave time is not considered Trade Time by default
-     * But wave management is handled in the same manner 
-     */
-    bTradeTime = KFGT.bTradingDoorsOpen || (KFGT.WaveNum == 0 && KFGT.WaveCountDown > 0);
+    bTradeTime = !KFGT.bWaveInProgress && !KFGT.bWaveBossInProgress && KFGT.WaveCountDown > 0;
+
     WaveNum = ToInt(ExecState.GetArg(ECmdArgs.ARG_WAVE));
 
     /**
