@@ -29,134 +29,10 @@ var public N7_HPConfigModel HPConfigModel;
 var protected const class<N7_FakedPlayersModel> FakedPlayersModelClass;
 var public N7_FakedPlayersModel FakedPlayersModel;
 
-enum ECmd
-{
-    // Helper Commands
-    CMD_HELP,
-    CMD_AHELP,
-    CMD_STATUS,
-
-    // Game Settings Commands
-    CMD_SLOTS,
-    CMD_SPECS,
-    CMD_FAKED,
-    CMD_HPCONFIG,
-    CMD_MAXZEDS,
-    CMD_SPAWNRATE,
-    CMD_SKIPTRADE,
-    CMD_TRADE,
-    CMD_WAVEINTERVAL,
-    CMD_ZEDTIME,
-    CMD_GAMESPEED,
-
-    // Gameplay Commands
-    CMD_SETWAVE,
-    CMD_RESTARTWAVE,
-    CMD_RESPAWN,
-    CMD_SUMMON,
-    CMD_RESTORE,
-    CMD_HITZ,
-    CMD_KILLZEDS,
-    CMD_RESPAWNDOORS,
-    CMD_BREAKDOORS,
-    CMD_WELDDOORS,
-    CMD_SPAWNPROJ,
-    CMD_CLEARPIPES,
-    CMD_RESETSTATS,
-    CMD_READYALL,
-
-    // Player Commands
-    CMD_SETNAME,
-    CMD_SETPERK,
-    CMD_GOD,
-    CMD_HEADSIZE,
-    CMD_BODYSIZE,
-    CMD_HITP,
-    CMD_SLAP,
-    CMD_TELEPORT,
-    CMD_TELEPORTP,
-    CMD_GIVEWEAPON,
-    CMD_GIVECASH,
-    CMD_WALK,
-    CMD_SPIDER,
-    CMD_FLY,
-    CMD_GHOST,
-    CMD_FORCESPEC,
-    CMD_KICK,
-    CMD_BAN,
-    CMD_TEMPADMIN,
-    CMD_BOOST,
-};
-
-/*********************************
- * HELPER COMMANDS
- *********************************/
-
-var protected class<N7_Command> HelpCommandClass;
-var protected class<N7_Command> AdminHelpCommandClass;
-var protected class<N7_Command> StatusCommandClass;
-
-/*********************************
- * GAME SETTINGS RELATED COMMANDS
- *********************************/
-
-var protected class<N7_Command> SlotsCommandClass;
-var protected class<N7_Command> SpecsCommandClass;
-var protected class<N7_Command> FakesCommandClass;
-var protected class<N7_Command> HPConfigCommandClass;
-var protected class<N7_Command> MaxZedsCommandClass;
-var protected class<N7_Command> SpawnRateCommandClass;
-var protected class<N7_Command> SkipTradeCommandClass;
-var protected class<N7_Command> TradeTimeCommandClass;
-var protected class<N7_Command> WaveIntervalCommandClass;
-var protected class<N7_Command> ZEDTimeCommandClass;
-var protected class<N7_Command> GameSpeedCommandClass;
-
-/*********************************
- * GAMEPLAY RELATED COMMANDS
- *********************************/
-
-var protected class<N7_Command> SetWaveCommandClass;
-var protected class<N7_Command> RestartWaveCommandClass;
-var protected class<N7_Command> RespawnPlayerCommandClass;
-var protected class<N7_Command> SummonCommandClass;
-var protected class<N7_Command> RestoreAttrsCommandClass;
-var protected class<N7_Command> HitZedCommandClass;
-var protected class<N7_Command> KillZedsCommandClass;
-var protected class<N7_Command> RespawnDoorsCommandClass;
-var protected class<N7_Command> BreakDoorsCommandClass;
-var protected class<N7_Command> WeldDoorsCommandClass;
-var protected class<N7_Command> SpawnProjCommandClass;
-var protected class<N7_Command> ClearPipesCommandClass;
-var protected class<N7_Command> ResetStatsCommandClass;
-var protected class<N7_Command> ReadyAllCommandClass;
-
-/*********************************
- * PLAYERS RELATED COMMANDS
- *********************************/
-
-var protected class<N7_Command> SetNameCommandClass;
-var protected class<N7_Command> SetPerkCommandClass;
-var protected class<N7_Command> GodModeCommandClass;
-var protected class<N7_Command> HeadSizeCommandClass;
-var protected class<N7_Command> BodySizeCommandClass;
-var protected class<N7_Command> HitPlayerCommandClass;
-var protected class<N7_Command> SlapCommandClass;
-var protected class<N7_Command> TeleportCommandClass;
-var protected class<N7_Command> TeleportToCommandClass;
-var protected class<N7_Command> GiveWeaponCommandClass;
-var protected class<N7_Command> GiveCashCommandClass;
-var protected class<N7_Command> WalkCommandClass;
-var protected class<N7_Command> SpiderCommandClass;
-var protected class<N7_Command> FlyCommandClass;
-var protected class<N7_Command> GhostCommandClass;
-var protected class<N7_Command> ForceSpectatorCommandClass;
-var protected class<N7_Command> KickCommandClass;
-var protected class<N7_Command> BanCommandClass;
-var protected class<N7_Command> TempAdminCommandClass;
-var protected class<N7_Command> BoostCommandClass;
-
 /** Commands List */
+const COMMANDS_COUNT = 48;
+
+var protected class<N7_Command> CommandsClasses[COMMANDS_COUNT];
 var protected Array<N7_Command> Commands;
 
 /** THP Game settings */
@@ -167,22 +43,31 @@ var protected float LastAttributeRestoreTime;
 var protected float NextResizedPlayersRefreshTime;
 
 /*********************************
- * DATA ACCESSORS
+ * INITIALIZATION
  *********************************/
 
-public final function bool IsMutateAllowed()
+protected function InitServices()
 {
-    return bAllowMutate;
+    GSU         = new(Self) GSUClass;
+    Colors      = new(Self) ColorsClass;
+    Validator   = new(Self) ValidatorClass;
 }
 
-public final function bool IsZedTimeEnabled()
+protected function InitModels()
 {
-    return bZedTimeEnabled;
+    HPConfigModel           = new(Self) HPConfigModelClass;
+    FakedPlayersModel       = new(Self) FakedPlayersModelClass;
+    RestoredPlayersModel    = new(Self) RestoredPlayersModelClass;
+    ResizedPlayersModel     = new(Self) ResizedPlayersModelClass;
 }
 
-public final function SetZedTime(bool Flag)
+protected function InitCommands()
 {
-    bZedTimeEnabled = Flag;
+    local int i;
+    for (i = 0; i < COMMANDS_COUNT; i++)
+    {
+        Commands[i] = new(Self) CommandsClasses[i];
+    }
 }
 
 /*********************************
@@ -198,19 +83,9 @@ event PostBeginPlay()
         Destroy();
     }
 
-    GSU         = new(Self) GSUClass;
-    Colors      = new(Self) ColorsClass;
-    Validator   = new(Self) ValidatorClass;
-
-    HPConfigModel           = new(Self) HPConfigModelClass;
-    FakedPlayersModel       = new(Self) FakedPlayersModelClass;
-    RestoredPlayersModel    = new(Self) RestoredPlayersModelClass;
-    ResizedPlayersModel     = new(Self) ResizedPlayersModelClass;
-
-    InitHelperCommands();
-    InitGameSettingsCommands();
-    InitGameplayCommands();
-    InitPlayerCommands();
+    InitServices();
+    InitModels();
+    InitCommands();
 
     SetTimer(1.0, True);
 }
@@ -365,71 +240,22 @@ public function Mutate(string MutateString, PlayerController Sender)
 }
 
 /*********************************
- * COMMANDS INITIALIZATION
+ * DATA ACCESSORS
  *********************************/
 
-protected function InitHelperCommands()
+public final function bool IsMutateAllowed()
 {
-    Commands[ECmd.CMD_HELP]      = new(Self) HelpCommandClass;
-    Commands[ECmd.CMD_AHELP]     = new(Self) AdminHelpCommandClass;
-    Commands[ECmd.CMD_STATUS]    = new(Self) StatusCommandClass;
+    return bAllowMutate;
 }
 
-protected function InitGameSettingsCommands()
+public final function bool IsZedTimeEnabled()
 {
-    Commands[ECmd.CMD_SLOTS]         = new(Self) SlotsCommandClass;
-    Commands[ECmd.CMD_SPECS]         = new(Self) SpecsCommandClass;
-    Commands[ECmd.CMD_FAKED]         = new(Self) FakesCommandClass;
-    Commands[ECmd.CMD_HPCONFIG]      = new(Self) HPConfigCommandClass;
-    Commands[ECmd.CMD_MAXZEDS]       = new(Self) MaxZedsCommandClass;
-    Commands[ECmd.CMD_SPAWNRATE]     = new(Self) SpawnRateCommandClass;
-    Commands[ECmd.CMD_SKIPTRADE]     = new(Self) SkipTradeCommandClass;
-    Commands[ECmd.CMD_TRADE]         = new(Self) TradeTimeCommandClass;
-    Commands[ECmd.CMD_WAVEINTERVAL]  = new(Self) WaveIntervalCommandClass;
-    Commands[ECmd.CMD_ZEDTIME]       = new(Self) ZEDTimeCommandClass;
-    Commands[ECmd.CMD_GAMESPEED]     = new(Self) GameSpeedCommandClass;
+    return bZedTimeEnabled;
 }
 
-protected function InitGameplayCommands()
+public final function SetZedTime(bool Flag)
 {
-    Commands[ECmd.CMD_SETWAVE]      = new(Self) SetWaveCommandClass;
-    Commands[ECmd.CMD_RESTARTWAVE]  = new(Self) RestartWaveCommandClass;
-    Commands[ECmd.CMD_RESPAWN]      = new(Self) RespawnPlayerCommandClass;
-    Commands[ECmd.CMD_SUMMON]       = new(Self) SummonCommandClass;
-    Commands[ECmd.CMD_RESTORE]      = new(Self) RestoreAttrsCommandClass;
-    Commands[ECmd.CMD_HITZ]         = new(Self) HitZedCommandClass;
-    Commands[ECmd.CMD_KILLZEDS]     = new(Self) KillZedsCommandClass;
-    Commands[ECmd.CMD_RESPAWNDOORS] = new(Self) RespawnDoorsCommandClass;
-    Commands[ECmd.CMD_BREAKDOORS]   = new(Self) BreakDoorsCommandClass;
-    Commands[ECmd.CMD_WELDDOORS]    = new(Self) WeldDoorsCommandClass;
-    Commands[ECmd.CMD_SPAWNPROJ]    = new(Self) SpawnProjCommandClass;
-    Commands[ECmd.CMD_CLEARPIPES]   = new(Self) ClearPipesCommandClass;
-    Commands[ECmd.CMD_RESETSTATS]   = new(Self) ResetStatsCommandClass;
-    Commands[ECmd.CMD_READYALL]     = new(Self) ReadyAllCommandClass;
-}
-
-protected function InitPlayerCommands()
-{
-    Commands[ECmd.CMD_SETNAME]      = new(Self) SetNameCommandClass;
-    Commands[ECmd.CMD_SETPERK]      = new(Self) SetPerkCommandClass;
-    Commands[ECmd.CMD_GOD]          = new(Self) GodModeCommandClass;
-    Commands[ECmd.CMD_HEADSIZE]     = new(Self) HeadSizeCommandClass;
-    Commands[ECmd.CMD_BODYSIZE]     = new(Self) BodySizeCommandClass;
-    Commands[ECmd.CMD_HITP]         = new(Self) HitPlayerCommandClass;
-    Commands[ECmd.CMD_SLAP]         = new(Self) SlapCommandClass;
-    Commands[ECmd.CMD_TELEPORT]     = new(Self) TeleportCommandClass;
-    Commands[ECmd.CMD_TELEPORTP]    = new(Self) TeleportToCommandClass;
-    Commands[ECmd.CMD_GIVEWEAPON]   = new(Self) GiveWeaponCommandClass;
-    Commands[ECmd.CMD_GIVECASH]     = new(Self) GiveCashCommandClass;
-    Commands[ECmd.CMD_WALK]         = new(Self) WalkCommandClass;
-    Commands[ECmd.CMD_SPIDER]       = new(Self) SpiderCommandClass;
-    Commands[ECmd.CMD_FLY]          = new(Self) FlyCommandClass;
-    Commands[ECmd.CMD_GHOST]        = new(Self) GhostCommandClass;
-    Commands[ECmd.CMD_FORCESPEC]    = new(Self) ForceSpectatorCommandClass;
-    Commands[ECmd.CMD_KICK]         = new(Self) KickCommandClass;
-    Commands[ECmd.CMD_BAN]          = new(Self) BanCommandClass;
-    Commands[ECmd.CMD_TEMPADMIN]    = new(Self) TempAdminCommandClass;
-    Commands[ECmd.CMD_BOOST]        = new(Self) BoostCommandClass;
+    bZedTimeEnabled = Flag;
 }
 
 /*********************************
@@ -529,7 +355,7 @@ protected final function int GetCommandIndex(string Alias)
 {
     local int i;
 
-    for (i = 0; i < Commands.Length; i++)
+    for (i = 0; i < COMMANDS_COUNT; i++)
     {
         if (Commands[i] != None && Commands[i].HasAlias(Alias))
         {
@@ -558,55 +384,55 @@ defaultproperties
     RestoredPlayersModelClass=class'N7_RestoredPlayersModel'
     ResizedPlayersModelClass=class'N7_ResizedPlayersModel'
 
-    HelpCommandClass=class'N7_HelpCommand'
-    AdminHelpCommandClass=class'N7_AdminHelpCommand'
-    StatusCommandClass=class'N7_StatusCommand'
+    CommandsClasses(0)=class'N7_HelpCommand'
+    CommandsClasses(1)=class'N7_AdminHelpCommand'
+    CommandsClasses(2)=class'N7_StatusCommand'
 
-    SlotsCommandClass=class'N7_SlotsCommand'
-    SpecsCommandClass=class'N7_SpectatorsCommand'
-    FakesCommandClass=class'N7_FakesCommand'
-    HPConfigCommandClass=class'N7_ZedHPConfigCommand'
-    MaxZedsCommandClass=class'N7_MaxZedsCommand'
-    SpawnRateCommandClass=class'N7_SpawnRateCommand'
-    SkipTradeCommandClass=class'N7_SkipTradeCommand'
-    TradeTimeCommandClass=class'N7_TradeTimeCommand'
-    WaveIntervalCommandClass=class'N7_WaveIntervalCommand'
-    ZEDTimeCommandClass=class'N7_ZedTimeCommand'
-    GameSpeedCommandClass=class'N7_GameSpeedCommand'
-    SetWaveCommandClass=class'N7_SetWaveCommand'
-    RestartWaveCommandClass=class'N7_RestartWaveCommand'
+    CommandsClasses(3)=class'N7_SlotsCommand'
+    CommandsClasses(4)=class'N7_SpectatorsCommand'
+    CommandsClasses(5)=class'N7_FakesCommand'
+    CommandsClasses(6)=class'N7_ZedHPConfigCommand'
+    CommandsClasses(7)=class'N7_MaxZedsCommand'
+    CommandsClasses(8)=class'N7_SpawnRateCommand'
+    CommandsClasses(9)=class'N7_SkipTradeCommand'
+    CommandsClasses(10)=class'N7_TradeTimeCommand'
+    CommandsClasses(11)=class'N7_WaveIntervalCommand'
+    CommandsClasses(12)=class'N7_ZedTimeCommand'
+    CommandsClasses(13)=class'N7_GameSpeedCommand'
+    CommandsClasses(14)=class'N7_SetWaveCommand'
+    CommandsClasses(15)=class'N7_RestartWaveCommand'
 
-    RespawnPlayerCommandClass=class'N7_RespawnPlayerCommand'
-    SummonCommandClass=class'N7_SummonCommand'
-    RestoreAttrsCommandClass=class'N7_RestoreAttrsCommand'
-    HitZedCommandClass=class'N7_HitZedCommand'
-    KillZedsCommandClass=class'N7_KillZedsCommand'
-    RespawnDoorsCommandClass=class'N7_RespawnDoorsCommand'
-    BreakDoorsCommandClass=class'N7_BreakDoorsCommand'
-    WeldDoorsCommandClass=class'N7_WeldDoorsCommand'
-    SpawnProjCommandClass=class'N7_SpawnProjCommand'
-    ClearPipesCommandClass=class'N7_ClearPipesCommand'
-    ResetStatsCommandClass=class'N7_ResetStatsCommand'
-    ReadyAllCommandClass=class'N7_ReadyAllCommand'
+    CommandsClasses(16)=class'N7_RespawnPlayerCommand'
+    CommandsClasses(17)=class'N7_SummonCommand'
+    CommandsClasses(18)=class'N7_RestoreAttrsCommand'
+    CommandsClasses(19)=class'N7_HitZedCommand'
+    CommandsClasses(20)=class'N7_KillZedsCommand'
+    CommandsClasses(21)=class'N7_RespawnDoorsCommand'
+    CommandsClasses(22)=class'N7_BreakDoorsCommand'
+    CommandsClasses(23)=class'N7_WeldDoorsCommand'
+    CommandsClasses(24)=class'N7_SpawnProjCommand'
+    CommandsClasses(25)=class'N7_ClearPipesCommand'
+    CommandsClasses(26)=class'N7_ResetStatsCommand'
+    CommandsClasses(27)=class'N7_ReadyAllCommand'
 
-    SetNameCommandClass=class'N7_SetNameCommand'
-    SetPerkCommandClass=class'N7_SetPerkCommand'
-    GodModeCommandClass=class'N7_GodModeCommand'
-    HeadSizeCommandClass=class'N7_HeadSizeCommand'
-    BodySizeCommandClass=class'N7_BodySizeCommand'
-    HitPlayerCommandClass=class'N7_HitPlayerCommand'
-    SlapCommandClass=class'N7_SlapCommand'
-    TeleportCommandClass=class'N7_TeleportCommand'
-    TeleportToCommandClass=class'N7_TeleportToCommand'
-    GiveWeaponCommandClass=class'N7_GiveWeaponCommand'
-    GiveCashCommandClass=class'N7_GiveCashCommand'
-    WalkCommandClass=class'N7_WalkCommand'
-    SpiderCommandClass=class'N7_SpiderCommand'
-    FlyCommandClass=class'N7_FlyCommand'
-    GhostCommandClass=class'N7_GhostCommand'
-    ForceSpectatorCommandClass=class'N7_ForceSpectatorCommand'
-    KickCommandClass=class'N7_KickCommand'
-    BanCommandClass=class'N7_BanCommand'
-    TempAdminCommandClass=class'N7_TempAdminCommand'
-    BoostCommandClass=class'N7_BoostCommand'
+    CommandsClasses(28)=class'N7_SetNameCommand'
+    CommandsClasses(29)=class'N7_SetPerkCommand'
+    CommandsClasses(30)=class'N7_GodModeCommand'
+    CommandsClasses(31)=class'N7_HeadSizeCommand'
+    CommandsClasses(32)=class'N7_BodySizeCommand'
+    CommandsClasses(33)=class'N7_HitPlayerCommand'
+    CommandsClasses(34)=class'N7_SlapCommand'
+    CommandsClasses(35)=class'N7_TeleportCommand'
+    CommandsClasses(36)=class'N7_TeleportToCommand'
+    CommandsClasses(37)=class'N7_GiveWeaponCommand'
+    CommandsClasses(38)=class'N7_GiveCashCommand'
+    CommandsClasses(39)=class'N7_WalkCommand'
+    CommandsClasses(40)=class'N7_SpiderCommand'
+    CommandsClasses(41)=class'N7_FlyCommand'
+    CommandsClasses(42)=class'N7_GhostCommand'
+    CommandsClasses(43)=class'N7_ForceSpectatorCommand'
+    CommandsClasses(44)=class'N7_KickCommand'
+    CommandsClasses(45)=class'N7_BanCommand'
+    CommandsClasses(46)=class'N7_TempAdminCommand'
+    CommandsClasses(47)=class'N7_BoostCommand'
 }
