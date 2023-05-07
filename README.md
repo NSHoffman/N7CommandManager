@@ -49,15 +49,12 @@ For those who want to extend the existing API there is some more information in 
 #### `N7_CommandManager`
 
 This is the entry file, the mutator itself that dispatches incoming `mutate` requests.
-Each of the available commands must be specified as a part of `N7_CommandManager.Commands` array. Initialization takes place in one of the command initializing methods:
+Each of the available commands' classes must be specified in `N7_CommandManager.CommandsClasses` array.
+Initialization includes the following steps:
 
-- `InitHelperCommands()`
-- `InitGameSettingsCommands()`
-- `InitGameplayCommands()`
-- `InitPlayerCommands()`
-
-The distinction between commands initialized in these methods is purely aesthetic, just visual grouping.
-Furthermore, each command must be stated in `enum ECmd` to have its own index in `N7_CommandManager.Commands` array.
+- `InitServices()` - Initialization of the services used by the command manager and individual command classes;
+- `InitModels()` - Initialization of data related to specific game settings that need to be kept track of;
+- `InitCommands()` - Initialization of commands. Command classes from `N7_CommandManager.CommandsClasses` get initialized and stored in `N7_CommandManager.Commands` array. Both arrays are static and one need to pay attention to capacity of those which is defined by `COMMANDS_COUNT` constant.
 
 #### `N7_GameStateUtils`
 
