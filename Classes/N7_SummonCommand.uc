@@ -98,8 +98,8 @@ protected function ExtendedHelp(PlayerController PC)
 defaultproperties
 {
     bAdminOnly=True
-    MinArgsNum=1
     Aliases(0)="SUMMON"
+    MinArgsNum=1
     ArgTypes(0)="any"
     Signature="<string ZedClass, ? string TargetName>"
     Description="Spawn ZED next to a player"

@@ -6,10 +6,10 @@ protected function DoAction(N7_CommandExecutionState ExecState)
     local Array<string> RestartArgs;
 
     /** + 1 because KFGT.WaveNum starts from 0 */
-    RestartArgs[ECmdArgs.ARG_WAVE] = ToString(KFGT.WaveNum + 1);
+    RestartArgs[ECmdArgs.ARG_WAVE] = string(KFGT.WaveNum + 1);
 
     ExecState.SetArgs(RestartArgs);
-    Super.DoAction(ExecState);
+    super.DoAction(ExecState);
 }
 
 /** @Override */
@@ -21,7 +21,7 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
 /** @Override */
 protected function bool CheckGameState(N7_CommandExecutionState ExecState)
 {
-    return Super.CheckGameState(ExecState) && KFGT.WaveCountDown <= 0;
+    return super.CheckGameState(ExecState) && KFGT.WaveCountDown <= 0;
 }
 
 /** @Override */
@@ -38,9 +38,9 @@ protected function string InvalidGameStateMessage()
 
 defaultproperties
 {
+    Aliases(0)="RW"
     MinArgsNum=0
     MaxArgsNum=0
-    Aliases=("RW")
     Signature="<>"
     Description="Restart current wave"
 }

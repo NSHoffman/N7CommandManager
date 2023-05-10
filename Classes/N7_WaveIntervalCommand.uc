@@ -15,7 +15,7 @@ protected function DoAction(N7_CommandExecutionState ExecState)
 
     if (ExecState.GetArgC() > 0)
     {
-        NewWaveInterval = ToInt(ExecState.GetArg(ECmdArgs.ARG_NEWTIME));
+        NewWaveInterval = int(ExecState.GetArg(ECmdArgs.ARG_NEWTIME));
 
         if (IsInRange(NewWaveInterval, MinLimit, MaxLimit))
         {
@@ -44,13 +44,13 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
 
 defaultproperties
 {
+    Aliases(0)="WI"
+    Aliases(1)="WT"
+    Aliases(2)="INTERVAL"
     MinLimit=6
     MaxLimit=600
     MinArgsNum=0
     MaxArgsNum=1
-    Aliases(0)="WI"
-    Aliases(1)="WT"
-    Aliases(2)="INTERVAL"
     ArgTypes(0)="number"
     Signature="<? int WaveInterval>"
     Description="Set interval between waves"

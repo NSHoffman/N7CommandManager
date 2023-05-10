@@ -15,7 +15,7 @@ protected function DoAction(N7_CommandExecutionState ExecState)
 
     if (ExecState.GetArgC() > 0)
     {
-        NewMaxZeds = ToInt(ExecState.GetArg(ECmdArgs.ARG_MAXZEDS));
+        NewMaxZeds = int(ExecState.GetArg(ECmdArgs.ARG_MAXZEDS));
 
         KFGT.MaxZombiesOnce = NewMaxZeds;
         KFGT.StandardMaxZombiesOnce = NewMaxZeds;
@@ -36,7 +36,7 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 
     if (ExecState.GetArgC() > 0)
     {
-        NewMaxZeds = ToInt(ExecState.GetArg(ECmdArgs.ARG_MAXZEDS));
+        NewMaxZeds = int(ExecState.GetArg(ECmdArgs.ARG_MAXZEDS));
 
         if (!IsInRange(NewMaxZeds, MinLimit, MaxLimit))
         {
@@ -61,13 +61,13 @@ protected function string InvalidArgsMessage(N7_CommandExecutionState ExecState)
 
 defaultproperties
 {
+    Aliases(0)="MZ"
+    Aliases(1)="SETMZ"
+    Aliases(2)="MAXZEDS"
     MinLimit=0
     MaxLimit=100
     MinArgsNum=0
     MaxArgsNum=1
-    Aliases(0)="MZ"
-    Aliases(1)="SETMZ"
-    Aliases(2)="MAXZEDS"
     ArgTypes(0)="number"
     Signature="<? int MaxZeds>"
     Description="Set max number of ZEDs present at a time"

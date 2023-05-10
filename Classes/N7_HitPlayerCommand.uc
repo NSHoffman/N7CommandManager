@@ -11,7 +11,7 @@ var protected const int MinLimit;
 var protected config const int MaxLimit;
 var protected config const int DefaultDamage;
 
-var protected editconstarray Array<string> AvailableDamageTypes;
+var protected const Array<string> AvailableDamageTypes;
 
 /** @Override */
 protected function DoActionForSingleTarget
@@ -29,7 +29,7 @@ protected function DoActionForSingleTarget
         PlayerDamageType = AvailableDamageTypes[0];
 
     if (ExecState.GetArgC() > 2) 
-        PlayerDamage = ToInt(ExecState.GetArg(ECmdArgs_X.ARG_DAMAGE));
+        PlayerDamage = int(ExecState.GetArg(ECmdArgs_X.ARG_DAMAGE));
     else
         PlayerDamage = DefaultDamage;
 
@@ -89,7 +89,7 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 
     if (ExecState.GetArgC() > 2)
     {
-        PlayerDamage = ToInt(ExecState.GetArg(ECmdArgs_X.ARG_DAMAGE));
+        PlayerDamage = int(ExecState.GetArg(ECmdArgs_X.ARG_DAMAGE));
 
         if (!IsInRange(PlayerDamage, MinLimit, MaxLimit))
         {
@@ -141,19 +141,19 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
 defaultproperties
 {
     bAdminOnly=True
-    MinArgsNum=0
-    MaxArgsNum=3
-    MinLimit=0
-    MaxLimit=10000
-    DefaultDamage=10
     Aliases(0)="HITP"
     ArgTypes(0)="any"
     ArgTypes(1)="word"
-    ArgTypes(2)="number"
+    MinLimit=0
+    MaxLimit=10000
+    DefaultDamage=10
     AvailableDamageTypes(0)="hit"
     AvailableDamageTypes(1)="frag"
     AvailableDamageTypes(2)="fire"
     AvailableDamageTypes(3)="vomit"
+    MinArgsNum=0
+    MaxArgsNum=3
+    ArgTypes(2)="number"
     Signature="<? string TargetName, ? string DamageType, ? int Damage>"
     Description="Damage Player. Available Damage types: hit, frag, fire, vomit"
     bOnlyAliveTargets=True

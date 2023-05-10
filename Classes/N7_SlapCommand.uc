@@ -58,9 +58,9 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
 defaultproperties
 {
     bAdminOnly=True
+    Aliases(0)="SLAP"
     MinArgsNum=0
     MaxArgsNum=1
-    Aliases(0)="SLAP"
     ArgTypes(0)="any"
     Signature="<? string TargetName>"
     Description="Slap Player"

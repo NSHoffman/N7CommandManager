@@ -15,7 +15,7 @@ protected function DoAction(N7_CommandExecutionState ExecState)
 
     if (ExecState.GetArgC() > 0)
     {
-        NewSpawnRate = ToFloat(ExecState.GetArg(ECmdArgs.ARG_SPAWNRATE));
+        NewSpawnRate = float(ExecState.GetArg(ECmdArgs.ARG_SPAWNRATE));
         KFGT.KFLRules.WaveSpawnPeriod = NewSpawnRate;
     }
     else
@@ -31,7 +31,7 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 
     if (ExecState.GetArgC() > 0)
     {
-        NewSpawnRate = ToFloat(ExecState.GetArg(ECmdArgs.ARG_SPAWNRATE));
+        NewSpawnRate = float(ExecState.GetArg(ECmdArgs.ARG_SPAWNRATE));
 
         if (!IsInRangeF(NewSpawnRate, MinLimit, MaxLimit))
         {
@@ -56,12 +56,12 @@ protected function string InvalidArgsMessage(N7_CommandExecutionState ExecState)
 
 defaultproperties
 {
+    Aliases(0)="SR"
+    Aliases(1)="SETSR"
     MinLimit=0.0
     MaxLimit=10.0
     MinArgsNum=0
     MaxArgsNum=1
-    Aliases(0)="SR"
-    Aliases(1)="SETSR"
     ArgTypes(0)="number"
     Signature="<? int | float SpawnRate>"
     Description="Set interval between ZED squads spawn"
