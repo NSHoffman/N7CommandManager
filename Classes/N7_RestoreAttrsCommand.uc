@@ -49,7 +49,7 @@ protected function string InvalidTargetMessage(N7_CommandExecutionState ExecStat
 protected function string GetTargetSuccessMessage(N7_CommandExecutionState ExecState)
 {
     local string TargetName;
-    TargetName = ExecState.LoadTarget();
+    TargetName = LoadTarget(ExecState);
 
     switch (ExecState.GetArgC())
     {
@@ -78,9 +78,9 @@ protected function ExtendedHelp(PlayerController PC)
 
 defaultproperties
 {
+    Aliases(0)="AR"
     MinArgsNum=0
     MaxArgsNum=2
-    Aliases(0)="AR"
     ArgTypes(0)="switch"
     ArgTypes(1)="any"
     Signature="<? (0 | 1 | ON | OFF), ? (string TargetName | 'all')>"

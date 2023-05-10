@@ -32,9 +32,9 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
 
 defaultproperties
 {
+    Aliases(0)="SKIP"
     MinArgsNum=0
     MaxArgsNum=0
-    Aliases=("SKIP")
     Signature="<>"
     Description="Skip trader time"
 }

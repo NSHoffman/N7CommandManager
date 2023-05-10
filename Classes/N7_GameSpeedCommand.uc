@@ -15,7 +15,7 @@ protected function DoAction(N7_CommandExecutionState ExecState)
 
     if (ExecState.GetArgC() > 0)
     {
-        NewGameSpeed = ToFloat(ExecState.GetArg(ECmdArgs.ARG_NEWSPEED));
+        NewGameSpeed = float(ExecState.GetArg(ECmdArgs.ARG_NEWSPEED));
         KFGT.SetGameSpeed(NewGameSpeed);
     }
     else
@@ -31,7 +31,7 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 
     if (ExecState.GetArgC() > 0)
     {
-        NewGameSpeed = ToFloat(ExecState.GetArg(ECmdArgs.ARG_NEWSPEED));
+        NewGameSpeed = float(ExecState.GetArg(ECmdArgs.ARG_NEWSPEED));
 
         if (!IsInRangeF(NewGameSpeed, MinLimit, MaxLimit))
         {
@@ -57,13 +57,13 @@ protected function string InvalidArgsMessage(N7_CommandExecutionState ExecState)
 defaultproperties
 {
     bAdminOnly=True
+    Aliases(0)="GS"
+    Aliases(1)="GAMESPEED"
+    Aliases(2)="SLOMO"
     MinLimit=0.25
     MaxLimit=10.0
     MinArgsNum=0
     MaxArgsNum=1
-    Aliases(0)="GS"
-    Aliases(1)="GAMESPEED"
-    Aliases(2)="SLOMO"
     ArgTypes(0)="number"
     Signature="<? int | float NewGameSpeed>"
     Description="Set Game Speed"

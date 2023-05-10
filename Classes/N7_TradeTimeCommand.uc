@@ -13,7 +13,7 @@ protected function DoAction(N7_CommandExecutionState ExecState)
 {
     local int NewTradeTime;
 
-    NewTradeTime = ToInt(ExecState.GetArg(ECmdArgs.ARG_NEWTIME));
+    NewTradeTime = int(ExecState.GetArg(ECmdArgs.ARG_NEWTIME));
     KFGT.WaveCountDown = FClamp(NewTradeTime, MinLimit, MaxLimit);
 }
 
@@ -38,13 +38,13 @@ protected function string InvalidGameStateMessage()
 
 defaultproperties
 {
+    Aliases(0)="TT"
+    Aliases(1)="TRADE"
+    Aliases(2)="SETTRADE"
     MinLimit=6
     MaxLimit=3600
     MinArgsNum=1
     MaxArgsNum=1
-    Aliases(0)="TT"
-    Aliases(1)="TRADE"
-    Aliases(2)="SETTRADE"
     ArgTypes(0)="number"
     Signature="<int TradeTime>"
     Description="Set trader time in seconds"

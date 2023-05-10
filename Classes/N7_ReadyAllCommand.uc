@@ -41,12 +41,12 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
 
 defaultproperties
 {
-    MinArgsNum=0
-    MaxArgsNum=0
     Aliases(0)="AS"
     Aliases(1)="AUTOSTART"
     Aliases(2)="RALL"
     Aliases(3)="READYALL"
+    MinArgsNum=0
+    MaxArgsNum=0
     Signature="<>"
     Description="Force ready upon all players"
     bNotifyTargetsOnSuccess=False

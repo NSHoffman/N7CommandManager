@@ -7,7 +7,7 @@ protected function DoActionForSingleTarget
     local class<KFVeterancyTypes> SelectedPerkClass;
     local int PerkIndex;
 
-    PerkIndex = ToInt(ExecState.GetArg(ECmdArgs.ARG_VALUE));
+    PerkIndex = int(ExecState.GetArg(ECmdArgs.ARG_VALUE));
     SelectedPerkClass = KFGT.default.LoadedSkills[PerkIndex];
 
     ExecState.SaveString(SelectedPerkClass.default.VeterancyName);
@@ -27,7 +27,7 @@ protected function DoActionForSingleTarget
 protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 {
     local int PerkIndex;
-    PerkIndex = ToInt(ExecState.GetArg(ECmdArgs.ARG_VALUE));
+    PerkIndex = int(ExecState.GetArg(ECmdArgs.ARG_VALUE));
 
     return IsInRange(PerkIndex, 0, KFGT.default.LoadedSkills.Length - 1);
 }
@@ -85,11 +85,11 @@ protected function ExtendedHelp(PlayerController PC)
 
 defaultproperties
 {
-    MinArgsNum=1
-    ArgTypes(0)="number"
     Aliases(0)="SP"
     Aliases(1)="PERK"
     Aliases(2)="SETPERK"
+    MinArgsNum=1
+    ArgTypes(0)="number"
     Signature="<int PerkIndex, adminonly ? string TargetName>"
     Description="Set Perk. Admin access allows for changing other players perks"
     bAllowTargetAll=False

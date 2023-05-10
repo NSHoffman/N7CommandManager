@@ -34,9 +34,9 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
 
 defaultproperties
 {
+    Aliases(0)="ZT"
     MinArgsNum=0
     MaxArgsNum=1
-    Aliases(0)="ZT"
     ArgTypes(0)="switch"
     Signature="<? (0 | 1 | ON | OFF)>"
     Description="Toggle ZED-Time"

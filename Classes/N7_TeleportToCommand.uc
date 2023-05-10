@@ -7,7 +7,7 @@ protected function DoActionForSingleTarget
     local string TeleportTargetName;
     local Vector TpLocation;
 
-    TeleportTargetName = ExecState.LoadString();
+    TeleportTargetName = LoadSecondaryTarget(ExecState);
     TpLocation = FindTarget(TeleportTargetName).Pawn.Location;
 
     PC.ViewTarget.SetLocation(TpLocation + 72 * Vector(PC.Rotation) + vect(0, 0, 1) * 15);
@@ -22,7 +22,7 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 
     TeleportTargetName = ExecState.GetArg(ECmdArgs.ARG_VALUE);
     bValidTeleportTarget = VerifyTargetByName(ExecState, TeleportTargetName);
-    ExecState.SaveString(TeleportTargetName);
+    SaveSecondaryTarget(ExecState, TeleportTargetName);
 
     return bValidTeleportTarget;
 }
@@ -36,7 +36,7 @@ protected function bool CheckGameState(N7_CommandExecutionState ExecState)
 /** @Override */
 protected function string InvalidArgsMessage(N7_CommandExecutionState ExecState)
 {
-    return "Invalid teleport target "$ColorizeTarget(ExecState.LoadString());
+    return "Invalid teleport target "$ColorizeTarget(LoadSecondaryTarget(ExecState));
 }
 
 /** @Override */

@@ -17,8 +17,8 @@ const ERRNO_RUNTIME     = 11;
 
 var protected const class<N7_CommandExecutionState> CommandStateClass;
 
-var protected editconstarray Array<string> ArgTypes;
-var protected config editconstarray Array<string> Aliases;
+var protected const Array<string> ArgTypes;
+var protected config const Array<string> Aliases;
 
 var protected const int MinArgsNum, MaxArgsNum;
 
@@ -49,7 +49,7 @@ public final function Execute(
 {
     local N7_CommandExecutionState ExecState;
 
-    ExecState = new(Self) CommandStateClass;
+    ExecState = new(self) CommandStateClass;
     ExecState.Initialize(Sender, Args, MaxArgsNum);
 
     Validate(ExecState);
@@ -726,10 +726,10 @@ protected final function Help(PlayerController PC)
 
         if (i + 1 < Aliases.Length)
         {
-            HelpMessage $= "/";
+            HelpMessage $= ", ";
         }
     }    
-    HelpMessage $= " "$ColorizeSignature(Signature)$" - "$Description;
+    HelpMessage $= " "$ColorizeSignature(Signature)$"  ::  "$Description;
     SendMessage(PC, HelpMessage);
 }
 
@@ -744,26 +744,6 @@ protected function HelpSectionSeparator(
 /****************************
  *  ARGS COERCION UTILS
  ****************************/
-
-protected final function int ToInt(string Arg)
-{
-    return int(Arg);
-}
-
-protected final function float ToFloat(string Arg)
-{
-    return float(Arg);
-}
-
-protected final function string ToString(int Arg)
-{
-    return string(Arg);
-}
-
-protected final function string ToStringF(float Arg)
-{
-    return string(Arg);
-}
 
 protected final function bool ToBool(string Arg)
 {

@@ -48,10 +48,10 @@ protected function string InvalidArgsMessage(N7_CommandExecutionState ExecState)
 
 defaultproperties
 {
-    MinArgsNum=0
-    MaxArgsNum=1
     Aliases(0)="KZ"
     Aliases(1)="KILLZEDS"
+    MinArgsNum=0
+    MaxArgsNum=1
     ArgTypes(0)="word"
     Signature="<? 'all'>"
     Description="Kill ZEDs"

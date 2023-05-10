@@ -15,7 +15,7 @@ protected function DoAction(N7_CommandExecutionState ExecState)
 
     if (ExecState.GetArgC() > 0)
     {
-        NewHPConfig = ToInt(ExecState.GetArg(ECmdArgs.ARG_HPCONFIG));
+        NewHPConfig = int(ExecState.GetArg(ECmdArgs.ARG_HPCONFIG));
     }
     else
     {
@@ -32,7 +32,7 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 
     if (ExecState.GetArgC() > 0)
     {
-        NewHPConfig = ToInt(ExecState.GetArg(ECmdArgs.ARG_HPCONFIG));
+        NewHPConfig = int(ExecState.GetArg(ECmdArgs.ARG_HPCONFIG));
 
         MinLimitActual = Min(
             GetZedHPConfigThreshold(),
@@ -63,12 +63,12 @@ protected function string InvalidArgsMessage(N7_CommandExecutionState ExecState)
 
 defaultproperties
 {
+    Aliases(0)="HP"
+    Aliases(1)="SETHP"
     MinLimit=1
     MaxLimit=10
     MinArgsNum=0
     MaxArgsNum=1
-    Aliases(0)="HP"
-    Aliases(1)="SETHP"
     ArgTypes(0)="number"
     Signature="<? int HPConfig>"
     Description="Set HP multiplier for ZEDs"

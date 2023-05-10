@@ -32,8 +32,8 @@ var public N7_FakedPlayersModel FakedPlayersModel;
 /** Commands List */
 const COMMANDS_COUNT = 48;
 
-var protected class<N7_Command> CommandsClasses[COMMANDS_COUNT];
-var protected Array<N7_Command> Commands;
+var protected const class<N7_Command> CommandsClasses[COMMANDS_COUNT];
+var protected const Array<N7_Command> Commands;
 
 /** THP Game settings */
 var protected config const bool bAllowMutate;
@@ -48,25 +48,41 @@ var protected float NextResizedPlayersRefreshTime;
 
 protected function InitServices()
 {
-    GSU         = new(Self) GSUClass;
-    Colors      = new(Self) ColorsClass;
-    Validator   = new(Self) ValidatorClass;
+    GSU         = new(self) GSUClass;
+    Colors      = new(self) ColorsClass;
+    Validator   = new(self) ValidatorClass;
 }
 
 protected function InitModels()
 {
-    HPConfigModel           = new(Self) HPConfigModelClass;
-    FakedPlayersModel       = new(Self) FakedPlayersModelClass;
-    RestoredPlayersModel    = new(Self) RestoredPlayersModelClass;
-    ResizedPlayersModel     = new(Self) ResizedPlayersModelClass;
+    HPConfigModel           = new(self) HPConfigModelClass;
+    FakedPlayersModel       = new(self) FakedPlayersModelClass;
+    RestoredPlayersModel    = new(self) RestoredPlayersModelClass;
+    ResizedPlayersModel     = new(self) ResizedPlayersModelClass;
 }
 
 protected function InitCommands()
 {
     local int i;
+
     for (i = 0; i < COMMANDS_COUNT; i++)
     {
-        Commands[i] = new(Self) CommandsClasses[i];
+        Commands[i] = new(self) CommandsClasses[i];
+    }
+}
+
+protected function SaveConfiguration()
+{
+    local int i;
+
+    self.SaveConfig();
+
+    Colors.SaveConfig();
+    Colors.ColorManager.static.StaticSaveConfig();
+
+    for (i = 0; i < COMMANDS_COUNT; i++)
+    {
+        Commands[i].SaveConfig();
     }
 }
 
@@ -86,6 +102,7 @@ event PostBeginPlay()
     InitServices();
     InitModels();
     InitCommands();
+    SaveConfiguration();
 
     SetTimer(1.0, True);
 }
@@ -236,7 +253,7 @@ public function Mutate(string MutateString, PlayerController Sender)
         }
     }
 
-    Super.Mutate(MutateString, Sender);
+    super.Mutate(MutateString, Sender);
 }
 
 /*********************************

@@ -70,9 +70,9 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
 
 defaultproperties
 {
+    Aliases(0)="WELD"
     MinArgsNum=1
     MaxArgsNum=1
-    Aliases(0)="WELD"
     ArgTypes(0)="switch"
     Signature="<(0 | 1 | ON | OFF)>"
     Description="Weld all doors"

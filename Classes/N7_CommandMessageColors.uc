@@ -1,8 +1,6 @@
 class N7_CommandMessageColors extends Core.Object
     config(N7CommandManager);
 
-var protected const class<N7_ColorManager> ColorManager;
-
 enum EColorTypes
 {
     CT_None,
@@ -25,54 +23,56 @@ var public config const string Signature;
 var public config const string Emphasis;
 var public config const string Error;
 
+var public const class<N7_ColorManager> ColorManager;
+
 /****************************
  *  PUBLIC INTERFACE
  ****************************/
 
 public final function string ColorizeMain(
-    string Text, bool bDisableColoring)
+    coerce string Text, bool bDisableColoring)
 {
     return Colorize(Text, EColorTypes.CT_Main, bDisableColoring, True);
 }
 
 public final function string ColorizeSender(
-    string SenderName, bool bDisableColoring)
+    coerce string SenderName, bool bDisableColoring)
 {
     return Colorize(SenderName, EColorTypes.CT_Sender, bDisableColoring);
 }
 
 public final function string ColorizeTarget(
-    string TargetName, bool bDisableColoring)
+    coerce string TargetName, bool bDisableColoring)
 {
     return Colorize(TargetName, EColorTypes.CT_Target, bDisableColoring);
 }
 
 public final function string ColorizeEntity(
-    string EntityName, bool bDisableColoring)
+    coerce string EntityName, bool bDisableColoring)
 {
     return Colorize(EntityName, EColorTypes.CT_Entity, bDisableColoring);
 }
 
 public final function string ColorizeValue(
-    string Value, bool bDisableColoring)
+    coerce string Value, bool bDisableColoring)
 {
     return Colorize(Value, EColorTypes.CT_Value, bDisableColoring);
 }
 
 public final function string ColorizeSignature(
-    string Signature, bool bDisableColoring)
+    coerce string Signature, bool bDisableColoring)
 {
     return Colorize(Signature, EColorTypes.CT_Signature, bDisableColoring);
 }
 
 public final function string ColorizeEmphasis(
-    string Text, bool bDisableColoring)
+    coerce string Text, bool bDisableColoring)
 {
     return Colorize(Text, EColorTypes.CT_Emphasis, bDisableColoring);
 }
 
 public final function string ColorizeError(
-    string Text, bool bDisableColoring)
+    coerce string Text, bool bDisableColoring)
 {
     return Colorize(Text, EColorTypes.CT_Error, bDisableColoring);
 }

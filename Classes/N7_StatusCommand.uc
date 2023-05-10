@@ -41,8 +41,8 @@ protected function ExtendedHelp(PlayerController PC)
 defaultproperties
 {
     Aliases(0)="STATUS"
-    Signature="<? 'all'>"
     ArgTypes(0)="word"
+    Signature="<? 'all'>"
     Description="Display current game settings. 'all' allows for broadcasting status to all players"
     bOnlyPlayerSender=False
     bOnlyPlayerTargets=False

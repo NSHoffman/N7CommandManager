@@ -9,9 +9,9 @@ protected function DoActionForSingleTarget
 {
     local bool bBoostEnabled;
 
-    if (ToInt(ExecState.GetArg(ECmdArgs.ARG_VALUE)) != PC.Pawn.default.HealthMax)
+    if (int(ExecState.GetArg(ECmdArgs.ARG_VALUE)) != PC.Pawn.default.HealthMax)
     {
-        PC.Pawn.Health = ToInt(ExecState.GetArg(ECmdArgs.ARG_VALUE));
+        PC.Pawn.Health = int(ExecState.GetArg(ECmdArgs.ARG_VALUE));
         bBoostEnabled = True;
     }
     else
@@ -33,7 +33,7 @@ protected function bool CheckGameState(N7_CommandExecutionState ExecState)
 protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 {
     local int NewHealth;
-    NewHealth = ToInt(ExecState.GetArg(ECmdArgs.ARG_VALUE));
+    NewHealth = int(ExecState.GetArg(ECmdArgs.ARG_VALUE));
 
     if (!IsInRange(NewHealth, MinLimit, MaxLimit))
     {
@@ -77,10 +77,10 @@ protected function string GetTargetSuccessMessage(N7_CommandExecutionState ExecS
 defaultproperties
 {
     bAdminOnly=True
+    Aliases(0)="BOOST"
     MinLimit=100
     MaxLimit=1500
     MinArgsNum=1
-    Aliases(0)="BOOST"
     Signature="<int Health, ? (string TargetName | 'all')>"
     Description="Boost HP and Speed"
     bOnlyAliveTargets=True

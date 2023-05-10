@@ -1,6 +1,6 @@
 class N7_GiveWeaponCommand extends N7_BinaryTargetCommand;
 
-var protected editconstarray Array<string> AvailableWeaponClasses;
+var protected const Array<string> AvailableWeaponClasses;
 var protected class<Weapon> WeaponClass;
 
 /** @Override */

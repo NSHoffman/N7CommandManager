@@ -8,7 +8,7 @@ protected function DoActionForSingleTarget
     (N7_CommandExecutionState ExecState, PlayerController PC)
 {
     local int CashAmount;
-    CashAmount = ToInt(ExecState.GetArg(ECmdArgs.ARG_VALUE));
+    CashAmount = int(ExecState.GetArg(ECmdArgs.ARG_VALUE));
 
     if (!IsInRange(CashAmount, MinLimit, MaxLimit) && IsInRange(CashAmount, MinLimit))
     {
@@ -57,13 +57,13 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
 defaultproperties
 {
     bAdminOnly=True
-    MinArgsNum=1
-    MinLimit=1
-    MaxLimit=50000
     Aliases(0)="GC"
     Aliases(1)="GD"
     Aliases(2)="CASH"
     Aliases(3)="DOSH"
+    MinArgsNum=1
+    MinLimit=1
+    MaxLimit=50000
     Signature="<int Amount, ? (string TargetName | 'all')>"
     Description="Give Money"
     bNotifyGlobalOnSuccess=True

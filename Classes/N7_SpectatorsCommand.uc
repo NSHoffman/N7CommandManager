@@ -15,7 +15,7 @@ protected function DoAction(N7_CommandExecutionState ExecState)
 
     if (ExecState.GetArgC() > 0)
     {
-        NewSpectators = ToInt(ExecState.GetArg(ECmdArgs.ARG_NEWSPECS));
+        NewSpectators = int(ExecState.GetArg(ECmdArgs.ARG_NEWSPECS));
         KFGT.MaxSpectators = NewSpectators;
     }
     else
@@ -31,7 +31,7 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 
     if (ExecState.GetArgC() > 0)
     {
-        NewSpectators = ToInt(ExecState.GetArg(ECmdArgs.ARG_NEWSPECS));
+        NewSpectators = int(ExecState.GetArg(ECmdArgs.ARG_NEWSPECS));
 
         if (!IsInRange(NewSpectators, MinLimit, MaxLimit))
         {
@@ -56,12 +56,12 @@ protected function string InvalidArgsMessage(N7_CommandExecutionState ExecState)
 
 defaultproperties
 {
+    Aliases(0)="SPEC"
+    Aliases(1)="SPECS"
     MinLimit=0
     MaxLimit=10
     MinArgsNum=0
     MaxArgsNum=1
-    Aliases(0)="SPEC"
-    Aliases(1)="SPECS"
     ArgTypes(0)="number"
     Signature="<? int NewSpectators>"
     Description="Set maximum number of spectators"

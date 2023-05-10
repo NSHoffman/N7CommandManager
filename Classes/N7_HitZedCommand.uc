@@ -10,7 +10,7 @@ var protected const int MinLimit;
 var protected config const int MaxLimit;
 var protected config const int DefaultDamage;
 
-var protected editconstarray Array<string> AvailableDamageTypes;
+var protected const Array<string> AvailableDamageTypes;
 
 /** @Override */
 protected function DoAction(N7_CommandExecutionState ExecState)
@@ -37,7 +37,7 @@ protected function DoAction(N7_CommandExecutionState ExecState)
         
 
     if (ExecState.GetArgC() > 1) 
-        ZedDamage = ToInt(ExecState.GetArg(ECmdArgs.ARG_DAMAGE));
+        ZedDamage = int(ExecState.GetArg(ECmdArgs.ARG_DAMAGE));
     else
         ZedDamage = DefaultDamage;
 
@@ -101,7 +101,7 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 
     if (ExecState.GetArgC() > 1)
     {
-        ZedDamage = ToInt(ExecState.GetArg(ECmdArgs.ARG_DAMAGE));
+        ZedDamage = int(ExecState.GetArg(ECmdArgs.ARG_DAMAGE));
 
         if (!IsInRange(ZedDamage, MinLimit, MaxLimit))
         {
@@ -120,17 +120,17 @@ protected function string InvalidArgsMessage(N7_CommandExecutionState ExecState)
 
 defaultproperties
 {
-    MinLimit=0
-    MaxLimit=100000
-    MinArgsNum=0
-    MaxArgsNum=2
     Aliases(0)="HITZ"
-    ArgTypes(0)="word"
-    ArgTypes(1)="number"
-    DefaultDamage=10000
     AvailableDamageTypes(0)="hit"
     AvailableDamageTypes(1)="frag"
     AvailableDamageTypes(2)="fire"
+    MinLimit=0
+    MaxLimit=100000
+    DefaultDamage=10000
+    MinArgsNum=0
+    MaxArgsNum=2
+    ArgTypes(0)="word"
+    ArgTypes(1)="number"
     Signature="<? string DamageType, ? int Damage>"
     Description="Damage Zed being looked at. Available Damage types: hit, frag, fire"
     bOnlyAliveSender=True

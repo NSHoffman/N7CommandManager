@@ -18,7 +18,7 @@ protected function bool CheckGameState(N7_CommandExecutionState ExecState)
 protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 {
     local float NewScale;
-    NewScale = ToFloat(ExecState.GetArg(ECmdArgs.ARG_VALUE));
+    NewScale = float(ExecState.GetArg(ECmdArgs.ARG_VALUE));
 
     if (ExecState.GetArgC() == 0)
     {
