@@ -15,7 +15,7 @@ protected function DoAction(N7_CommandExecutionState ExecState)
 
     if (ExecState.GetArgC() > 0)
     {
-        NewFakes = ToInt(ExecState.GetArg(ECmdArgs.ARG_NEWFAKES));
+        NewFakes = int(ExecState.GetArg(ECmdArgs.ARG_NEWFAKES));
     }
     else
     {
@@ -33,7 +33,7 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 
     if (ExecState.GetArgC() > 0)
     {
-        NewFakes = ToInt(ExecState.GetArg(ECmdArgs.ARG_NEWFAKES));
+        NewFakes = int(ExecState.GetArg(ECmdArgs.ARG_NEWFAKES));
 
         if (!IsInRange(NewFakes, MinLimit, MaxLimit))
         {
@@ -61,15 +61,15 @@ protected function string InvalidArgsMessage(N7_CommandExecutionState ExecState)
 
 defaultproperties
 {
-    MinLimit=0
-    MaxLimit=10
-    MinArgsNum=0
-    MaxArgsNum=1
     Aliases(0)="FAKE"
     Aliases(1)="FAKES"
     Aliases(2)="FAKED"
     Aliases(3)="SETFAKED"
     Aliases(4)="SETFAKES"
+    MinLimit=0
+    MaxLimit=10
+    MinArgsNum=0
+    MaxArgsNum=1
     ArgTypes(0)="number"
     Signature="<? int NewFakes>"
     Description="Set number of faked players"

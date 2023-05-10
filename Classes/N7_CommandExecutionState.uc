@@ -1,5 +1,25 @@
 class N7_CommandExecutionState extends Core.Object within N7_Command;
 
+var protected struct Context
+{
+    var string 
+        StringValue,
+        PrimaryTarget,
+        SecondaryTarget;
+
+    var int 
+        iNumberValue,
+        iMaxLimit,
+        iMinLimit;
+    
+    var float
+        fNumberValue,
+        fMaxLimit,
+        fMinLimit;
+
+    var bool bFlag;
+} Ctx;
+
 enum ECommandStatus
 {
     CS_NONE,
@@ -20,20 +40,6 @@ var protected Array<string> Args;
 var protected Array<string> InitialArgs;
 
 var protected int ErrNo;
-
-/** Preserved State */
-var protected string PreservedString;
-var protected string PreservedTarget;
-
-var protected int PreservedNumber;
-var protected int PreservedMinLimit;
-var protected int PreservedMaxLimit;
-
-var protected float PreservedNumberF;
-var protected float PreservedMinLimitF;
-var protected float PreservedMaxLimitF;
-
-var protected bool bPreservedFlag;
 
 /****************************
  *  STATE ACCESSORS
@@ -295,102 +301,112 @@ public final function bool IsFailed()
 }
 
 /****************************
- *  PRESERVED API
+ *  CONTEXT API
  ****************************/
 
 public final function SaveString(string Value)
 {
-    PreservedString = Value;
+    Ctx.StringValue = Value;
 }
 
-public final function SaveTarget(string Value)
+public final function SavePrimaryTarget(string Value)
 {
-    PreservedTarget = Value;
+    Ctx.PrimaryTarget = Value;
+}
+
+public final function SaveSecondaryTarget(string Value)
+{
+    Ctx.SecondaryTarget = Value;
 }
 
 public final function SaveNumber(int Value)
 {
-    PreservedNumber = Value;
+    Ctx.iNumberValue = Value;
 }
 
 public final function SaveMinLimit(int Value)
 {
-    PreservedMinLimit = Value;
+    Ctx.iMinLimit = Value;
 }
 
 public final function SaveMaxLimit(int Value)
 {
-    PreservedMaxLimit = Value;
+    Ctx.iMaxLimit = Value;
 }
 
 public final function SaveNumberF(float Value)
 {
-    PreservedNumberF = Value;
+    Ctx.fNumberValue = Value;
 }
 
 public final function SaveMinLimitF(float Value)
 {
-    PreservedMinLimitF = Value;
+    Ctx.fMinLimit = Value;
 }
 
 public final function SaveMaxLimitF(float Value)
 {
-    PreservedMaxLimitF = Value;
+    Ctx.fMaxLimit = Value;
 }
 
 public final function SaveFlag(bool bValue)
 {
-    bPreservedFlag = bValue;
+    Ctx.bFlag = bValue;
 }
 
 public final function string LoadString()
 {
-    return PreservedString;
+    return Ctx.StringValue;
 }
 
-public final function string LoadTarget()
+public final function string LoadPrimaryTarget()
 {
-    return PreservedTarget;
+    return Ctx.PrimaryTarget;
+}
+
+public final function string LoadSecondaryTarget()
+{
+    return Ctx.SecondaryTarget;
 }
 
 public final function int LoadNumber()
 {
-    return PreservedNumber;
+    return Ctx.iNumberValue;
 }
 
 public final function int LoadMinLimit()
 {
-    return PreservedMinLimit;
+    return Ctx.iMinLimit;
 }
 
 public final function int LoadMaxLimit()
 {
-    return PreservedMaxLimit;
+    return Ctx.iMaxLimit;
 }
 
 public final function float LoadNumberF()
 {
-    return PreservedNumberF;
+    return Ctx.fNumberValue;
 }
 
 public final function float LoadMinLimitF()
 {
-    return PreservedMinLimitF;
+    return Ctx.fMinLimit;
 }
 
 public final function float LoadMaxLimitF()
 {
-    return PreservedMaxLimitF;
+    return Ctx.fMaxLimit;
 }
 
 public final function bool LoadFlag()
 {
-    return bPreservedFlag;
+    return Ctx.bFlag;
 }
 
 public final function string LoadSwitch(optional bool bAllCaps)
 {
-    if (bPreservedFlag)
+    if (Ctx.bFlag)
     {
         return EnsureUpperCase("On", bAllCaps);
     }
@@ -400,7 +416,7 @@ public final function string LoadSwitch(optional bool bAllCaps)
 
 public final function string LoadEnabled(optional bool bAllCaps)
 {
-    if (bPreservedFlag)
+    if (Ctx.bFlag)
     {
         return EnsureUpperCase("enabled", bAllCaps);
     }

@@ -72,12 +72,12 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
 defaultproperties
 {
     bAdminOnly=True
+    Aliases(0)="TEMPADMIN"
     MinArgsNum=2
     MaxArgsNum=2
     ArgTypes(1)="switch"
-    Aliases(0)="TEMPADMIN"
-    Description="Grant temporary admin access to players"
     Signature="<string TargetName, (0 | 1 | ON | OFF)>"
+    Description="Grant temporary admin access to players"
     bAllowTargetSelf=False
     bOnlyPlayerTargets=False
     bOnlyNonAdminTargets=True

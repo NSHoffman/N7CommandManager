@@ -15,7 +15,7 @@ protected function DoAction(N7_CommandExecutionState ExecState)
 
     if (ExecState.GetArgC() > 0)
     {
-        NewSlots = ToInt(ExecState.GetArg(ECmdArgs.ARG_NEWSLOTS));
+        NewSlots = int(ExecState.GetArg(ECmdArgs.ARG_NEWSLOTS));
         KFGT.MaxPlayers = NewSlots;
     }
     else
@@ -31,7 +31,7 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 
     if (ExecState.GetArgC() > 0)
     {
-        NewSlots = ToInt(ExecState.GetArg(ECmdArgs.ARG_NEWSLOTS));
+        NewSlots = int(ExecState.GetArg(ECmdArgs.ARG_NEWSLOTS));
 
         if (!IsInRange(NewSlots, MinLimit, MaxLimit))
         {
@@ -56,12 +56,12 @@ protected function string InvalidArgsMessage(N7_CommandExecutionState ExecState)
 
 defaultproperties
 {
+    Aliases(0)="SLOT"
+    Aliases(1)="SLOTS"
     MinLimit=1
     MaxLimit=10
     MinArgsNum=0
     MaxArgsNum=1
-    Aliases(0)="SLOT"
-    Aliases(1)="SLOTS"
     ArgTypes(0)="number"
     Signature="<? int NewSlots>"
     Description="Set maximum number of players"

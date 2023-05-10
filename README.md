@@ -5,6 +5,25 @@
 Killing Floor Mutate API initially designed and developed for Three Hundred Pounds server.
 Provides various commands for both players and admins to change game settings and trigger gameplay actions/events.
 
+## Table of Contents
+
+- [1. Motivation](#motivation)
+- [2. What N7CM is offering](#what-n7cm-is-offering)
+- [3. How to use](#how-to-use)
+  - [3.1. Regular Players](#regular-players)
+  - [3.2. Admins](#admins)
+  - [3.3. Developers/Modders](#developersmodders)
+    - [3.3.1. `N7_CommandManager`](#n7_commandmanager)
+    - [3.3.2. `N7_GameStateUtils`](#n7_gamestateutils)
+    - [3.3.3. `N7_CommandValidator`](#n7_commandvalidator)
+    - [3.3.4. `N7_CommandExecutionState`](#n7_commandexecutionstate)
+    - [3.3.5. `N7_Command`](#n7_command)
+    - [3.3.6. Command Classes (`N7_GameSettingsCommand`, `N7_TargetCommand` etc)](#command-classes-n7_gamesettingscommand-n7_targetcommand-etc)
+    - [3.3.7. Models (`N7_HPConfigModel`, `N7_FakedPlayersModel` etc)](#models-n7_hpconfigmodel-n7_fakedplayersmodel-etc)
+    - [3.3.8. `N7_ColorManager`/`N7_CommandMessageColors`](#n7_colormanagern7_commandmessagecolors)
+- [4. Changelog](#changelog)
+- [5. Contacts](#contacts)
+
 ## Motivation
 
 The motivation and reasoning behind development of the command manager is that most publicly available APIs have:
@@ -49,15 +68,12 @@ For those who want to extend the existing API there is some more information in 
 #### `N7_CommandManager`
 
 This is the entry file, the mutator itself that dispatches incoming `mutate` requests.
-Each of the available commands must be specified as a part of `N7_CommandManager.Commands` array. Initialization takes place in one of the command initializing methods:
+Each of the available commands' classes must be specified in `N7_CommandManager.CommandsClasses` array.
+Initialization includes the following steps:
 
-- `InitHelperCommands()`
-- `InitGameSettingsCommands()`
-- `InitGameplayCommands()`
-- `InitPlayerCommands()`
-
-The distinction between commands initialized in these methods is purely aesthetic, just visual grouping.
-Furthermore, each command must be stated in `enum ECmd` to have its own index in `N7_CommandManager.Commands` array.
+- `InitServices()` - Initialization of the services used by the command manager and individual command classes;
+- `InitModels()` - Initialization of data related to specific game settings that need to be kept track of;
+- `InitCommands()` - Initialization of commands. Command classes from `N7_CommandManager.CommandsClasses` get initialized and stored in `N7_CommandManager.Commands` array. Both arrays are static and one need to pay attention to capacity of those which is defined by `COMMANDS_COUNT` constant.
 
 #### `N7_GameStateUtils`
 
@@ -135,6 +151,10 @@ Information on both colors and tints can be found on Material Design colors page
 `N7_CommandMessageColors` is just a class that keeps configurable color IDs for various messages/notifications parts.
 It is also responsible for providing colorization API for commands.
 One is not strictly tied to the cases defined in base `N7_CommandMessageColors` class as it can be extended and assigned to `N7_CommandManager.ColorsClass` field.
+
+## Changelog
+
+All the changes and updates can be found in the separate [`CHANGELOG.md`](./CHANGELOG.md) file.
 
 ## Contacts
 

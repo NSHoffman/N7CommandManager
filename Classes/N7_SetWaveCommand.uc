@@ -54,7 +54,7 @@ protected function DoAction(N7_CommandExecutionState ExecState)
 
     bTradeTime = !KFGT.bWaveInProgress && !KFGT.bWaveBossInProgress && KFGT.WaveCountDown > 0;
 
-    WaveNum = ToInt(ExecState.GetArg(ECmdArgs.ARG_WAVE));
+    WaveNum = int(ExecState.GetArg(ECmdArgs.ARG_WAVE));
 
     /**
      * KFGT.WaveNum is actual Wave, starting from 0 
@@ -91,7 +91,7 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 {
     local int WaveNum;
     MaxLimit = KFGT.FinalWave + 1;
-    WaveNum = ToInt(ExecState.GetArg(ECmdArgs.ARG_WAVE));
+    WaveNum = int(ExecState.GetArg(ECmdArgs.ARG_WAVE));
 
     return IsInRange(WaveNum, MinLimit, MaxLimit);
 }
@@ -119,16 +119,16 @@ protected function string InvalidArgsMessage(N7_CommandExecutionState ExecState)
 
 defaultproperties
 {
-    MinLimit=1
-    MaxLimit=11
-    MinArgsNum=1
-    MaxArgsNum=1
     Aliases(0)="WN"
     Aliases(1)="FW"
     Aliases(2)="WAVE"
     Aliases(3)="WAVENUM"
     Aliases(4)="SETWAVE"
     Aliases(5)="WAVENUM"
+    MinLimit=1
+    MaxLimit=11
+    MinArgsNum=1
+    MaxArgsNum=1
     ArgTypes(0)="number"
     Signature="<int WaveNum>"
     Description="Set Wave number"

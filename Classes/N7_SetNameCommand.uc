@@ -36,11 +36,11 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
 
 defaultproperties
 {
-    MinArgsNum=1
-    MaxArgsNum=2
     Aliases(0)="CN"
     Aliases(1)="SN"
     Aliases(2)="SETNAME"
+    MinArgsNum=1
+    MaxArgsNum=2
     ArgTypes(0)="any"
     ArgTypes(1)="any"
     Signature="<string Name, adminonly ? string TargetName>"

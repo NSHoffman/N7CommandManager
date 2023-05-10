@@ -5,7 +5,7 @@ enum ECmdArgs
     ARG_PROJTYPE,
 };
 
-var protected editconstarray Array<string> AvailableProjTypes;
+var protected const Array<string> AvailableProjTypes;
 
 /** @Override */
 protected function DoAction(N7_CommandExecutionState ExecState)
@@ -117,9 +117,9 @@ protected function ExtendedHelp(PlayerController PC)
 defaultproperties
 {
     bAdminOnly=True
+    ArgTypes(0)="any"
     MinArgsNum=1
     MaxArgsNum=1
-    ArgTypes(0)="any"
     Aliases(0)="PROJ"
     Signature="<string ProjType>"
     Description="Spawn projectile"

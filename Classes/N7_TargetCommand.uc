@@ -172,13 +172,24 @@ protected function SaveTarget(
 {
     if (bOnlyFirstTargetMatch)
     {
-        ExecState.SaveTarget(TargetName);
+        ExecState.SavePrimaryTarget(TargetName);
     }
+}
+
+protected function SaveSecondaryTarget(
+    N7_CommandExecutionState ExecState, string TargetName)
+{
+    ExecState.SaveSecondaryTarget(TargetName);
 }
 
 protected function string LoadTarget(N7_CommandExecutionState ExecState)
 {
-    return ExecState.LoadTarget();
+    return ExecState.LoadPrimaryTarget();
+}
+
+protected function string LoadSecondaryTarget(N7_CommandExecutionState ExecState)
+{
+    return ExecState.LoadSecondaryTarget();
 }
 
 protected function PlayerController FindTarget(string TargetName)
