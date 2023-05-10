@@ -165,4 +165,4 @@ MaxLimit=10
 ## Other commands
 
 Other commands might have some specific configurable fields.
-Feel free to explore them in the source code. Those are marked as `config`.
+Feel free to explore them in `N7CommandManager.ini` which is generated automatically as you start the game with the mutator enabled for the first time.
