@@ -15,7 +15,7 @@ protected function DoActionForSingleTarget(N7_CommandExecutionState ExecState, P
 /** @Override */
 protected function bool CheckIfNonAdminExecutionAllowed(N7_CommandExecutionState ExecState)
 {
-	return ExecState.GetArgC() <= 1 || ExecState.GetArg(ECmdArgs.ARG_TARGETNAME) == ExecState.GetSender().PlayerReplicationInfo.PlayerName;
+	return ExecState.GetArgC() == 0 || ExecState.GetArg(ECmdArgs.ARG_TARGETNAME) == ExecState.GetSender().PlayerReplicationInfo.PlayerName;
 }
 
 /** @Override */
@@ -47,6 +47,4 @@ defaultproperties
     Description="Reset Kills/Deaths/Assists/Score"
 
     Signature="<adminonly ? (string TargetName | 'all')>"
-
-	bAdminOnly=True
 }
