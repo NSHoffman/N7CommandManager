@@ -19,7 +19,7 @@ public final function int GetRealPlayersNum()
 
     for (C = Level.ControllerList; C != None; C = C.NextController)
     {
-        if ((C.IsA('PlayerController') || C.IsA('xBot')) && MessagingSpectator(C) == None)
+        if ((C.IsA('PlayerController') || C.IsA('xBot')) && !PlayerController(C).PlayerReplicationInfo.bOnlySpectator)
         {
             RealPlayersNum++;
         }
@@ -30,5 +30,4 @@ public final function int GetRealPlayersNum()
 
 defaultproperties
 {
-    FakedPlayersNum=0
 }

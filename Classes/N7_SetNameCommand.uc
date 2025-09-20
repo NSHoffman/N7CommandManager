@@ -1,8 +1,7 @@
 class N7_SetNameCommand extends N7_BinaryTargetCommand;
 
 /** @Override */
-protected function DoActionForSingleTarget
-    (N7_CommandExecutionState ExecState, PlayerController PC)
+protected function DoActionForSingleTarget(N7_CommandExecutionState ExecState, PlayerController PC)
 {
     PC.PlayerReplicationInfo.PlayerName = ExecState.GetArg(ECmdArgs.ARG_VALUE);
 }
@@ -10,14 +9,14 @@ protected function DoActionForSingleTarget
 /** @Override */
 protected function bool CheckIfNonAdminExecutionAllowed(N7_CommandExecutionState ExecState)
 {
-    return ExecState.GetArgC() == 1 
-        || IsStringPartOf(ExecState.GetArg(ECmdArgs.ARG_TARGETNAME), ExecState.GetSender().PlayerReplicationInfo.PlayerName);
+    return ExecState.GetArgC() == 1 || ExecState.GetArg(ECmdArgs.ARG_TARGETNAME) == ExecState.GetSender().PlayerReplicationInfo.PlayerName;
 }
 
 /** @Override */
 protected function string GetTargetSuccessMessage(N7_CommandExecutionState ExecState)
 {
     local string NewName;
+
     NewName = ColorizeValue(ExecState.GetArg(ECmdArgs.ARG_VALUE));
 
     return "Your name has been changed to "$NewName;
@@ -36,16 +35,17 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
 
 defaultproperties
 {
+    ArgTypes(0)="any"
+
     Aliases(0)="CN"
     Aliases(1)="SN"
     Aliases(2)="SETNAME"
-    MinArgsNum=1
-    MaxArgsNum=2
-    ArgTypes(0)="any"
-    ArgTypes(1)="any"
-    Signature="<string Name, adminonly ? string TargetName>"
-    Description="Change Player's name. Admin access allows for changing other players names"
+    Description="Change player's name. Admin access allows for changing other players names"
+    Signature="<? string Name, adminonly ? string TargetName>"
+
     bNotifyGlobalOnSuccess=True
-    bOnlyPlayerSender=False
+
     bAllowTargetAll=False
+
+    bOnlyPlayerSender=False
 }

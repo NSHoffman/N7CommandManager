@@ -25,8 +25,7 @@ protected function DoAction(N7_CommandExecutionState ExecState)
 /** @Override */
 protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 {
-    return ExecState.GetArgC() == 0 
-        || ExecState.GetArgC() == 1 && ExecState.GetArg(ECmdArgs.ARG_TARGET) ~= "all";
+    return ExecState.GetArgC() == 0 || ExecState.GetArgC() == 1 && ExecState.GetArg(ECmdArgs.ARG_TARGET) ~= "all";
 }
 
 /** @Override */
@@ -48,13 +47,16 @@ protected function string InvalidArgsMessage(N7_CommandExecutionState ExecState)
 
 defaultproperties
 {
-    Aliases(0)="KZ"
-    Aliases(1)="KILLZEDS"
-    MinArgsNum=0
     MaxArgsNum=1
     ArgTypes(0)="word"
-    Signature="<? 'all'>"
+
+    Aliases(0)="KZ"
+    Aliases(1)="KILLZEDS"
     Description="Kill ZEDs"
+    Signature="<? 'all'>"
+
     bNotifySenderOnSuccess=False
     bNotifyGlobalOnSuccess=True
+
+    bAdminOnly=True
 }

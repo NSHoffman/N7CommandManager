@@ -1,8 +1,7 @@
 class N7_BodySizeCommand extends N7_SizeCommand;
 
 /** @Override */
-protected function DoActionForSingleTarget
-    (N7_CommandExecutionState ExecState, PlayerController PC)
+protected function DoActionForSingleTarget(N7_CommandExecutionState ExecState, PlayerController PC)
 {
     local float NewBodyScale;
     NewBodyScale = ExecState.LoadNumberF();
@@ -56,9 +55,10 @@ protected function string GetSenderSuccessMessage(N7_CommandExecutionState ExecS
 
 defaultproperties
 {
-    bAdminOnly=True
     Aliases(0)="BODY"
     Aliases(1)="BODYSIZE"
+    Description="Set player's body size scale"
     Signature="<? float BodyScale, ? (string TargetName | 'all')>"
-    Description="Set Player's body size scale"
+
+    bAdminOnly=True
 }

@@ -1,17 +1,19 @@
 class N7_HPConfigModel extends Core.Object within N7_CommandManager;
 
-var protected const int ZedHPConfigThreshold;
 var protected int ZedHPConfig;
+var protected const int ZedHPConfigThreshold;
 
 public final function int GetZedHPConfig()
 {
     local int AlivePlayersNum;
+    local int ZedHPConfigThreshold;
 
     AlivePlayersNum = GetAlivePlayersNum();
+    ZedHPConfigThreshold = GetZedHPConfigThreshold();
 
-    if (AlivePlayersNum >= GetZedHPConfigThreshold())
+    if (AlivePlayersNum >= ZedHPConfigThreshold)
     {
-        return ZedHPConfig;
+        return ZedHPConfigThreshold;
     }
 
     return Max(AlivePlayersNum, ZedHPConfig);

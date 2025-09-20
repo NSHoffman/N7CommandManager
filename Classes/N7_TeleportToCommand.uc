@@ -1,8 +1,7 @@
 class N7_TeleportToCommand extends N7_BinaryTargetCommand;
 
 /** @Override */
-protected function DoActionForSingleTarget
-    (N7_CommandExecutionState ExecState, PlayerController PC)
+protected function DoActionForSingleTarget(N7_CommandExecutionState ExecState, PlayerController PC)
 {
     local string TeleportTargetName;
     local Vector TpLocation;
@@ -47,17 +46,20 @@ protected function string InvalidGameStateMessage()
 
 defaultproperties
 {
-    bAdminOnly=True
+    MinArgsNum=1
+    ArgTypes(0)="any"
+
     Aliases(0)="TPP"
     Aliases(1)="TELEPORTP"
-    ArgTypes(0)="any"
-    ArgTypes(1)="any"
-    MinArgsNum=1
-    Signature="<string TeleportTo, ? string TargetName>"
     Description="Teleport a player to another player"
+    Signature="<string TeleportTo, ? string TargetName>"
+
+    bNotifyTargetsOnSuccess=False
+
     bAllowTargetAll=False
     bOnlyAliveTargets=True
+
     bOnlyAliveSender=True
-    bNotifySenderOnSuccess=False
-    bNotifyTargetsOnSuccess=False
+
+    bAdminOnly=True
 }

@@ -4,23 +4,18 @@ var protected const int MinLimit;
 var protected const config int MaxLimit; 
 
 /** @Override */
-protected function DoActionForSingleTarget
-    (N7_CommandExecutionState ExecState, PlayerController PC)
+protected function DoActionForSingleTarget(N7_CommandExecutionState ExecState, PlayerController PC)
 {
-    local bool bBoostEnabled;
-
     if (int(ExecState.GetArg(ECmdArgs.ARG_VALUE)) != PC.Pawn.default.HealthMax)
     {
         PC.Pawn.Health = int(ExecState.GetArg(ECmdArgs.ARG_VALUE));
-        bBoostEnabled = True;
+        ExecState.SaveFlag(True);
     }
     else
     {
         PC.Pawn.Health = PC.Pawn.default.HealthMax;
-        bBoostEnabled = False;
+        ExecState.SaveFlag(False);
     }
-
-    ExecState.SaveFlag(bBoostEnabled);
 }
 
 /** @Override */
@@ -59,12 +54,17 @@ protected function string InvalidArgsMessage(N7_CommandExecutionState ExecState)
 protected function string GetTargetSuccessMessage(N7_CommandExecutionState ExecState)
 {
     local string TargetName, BoostState;
+
     TargetName = LoadTarget(ExecState);
 
     if (ExecState.LoadFlag())
+    {
         BoostState = ColorizeValue("boosted");
+    }
     else
+    {
         BoostState = ColorizeValue("reset back to normal");
+    }
 
     if (TargetName ~= "all")
     {
@@ -76,12 +76,16 @@ protected function string GetTargetSuccessMessage(N7_CommandExecutionState ExecS
 
 defaultproperties
 {
-    bAdminOnly=True
-    Aliases(0)="BOOST"
+    MinArgsNum=1
+
     MinLimit=100
     MaxLimit=1500
-    MinArgsNum=1
+
+    Aliases(0)="BOOST"
+    Description="Boost HP and speed"
     Signature="<int Health, ? (string TargetName | 'all')>"
-    Description="Boost HP and Speed"
+
     bOnlyAliveTargets=True
+
+    bAdminOnly=True
 }

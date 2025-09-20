@@ -1,15 +1,12 @@
 class N7_SummonCommand extends N7_BinaryTargetCommand;
 
 /** @Override */
-protected function DoActionForSingleTarget
-    (N7_CommandExecutionState ExecState, PlayerController PC)
+protected function DoActionForSingleTarget(N7_CommandExecutionState ExecState, PlayerController PC)
 {
     local class<KFMonster> TargetZedClass;
     local KFMonster SpawnedZed;
 
-    TargetZedClass = class<KFMonster>(
-        DynamicLoadObject(ExecState.LoadString(), class'Class')
-    );
+    TargetZedClass = class<KFMonster>(DynamicLoadObject(ExecState.LoadString(), class'Class'));
 
     SpawnedZed = Spawn(TargetZedClass,,, PC.Pawn.Location + 72 * Vector(PC.Rotation) + vect(0, 0, 1) * 15);
     ExecState.SaveString(TargetZedClass.default.MenuName);
@@ -92,17 +89,21 @@ protected function ExtendedHelp(PlayerController PC)
     {
         SendMessage(PC, KFGT.MonsterCollection.default.MonsterClasses[i].MClassName);
     }
+
     SendMessage(PC, KFGT.MonsterCollection.default.EndGameBossClass);
 }
 
 defaultproperties
 {
-    bAdminOnly=True
-    Aliases(0)="SUMMON"
     MinArgsNum=1
     ArgTypes(0)="any"
-    Signature="<string ZedClass, ? string TargetName>"
+
+    Aliases(0)="SUMMON"
     Description="Spawn ZED next to a player"
+    Signature="<string ZedClass, ? string TargetName>"
+
     bAllowTargetAll=False
     bOnlyAliveTargets=True
+
+    bAdminOnly=True
 }

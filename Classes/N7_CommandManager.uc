@@ -20,6 +20,9 @@ var public N7_GameStateUtils GSU;
 var protected const class<N7_RestoredPlayersModel> RestoredPlayersModelClass;
 var public N7_RestoredPlayersModel RestoredPlayersModel;
 
+var protected const class<N7_InfiniteAmmoPlayersModel> InfiniteAmmoPlayersModelClass;
+var public N7_InfiniteAmmoPlayersModel InfiniteAmmoPlayersModel;
+
 var protected const class<N7_ResizedPlayersModel> ResizedPlayersModelClass;
 var public N7_ResizedPlayersModel ResizedPlayersModel;
 
@@ -29,18 +32,19 @@ var public N7_HPConfigModel HPConfigModel;
 var protected const class<N7_FakedPlayersModel> FakedPlayersModelClass;
 var public N7_FakedPlayersModel FakedPlayersModel;
 
+/** Properties */
+var protected Array<KFPlayerController> PendingPlayers;
+var protected bool bHasPendingPlayers;
+
 /** Commands List */
-const COMMANDS_COUNT = 48;
+const COMMANDS_COUNT = 100;
 
 var protected const class<N7_Command> CommandsClasses[COMMANDS_COUNT];
 var protected const Array<N7_Command> Commands;
 
 /** THP Game settings */
-var protected config const bool bAllowMutate;
 var protected bool bZedTimeEnabled;
-
 var protected float LastAttributeRestoreTime;
-var protected float NextResizedPlayersRefreshTime;
 
 /*********************************
  * INITIALIZATION
@@ -48,17 +52,18 @@ var protected float NextResizedPlayersRefreshTime;
 
 protected function InitServices()
 {
-    GSU         = new(self) GSUClass;
     Colors      = new(self) ColorsClass;
     Validator   = new(self) ValidatorClass;
+    GSU         = new(self) GSUClass;
 }
 
 protected function InitModels()
 {
-    HPConfigModel           = new(self) HPConfigModelClass;
-    FakedPlayersModel       = new(self) FakedPlayersModelClass;
-    RestoredPlayersModel    = new(self) RestoredPlayersModelClass;
-    ResizedPlayersModel     = new(self) ResizedPlayersModelClass;
+    RestoredPlayersModel     = new(self) RestoredPlayersModelClass;
+    InfiniteAmmoPlayersModel = new(self) InfiniteAmmoPlayersModelClass;
+    ResizedPlayersModel      = new(self) ResizedPlayersModelClass;
+    HPConfigModel            = new(self) HPConfigModelClass;
+    FakedPlayersModel        = new(self) FakedPlayersModelClass;
 }
 
 protected function InitCommands()
@@ -67,7 +72,10 @@ protected function InitCommands()
 
     for (i = 0; i < COMMANDS_COUNT; i++)
     {
-        Commands[i] = new(self) CommandsClasses[i];
+        if (CommandsClasses[i] != None) 
+        {
+            Commands[i] = new(self) CommandsClasses[i];
+        }
     }
 }
 
@@ -82,7 +90,10 @@ protected function SaveConfiguration()
 
     for (i = 0; i < COMMANDS_COUNT; i++)
     {
-        Commands[i].SaveConfig();
+        if (CommandsClasses[i] != None) 
+        {
+            Commands[i].SaveConfig();
+        }
     }
 }
 
@@ -107,83 +118,9 @@ event PostBeginPlay()
     SetTimer(1.0, True);
 }
 
-event Tick(float DeltaTime)
-{
-    local PlayerController PC;
-    local bool bWaveEnd, bWaveStart; 
-    local Array<N7_ResizedPlayersModel.ResizedPlayer> ResizedPlayers;
-    local int i;
-
-    /**
-     * Keeping players' bodies resized
-     */
-    ResizedPlayers = GetResizedPlayers();
-    if (ResizedPlayers.Length > 0)
-    {
-        if (Level.TimeSeconds >= NextResizedPlayersRefreshTime)
-        {
-            RefreshResizedPlayers();
-            NextResizedPlayersRefreshTime = Level.TimeSeconds + 2.0;
-        }
-
-        for (i = 0; i < ResizedPlayers.Length; i++)
-        {
-            if (ResizedPlayers[i].PC != None)
-            {
-                GSU.ResizePlayer(ResizedPlayers[i].PC, ResizedPlayers[i].ResizeMultiplier);
-            }
-        }
-    }
-
-    /**
-     * Keeping players' attributes restored
-     */
-    if (GetRestoredPlayers().Length > 0 && Level.TimeSeconds - LastAttributeRestoreTime > 2.0)
-    {
-        bWaveEnd = (KFGT.bWaveInProgress || KFGT.bWaveBossInProgress)
-            && KFGT.NumMonsters <= 0
-            && KFGT.TotalMaxMonsters <= 0;
-
-        bWaveStart = KFGT.WaveCountDown == 1
-            && !KFGT.bWaveInProgress 
-            && !KFGT.bWaveBossInProgress;
-
-        if (bWaveStart || bWaveEnd)
-        {
-            RefreshRestoredPlayers();
-
-            for (i = 0; i < GetRestoredPlayers().Length; i++)
-            {
-                PC = GetRestoredPlayers()[i];
-                GSU.RestorePlayerAttributes(PC);
-
-                if (PC.Pawn != None && PC.Pawn.Health > 0)
-                {
-                    PC.ClientMessage("Your attributes have been restored");
-                }
-            }
-
-            LastAttributeRestoreTime = Level.TimeSeconds;
-        }
-    }
-}
-
-event Timer()
-{
-    /** 
-     * Constantly delaying next ZED-Time event
-     * so that it will never occur if bZedTimeEnabled is False
-     */
-    if (!IsZedTimeEnabled())
-    {
-        KFGT.LastZedTimeEvent = Level.TimeSeconds;
-    }
-}
-
 public function bool CheckReplacement(Actor Other, out byte bSuperRelevant)
 {
     local KFMonster Zed;
-    local PlayerController PC;
     local int ZedHealthDesired, ZedHeadHealthDesired;
 
     /** 
@@ -213,22 +150,11 @@ public function bool CheckReplacement(Actor Other, out byte bSuperRelevant)
             / Zed.DifficultyHeadHealthModifer();
     }
 
-    /** 
-     * When new players join the game, they might be added to attribute restoration list
-     * That happens in case if all other players already have attribute restoration enabled
-     */
-    if (PlayerController(Other) != None)
-    {
-        RefreshRestoredPlayers();
-        PC = PlayerController(Other);
-
-        if (KFGT.NumPlayers > 0 &&
-            FindRestoredPlayer(PC) == None &&
-            GetRestoredPlayers().Length == KFGT.NumPlayers)
-        {
-            AddRestoredPlayer(PC);
-        }
-    }
+    if (KFPlayerController(Other) != None)
+	{
+		PendingPlayers[PendingPlayers.Length] = KFPlayerController(Other);
+		bHasPendingPlayers = True;
+	}
 
     return True;
 }
@@ -238,32 +164,144 @@ public function Mutate(string MutateString, PlayerController Sender)
     local int MutateCommandIndex;
     local Array<string> MutateArgs;
 
-    if (bAllowMutate)
-    {
-        Split(MutateString, " ", MutateArgs);
+    Split(MutateString, " ", MutateArgs);
 
-        if (MutateArgs.Length > 0)
+    if (MutateArgs.Length > 0)
+    {
+        MutateCommandIndex = GetCommandIndex(MutateArgs[0]);
+        
+        if (MutateCommandIndex != -1)
         {
-            MutateCommandIndex = GetCommandIndex(MutateArgs[0]);
-            
-            if (MutateCommandIndex != -1)
-            {
-                Commands[MutateCommandIndex].Execute(Sender, MutateArgs);
-            }
+            Commands[MutateCommandIndex].Execute(Sender, MutateArgs);
         }
     }
 
     super.Mutate(MutateString, Sender);
 }
 
+event Timer()
+{
+    local Controller C;
+    local PlayerController PC;
+
+    /** 
+     * When new players join the game, they might be added to attribute restoration list
+     * That happens in case if all other players already have attribute restoration enabled
+     */
+	if (bHasPendingPlayers)
+	{
+		while (PendingPlayers.Length > 0)
+		{
+			PC = PendingPlayers[0];
+
+			if (PC != None)
+			{
+				if (GetRealPlayersNum() > 0 && FindRestoredPlayer(PC) == "" && GetRestoredPlayers().Length == GetRealPlayersNum() - 1)
+				{
+					AddRestoredPlayer(PC);
+				}
+			}
+
+			PendingPlayers.Remove(0, 1);
+		}
+
+		bHasPendingPlayers = False;
+	}
+
+    /** 
+     * Constantly delaying next ZED-Time event
+     * so that it will never occur if bZedTimeEnabled is False
+     */
+    if (!IsZedTimeEnabled())
+    {
+        KFGT.LastZedTimeEvent = Level.TimeSeconds;
+    }
+
+    /**
+	 * Keeping players' ammo refilled
+	 */
+	if (GetInfiniteAmmoPlayers().Length > 0)
+	{
+		for (C = Level.ControllerList; C != None; C = C.NextController)
+		{
+			PC = PlayerController(C);
+
+			if (PC != None && PC.Pawn != None && PC.Pawn.Health > 0)
+			{
+				if (FindInfiniteAmmoPlayer(PC) != "")
+				{
+					GSU.RestorePlayerAmmo(PC);
+				}
+			}
+		}
+	}
+}
+
+event Tick(float DeltaTime)
+{
+    local Controller C;
+    local PlayerController PC;
+    local bool bWaveEnd, bWaveStart; 
+    local Array<N7_ResizedPlayersModel.ResizedPlayer> ResizedPlayers;
+    local N7_ResizedPlayersModel.ResizedPlayer RP;
+    local Array<string> RestoredPlayers;
+
+    /**
+    * Keeping players' bodies resized
+    */
+    ResizedPlayers = GetResizedPlayers();
+    if (ResizedPlayers.Length > 0)
+    {
+        RefreshResizedPlayers();
+
+        for (C = Level.ControllerList; C != None; C = C.NextController)
+        {
+            PC = PlayerController(C);
+
+            if (PC != None && PC.Pawn != None && PC.Pawn.Health > 0)
+            {
+                RP = FindResizedPlayer(PC);
+                if (RP.Hash != "")
+                {
+                    GSU.ResizePlayer(PC, RP.ResizeMultiplier);
+                }
+            }
+        }
+    }
+
+    bWaveStart = KFGT.WaveCountDown <= 1 && !KFGT.bWaveInProgress && !KFGT.bWaveBossInProgress;
+    bWaveEnd = (KFGT.bWaveInProgress || KFGT.bWaveBossInProgress) && KFGT.NumMonsters <= 0 && KFGT.TotalMaxMonsters <= 0;
+
+    /**
+    * Keeping players' attributes restored
+    */
+    RestoredPlayers = GetRestoredPlayers();
+    if (RestoredPlayers.Length > 0 && Level.TimeSeconds - LastAttributeRestoreTime > 2.0)
+    {
+        if (bWaveStart || bWaveEnd)
+        {
+            for (C = Level.ControllerList; C != None; C = C.NextController)
+            {
+                PC = PlayerController(C);
+
+                if (PC != None && PC.Pawn != None && PC.Pawn.Health > 0)
+                {
+                    if (FindRestoredPlayer(PC) != "")
+                    {
+                        GSU.RestorePlayerAttributes(PC);
+                        PC.ClientMessage("Your attributes have been restored");
+                    }
+                }
+            }
+
+            LastAttributeRestoreTime = Level.TimeSeconds;
+        }
+    }
+}
+
 /*********************************
  * DATA ACCESSORS
  *********************************/
-
-public final function bool IsMutateAllowed()
-{
-    return bAllowMutate;
-}
 
 public final function bool IsZedTimeEnabled()
 {
@@ -278,6 +316,76 @@ public final function SetZedTime(bool Flag)
 /*********************************
  * MODELS API
  *********************************/
+
+public final function Array<string> GetRestoredPlayers()
+{
+    return RestoredPlayersModel.GetRestoredPlayers();
+}
+
+public final function RefreshRestoredPlayers()
+{
+    RestoredPlayersModel.RefreshRestoredPlayers();
+}
+
+public final function AddRestoredPlayer(PlayerController PC)
+{
+    RestoredPlayersModel.AddRestoredPlayer(PC);
+}
+
+public final function RemoveRestoredPlayer(PlayerController PC)
+{
+    RestoredPlayersModel.RemoveRestoredPlayer(PC);
+}
+
+public final function string FindRestoredPlayer(PlayerController PC)
+{
+    return RestoredPlayersModel.FindRestoredPlayer(PC);
+}
+
+public final function Array<string> GetInfiniteAmmoPlayers()
+{
+	return InfiniteAmmoPlayersModel.GetInfiniteAmmoPlayers();
+}
+
+public final function AddInfiniteAmmoPlayer(PlayerController PC)
+{
+	InfiniteAmmoPlayersModel.AddInfiniteAmmoPlayer(PC);
+}
+
+public final function RemoveInfiniteAmmoPlayer(PlayerController PC)
+{
+	InfiniteAmmoPlayersModel.RemoveInfiniteAmmoPlayer(PC);
+}
+
+public final function string FindInfiniteAmmoPlayer(PlayerController PC)
+{
+	return InfiniteAmmoPlayersModel.FindInfiniteAmmoPlayer(PC);
+}
+
+public final function Array<N7_ResizedPlayersModel.ResizedPlayer> GetResizedPlayers()
+{
+    return ResizedPlayersModel.GetResizedPlayers();
+}
+
+public final function RefreshResizedPlayers()
+{
+    ResizedPlayersModel.RefreshResizedPlayers();
+}
+
+public final function AddResizedPlayer(PlayerController PC, float ResizeMultiplier)
+{
+    ResizedPlayersModel.AddResizedPlayer(PC, ResizeMultiplier);
+}
+
+public final function RemoveResizedPlayer(PlayerController PC)
+{
+    ResizedPlayersModel.RemoveResizedPlayer(PC);
+}
+
+public final function N7_ResizedPlayersModel.ResizedPlayer FindResizedPlayer(PlayerController PC)
+{
+    return ResizedPlayersModel.FindResizedPlayer(PC);
+}
 
 public final function int GetZedHPConfig()
 {
@@ -319,51 +427,6 @@ public final function SetFakedPlayersNum(int NewFakedPlayersNum)
     FakedPlayersModel.SetFakedPlayersNum(NewFakedPlayersNum);
 }
 
-public final function Array<PlayerController> GetRestoredPlayers()
-{
-    return RestoredPlayersModel.GetRestoredPlayers();
-}
-
-public final function RefreshRestoredPlayers()
-{
-    RestoredPlayersModel.RefreshRestoredPlayers();
-}
-
-public final function AddRestoredPlayer(PlayerController PC)
-{
-    RestoredPlayersModel.AddRestoredPlayer(PC);
-}
-
-public final function RemoveRestoredPlayer(PlayerController PC)
-{
-    RestoredPlayersModel.RemoveRestoredPlayer(PC);
-}
-
-public final function PlayerController FindRestoredPlayer(PlayerController PC)
-{
-    return RestoredPlayersModel.FindRestoredPlayer(PC);
-}
-
-public final function Array<N7_ResizedPlayersModel.ResizedPlayer> GetResizedPlayers()
-{
-    return ResizedPlayersModel.GetResizedPlayers();
-}
-
-public final function RefreshResizedPlayers()
-{
-    ResizedPlayersModel.RefreshResizedPlayers();
-}
-
-public final function AddResizedPlayer(PlayerController PC, float ResizeMultiplier)
-{
-    ResizedPlayersModel.AddResizedPlayer(PC, ResizeMultiplier);
-}
-
-public final function RemoveResizedPlayer(PlayerController PC)
-{
-    ResizedPlayersModel.RemoveResizedPlayer(PC);
-}
-
 /*********************************
  * LOW-LEVEL LOGIC IMPLEMENTATION
  *********************************/
@@ -389,67 +452,81 @@ defaultproperties
     FriendlyName="N7 Command Manager"
     Description="Mutate API for more sophisticated game settings and event triggering."
 
-    bAllowMutate=True
+    ValidatorClass=class'N7CommandManager.N7_CommandValidator'
+    ColorsClass=class'N7CommandManager.N7_CommandMessageColors'
+    GSUClass=class'N7CommandManager.N7_GameStateUtils'
+
+    RestoredPlayersModelClass=class'N7CommandManager.N7_RestoredPlayersModel'
+    ResizedPlayersModelClass=class'N7CommandManager.N7_ResizedPlayersModel'
+    HPConfigModelClass=class'N7CommandManager.N7_HPConfigModel'
+    FakedPlayersModelClass=class'N7CommandManager.N7_FakedPlayersModel'
+
+    CommandsClasses(0)=class'N7CommandManager.N7_HelpCommand'
+    CommandsClasses(1)=class'N7CommandManager.N7_AdminHelpCommand'
+    CommandsClasses(2)=class'N7CommandManager.N7_SlotsCommand'
+    CommandsClasses(3)=class'N7CommandManager.N7_SpectatorsCommand'
+    CommandsClasses(4)=class'N7CommandManager.N7_FakesCommand'
+    CommandsClasses(5)=class'N7CommandManager.N7_ZedHPConfigCommand'
+    CommandsClasses(6)=class'N7CommandManager.N7_SpawnRateCommand'
+    CommandsClasses(7)=class'N7CommandManager.N7_ZedTimeCommand'
+    CommandsClasses(8)=class'N7CommandManager.N7_MaxZedsCommand'
+    CommandsClasses(9)=class'N7CommandManager.N7_StatusCommand'
+
+    CommandsClasses(10)=class'N7CommandManager.N7_TradeTimeCommand'
+    CommandsClasses(11)=class'N7CommandManager.N7_SkipTradeCommand'
+    CommandsClasses(12)=class'N7CommandManager.N7_WaveIntervalCommand'
+
+    CommandsClasses(13)=class'N7CommandManager.N7_SetWaveCommand'
+    CommandsClasses(14)=class'N7CommandManager.N7_RestartWaveCommand'
+    CommandsClasses(15)=class'N7CommandManager.N7_RespawnPlayerCommand'
+    CommandsClasses(16)=class'N7CommandManager.N7_RestoreAttributesCommand'
+
+    CommandsClasses(17)=class'N7CommandManager.N7_ReadyAllCommand'
+    CommandsClasses(18)=class'N7CommandManager.N7_ResetStatsCommand'
+
+    CommandsClasses(19)=class'N7CommandManager.N7_RespawnDoorsCommand'
+    CommandsClasses(20)=class'N7CommandManager.N7_BreakDoorsCommand'
+    CommandsClasses(21)=class'N7CommandManager.N7_WeldDoorsCommand'
+
+    CommandsClasses(22)=class'N7CommandManager.N7_ClearPipesCommand'
+    CommandsClasses(23)=class'N7CommandManager.N7_ClearLevelCommand'
+
+    CommandsClasses(24)=class'N7CommandManager.N7_SetNameCommand'
+    CommandsClasses(25)=class'N7CommandManager.N7_SetPerkCommand'
+
+    CommandsClasses(26)=class'N7CommandManager.N7_GameSpeedCommand'
+    CommandsClasses(27)=class'N7CommandManager.N7_GravityCommand'
+
+    CommandsClasses(28)=class'N7CommandManager.N7_SummonCommand'
+    CommandsClasses(29)=class'N7CommandManager.N7_HitZedCommand'
+    CommandsClasses(30)=class'N7CommandManager.N7_KillZedsCommand'
+
+    CommandsClasses(31)=class'N7CommandManager.N7_SpawnProjCommand'
+    CommandsClasses(32)=class'N7CommandManager.N7_HitPlayerCommand'
+    CommandsClasses(33)=class'N7CommandManager.N7_SlapCommand'
+
+    CommandsClasses(34)=class'N7CommandManager.N7_GodModeCommand'
+    CommandsClasses(35)=class'N7CommandManager.N7_WalkCommand'
+    CommandsClasses(36)=class'N7CommandManager.N7_SpiderCommand'
+    CommandsClasses(37)=class'N7CommandManager.N7_FlyCommand'
+    CommandsClasses(38)=class'N7CommandManager.N7_GhostCommand'
+    CommandsClasses(39)=class'N7CommandManager.N7_BoostCommand'
+
+    CommandsClasses(40)=class'N7CommandManager.N7_InfiniteAmmoCommand'
+
+    CommandsClasses(41)=class'N7CommandManager.N7_GiveWeaponCommand'
+    CommandsClasses(42)=class'N7CommandManager.N7_GiveCashCommand'
+
+    CommandsClasses(43)=class'N7CommandManager.N7_TeleportCommand'
+    CommandsClasses(44)=class'N7CommandManager.N7_TeleportToCommand'
+
+    CommandsClasses(45)=class'N7CommandManager.N7_HeadSizeCommand'
+    CommandsClasses(46)=class'N7CommandManager.N7_BodySizeCommand'
+
+    CommandsClasses(47)=class'N7CommandManager.N7_ForceSpectatorCommand'
+    CommandsClasses(48)=class'N7CommandManager.N7_KickCommand'
+    CommandsClasses(49)=class'N7CommandManager.N7_BanCommand'
+    CommandsClasses(50)=class'N7CommandManager.N7_TempAdminCommand'
+
     bZedTimeEnabled=True
-
-    GSUClass=class'N7_GameStateUtils'
-    ColorsClass=class'N7_CommandMessageColors'
-    ValidatorClass=class'N7_CommandValidator'
-
-    HPConfigModelClass=class'N7_HPConfigModel'
-    FakedPlayersModelClass=class'N7_FakedPlayersModel'
-    RestoredPlayersModelClass=class'N7_RestoredPlayersModel'
-    ResizedPlayersModelClass=class'N7_ResizedPlayersModel'
-
-    CommandsClasses(0)=class'N7_HelpCommand'
-    CommandsClasses(1)=class'N7_AdminHelpCommand'
-    CommandsClasses(2)=class'N7_StatusCommand'
-
-    CommandsClasses(3)=class'N7_SlotsCommand'
-    CommandsClasses(4)=class'N7_SpectatorsCommand'
-    CommandsClasses(5)=class'N7_FakesCommand'
-    CommandsClasses(6)=class'N7_ZedHPConfigCommand'
-    CommandsClasses(7)=class'N7_MaxZedsCommand'
-    CommandsClasses(8)=class'N7_SpawnRateCommand'
-    CommandsClasses(9)=class'N7_SkipTradeCommand'
-    CommandsClasses(10)=class'N7_TradeTimeCommand'
-    CommandsClasses(11)=class'N7_WaveIntervalCommand'
-    CommandsClasses(12)=class'N7_ZedTimeCommand'
-    CommandsClasses(13)=class'N7_GameSpeedCommand'
-    CommandsClasses(14)=class'N7_SetWaveCommand'
-    CommandsClasses(15)=class'N7_RestartWaveCommand'
-
-    CommandsClasses(16)=class'N7_RespawnPlayerCommand'
-    CommandsClasses(17)=class'N7_SummonCommand'
-    CommandsClasses(18)=class'N7_RestoreAttrsCommand'
-    CommandsClasses(19)=class'N7_HitZedCommand'
-    CommandsClasses(20)=class'N7_KillZedsCommand'
-    CommandsClasses(21)=class'N7_RespawnDoorsCommand'
-    CommandsClasses(22)=class'N7_BreakDoorsCommand'
-    CommandsClasses(23)=class'N7_WeldDoorsCommand'
-    CommandsClasses(24)=class'N7_SpawnProjCommand'
-    CommandsClasses(25)=class'N7_ClearPipesCommand'
-    CommandsClasses(26)=class'N7_ResetStatsCommand'
-    CommandsClasses(27)=class'N7_ReadyAllCommand'
-
-    CommandsClasses(28)=class'N7_SetNameCommand'
-    CommandsClasses(29)=class'N7_SetPerkCommand'
-    CommandsClasses(30)=class'N7_GodModeCommand'
-    CommandsClasses(31)=class'N7_HeadSizeCommand'
-    CommandsClasses(32)=class'N7_BodySizeCommand'
-    CommandsClasses(33)=class'N7_HitPlayerCommand'
-    CommandsClasses(34)=class'N7_SlapCommand'
-    CommandsClasses(35)=class'N7_TeleportCommand'
-    CommandsClasses(36)=class'N7_TeleportToCommand'
-    CommandsClasses(37)=class'N7_GiveWeaponCommand'
-    CommandsClasses(38)=class'N7_GiveCashCommand'
-    CommandsClasses(39)=class'N7_WalkCommand'
-    CommandsClasses(40)=class'N7_SpiderCommand'
-    CommandsClasses(41)=class'N7_FlyCommand'
-    CommandsClasses(42)=class'N7_GhostCommand'
-    CommandsClasses(43)=class'N7_ForceSpectatorCommand'
-    CommandsClasses(44)=class'N7_KickCommand'
-    CommandsClasses(45)=class'N7_BanCommand'
-    CommandsClasses(46)=class'N7_TempAdminCommand'
-    CommandsClasses(47)=class'N7_BoostCommand'
 }

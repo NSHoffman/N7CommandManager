@@ -63,13 +63,14 @@ protected function string InvalidArgsMessage(N7_CommandExecutionState ExecState)
 
 defaultproperties
 {
-    Aliases(0)="HP"
-    Aliases(1)="SETHP"
-    MinLimit=1
-    MaxLimit=10
-    MinArgsNum=0
     MaxArgsNum=1
     ArgTypes(0)="number"
-    Signature="<? int HPConfig>"
+    
+    MinLimit=1
+    
+    MaxLimit=10
+    Aliases(0)="HP"
+    Aliases(1)="SETHP"
     Description="Set HP multiplier for ZEDs"
+    Signature="<? int HPConfig>"
 }

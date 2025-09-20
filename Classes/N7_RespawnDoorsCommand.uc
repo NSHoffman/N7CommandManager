@@ -3,14 +3,13 @@ class N7_RespawnDoorsCommand extends N7_GameSettingsCommand;
 /** @Override */
 protected function DoAction(N7_CommandExecutionState ExecState)
 {
-    local KFUseTrigger KFUT;
-    local int i;
+    local KFDoorMover KFDM;
 
-    foreach DynamicActors(class'KFUseTrigger', KFUT)
+    foreach DynamicActors(class'KFMod.KFDoorMover', KFDM)
     {
-        for (i = 0; i < KFUT.DoorOwners.Length; i++)
+        if (KFDM != None)
         {
-            KFUT.DoorOwners[i].RespawnDoor();
+            KFDM.RespawnDoor();
         }
     }
 }
@@ -25,7 +24,8 @@ defaultproperties
 {
     Aliases(0)="RD"
     Aliases(1)="RESPAWNDOORS"
-    Signature="<>"
     Description="Respawn all doors"
+    Signature="<>"
+
     bOnlyAliveSender=True
 }

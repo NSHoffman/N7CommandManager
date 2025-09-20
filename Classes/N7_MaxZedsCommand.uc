@@ -61,14 +61,15 @@ protected function string InvalidArgsMessage(N7_CommandExecutionState ExecState)
 
 defaultproperties
 {
+    MaxArgsNum=1
+    ArgTypes(0)="number"
+
+    MinLimit=0
+    MaxLimit=100
+    
     Aliases(0)="MZ"
     Aliases(1)="SETMZ"
     Aliases(2)="MAXZEDS"
-    MinLimit=0
-    MaxLimit=100
-    MinArgsNum=0
-    MaxArgsNum=1
-    ArgTypes(0)="number"
-    Signature="<? int MaxZeds>"
     Description="Set max number of ZEDs present at a time"
+    Signature="<? int MaxZeds>"
 }

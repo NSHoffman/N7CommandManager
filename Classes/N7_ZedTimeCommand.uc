@@ -26,18 +26,15 @@ protected function DoAction(N7_CommandExecutionState ExecState)
 /** @Override */
 protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecState)
 {
-    local string ZedTimeState;
-    ZedTimeState = ColorizeValue(ExecState.LoadEnabled());
-
-    return "ZED-Time is "$ZedTimeState$" by "$ColorizeSender(ExecState);
+    return "ZED-Time is "$ColorizeValue(ExecState.LoadEnabled())$" by "$ColorizeSender(ExecState);
 }
 
 defaultproperties
 {
-    Aliases(0)="ZT"
-    MinArgsNum=0
     MaxArgsNum=1
     ArgTypes(0)="switch"
-    Signature="<? (0 | 1 | ON | OFF)>"
+
+    Aliases(0)="ZT"
     Description="Toggle ZED-Time"
+    Signature="<? (0 | 1 | ON | OFF)>"
 }

@@ -56,15 +56,17 @@ protected function string InvalidArgsMessage(N7_CommandExecutionState ExecState)
 
 defaultproperties
 {
-    bAdminOnly=True
+    MaxArgsNum=1
+    ArgTypes(0)="number"
+
+    MinLimit=0.25
+    MaxLimit=10.0
+
     Aliases(0)="GS"
     Aliases(1)="GAMESPEED"
     Aliases(2)="SLOMO"
-    MinLimit=0.25
-    MaxLimit=10.0
-    MinArgsNum=0
-    MaxArgsNum=1
-    ArgTypes(0)="number"
-    Signature="<? int | float NewGameSpeed>"
-    Description="Set Game Speed"
+    Description="Set game speed"
+    Signature="<? float GameSpeed>"
+
+    bAdminOnly=True
 }

@@ -38,9 +38,10 @@ protected function string InvalidGameStateMessage()
 
 defaultproperties
 {
-    Aliases(0)="RW"
     MinArgsNum=0
     MaxArgsNum=0
-    Signature="<>"
+
+    Aliases(0)="RW"
     Description="Restart current wave"
+    Signature="<>"
 }

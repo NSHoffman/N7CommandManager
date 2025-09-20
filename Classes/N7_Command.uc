@@ -35,6 +35,7 @@ var protected const bool bUseTargets;
 
 var protected const bool bOnlyPlayerSender;
 var protected const bool bOnlyAliveSender;
+var protected const bool bDisableAdminPrivilegedAccess;
 
 var protected config const bool bAdminOnly;
 var protected config const bool bDisableColoring;
@@ -44,8 +45,7 @@ var protected config const bool bDisableNotifications;
  *  PUBLIC INTERFACE
  ****************************/
 
-public final function Execute(
-    PlayerController Sender, Array<string> Args)
+public final function Execute(PlayerController Sender, Array<string> Args)
 {
     local N7_CommandExecutionState ExecState;
 
@@ -276,17 +276,17 @@ protected function bool CheckGameState(N7_CommandExecutionState ExecState)
 
 protected function bool CheckSender(N7_CommandExecutionState ExecState)
 {
-    if ((bOnlyAliveSender || !IsAdmin(ExecState.GetSender())) && IsSpectator(ExecState.GetSender()) && bOnlyPlayerSender)
-    {
-        return False;
-    }
+	if (bOnlyPlayerSender && (!HasAdminAccess(ExecState.GetSender()) || bDisableAdminPrivilegedAccess) && IsSpectator(ExecState.GetSender()))
+	{
+		return False;
+	}
 
-    if (bOnlyAliveSender && !IsAlive(ExecState.GetSender()))
-    {
-        return False;
-    }
+	if (bOnlyAliveSender && (!HasAdminAccess(ExecState.GetSender()) || bDisableAdminPrivilegedAccess) && !IsAlive(ExecState.GetSender()))
+	{
+		return False;
+	}
 
-    return True;
+	return True;
 }
 
 protected final function bool CheckActionProcessing(N7_CommandExecutionState ExecState)
@@ -306,7 +306,7 @@ protected final function bool CheckActionFailure(N7_CommandExecutionState ExecSt
 
 protected final function bool CheckAdminPermissions(N7_CommandExecutionState ExecState)
 {
-    return IsAdmin(ExecState.GetSender()) || IsTempAdmin(ExecState.GetSender());
+    return HasAdminAccess(ExecState.GetSender());
 }
 
 protected final function bool CheckArgsNum(N7_CommandExecutionState ExecState)
@@ -728,15 +728,15 @@ protected final function Help(PlayerController PC)
         {
             HelpMessage $= ", ";
         }
-    }    
+    }
+    
     HelpMessage $= " "$ColorizeSignature(Signature)$"  ::  "$Description;
     SendMessage(PC, HelpMessage);
 }
 
 protected function ExtendedHelp(PlayerController PC);
 
-protected function HelpSectionSeparator(
-    PlayerController PC, string SectionTitle)
+protected function HelpSectionSeparator(PlayerController PC, string SectionTitle)
 {
     SendMessage(PC, ColorizeEmphasis("========== "$Caps(SectionTitle)$" =========="));
 }
@@ -755,7 +755,7 @@ protected final function bool ToBool(string Arg)
     {
         return False;
     }
-    
+
     return bool(Arg);
 }
 
@@ -766,6 +766,11 @@ protected final function bool ToBool(string Arg)
 protected final function int GetMaxAcceptableStringLength()
 {
     return Validator.GetMaxAcceptableStringLength();
+}
+
+protected final function float GetStringMatchRatio(string SubStr, string SupStr)
+{
+  return Validator.GetStringMatchRatio(SubStr, SupStr);
 }
 
 protected final function bool IsEmptyString(string Str)
@@ -818,18 +823,12 @@ protected final function bool IsNumber(string Str)
     return Validator.IsNumber(Str);
 }
 
-protected final function bool IsInRange(
-    coerce int Number, 
-    int Start, 
-    optional int End)
+protected final function bool IsInRange(coerce int Number, int Start, optional int End)
 {
     return Validator.IsInRange(Number, Start, End);
 }
 
-protected final function bool IsInRangeF(
-    coerce float Number, 
-    float Start, 
-    optional float End)
+protected final function bool IsInRangeF(coerce float Number, float Start, optional float End)
 {
     return Validator.IsInRangeF(Number, Start, End);
 }
@@ -859,6 +858,11 @@ protected final function bool IsTempAdmin(PlayerController PC)
     return Validator.IsTempAdmin(PC);
 }
 
+protected final function bool HasAdminAccess(PlayerController PC)
+{
+    return Validator.HasAdminAccess(PC);
+}
+
 protected final function bool IsWebAdmin(PlayerController PC)
 {
     return Validator.IsWebAdmin(PC);
@@ -866,18 +870,24 @@ protected final function bool IsWebAdmin(PlayerController PC)
 
 defaultproperties
 {
+    CommandStateClass=class'N7CommandManager.N7_CommandExecutionState'
+
     MinArgsNum=0
     MaxArgsNum=0
-    bAdminOnly=False
-    bUseTargets=False
-    bOnlyPlayerSender=True
-    bOnlyAliveSender=False
+
     bNotifySenderOnSuccess=True
     bNotifyTargetsOnSuccess=False
     bNotifyGlobalOnSuccess=False
     bNotifyAdminsOnlyOnSuccess=False
     bNotifyOnError=True
+
+    bUseTargets=False
+
+    bOnlyPlayerSender=True
+    bOnlyAliveSender=False
+    bDisableAdminPrivilegedAccess=False
+
+    bAdminOnly=False
     bDisableColoring=False
     bDisableNotifications=False
-    CommandStateClass=class'N7_CommandExecutionState'
 }

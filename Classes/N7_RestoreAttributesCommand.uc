@@ -1,8 +1,7 @@
-class N7_RestoreAttrsCommand extends N7_BinaryTargetCommand;
+class N7_RestoreAttributesCommand extends N7_BinaryTargetCommand;
 
 /** @Override */
-protected function DoActionForSingleTarget
-    (N7_CommandExecutionState ExecState, PlayerController PC)
+protected function DoActionForSingleTarget(N7_CommandExecutionState ExecState, PlayerController PC)
 {
     switch (ExecState.GetArgC())
     {
@@ -29,8 +28,7 @@ protected function DoActionForSingleTarget
 /** @Override */
 protected function bool CheckGameState(N7_CommandExecutionState ExecState)
 {
-    return ExecState.GetArgC() > 0 
-        || ExecState.GetArgC() == 0 && !KFGT.IsInState('PendingMatch') && KFGT.WaveCountDown > 0;
+    return ExecState.GetArgC() > 0 || ExecState.GetArgC() == 0 && !KFGT.IsInState('PendingMatch') && (KFGT.WaveCountDown > 0 || HasAdminAccess(ExecState.GetSender()));
 }
 
 /** @Override */
@@ -46,9 +44,17 @@ protected function string InvalidTargetMessage(N7_CommandExecutionState ExecStat
 }
 
 /** @Override */
+protected function bool CheckIfNonAdminExecutionAllowed(N7_CommandExecutionState ExecState)
+{
+    return ExecState.GetArgC() <= 1 || ExecState.GetArg(ECmdArgs.ARG_TARGETNAME) == ExecState.GetSender().PlayerReplicationInfo.PlayerName;
+}
+
+/** @Override */
 protected function string GetTargetSuccessMessage(N7_CommandExecutionState ExecState)
 {
-    local string TargetName;
+    local string AttrState, TargetName;
+
+    AttrState = ColorizeValue(ExecState.LoadEnabled());
     TargetName = LoadTarget(ExecState);
 
     switch (ExecState.GetArgC())
@@ -60,10 +66,10 @@ protected function string GetTargetSuccessMessage(N7_CommandExecutionState ExecS
         case 2:
             if (TargetName ~= "all")
             {
-                return "Attribute restoration is "$ColorizeValue(ExecState.LoadEnabled())$" for all players";
+                return "Attribute restoration is "$AttrState$" for all players";
             }
 
-            return "Attribute restoration is "$ColorizeValue(ExecState.LoadEnabled());
+            return "Attribute restoration is "$AttrState;
     }
 }
 
@@ -78,11 +84,8 @@ protected function ExtendedHelp(PlayerController PC)
 
 defaultproperties
 {
-    Aliases(0)="AR"
-    MinArgsNum=0
-    MaxArgsNum=2
     ArgTypes(0)="switch"
-    ArgTypes(1)="any"
-    Signature="<? (0 | 1 | ON | OFF), ? (string TargetName | 'all')>"
-    Description="Restore HP/Armor/Ammo"
+    Aliases(0)="AR"
+    Description="Restore HP/Armor/Ammo. Admin access allows for restoring other players attributes"
+    Signature="<? (0 | 1 | ON | OFF), adminonly ? (string TargetName | 'all')>"
 }

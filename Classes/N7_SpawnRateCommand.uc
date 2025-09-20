@@ -56,13 +56,13 @@ protected function string InvalidArgsMessage(N7_CommandExecutionState ExecState)
 
 defaultproperties
 {
-    Aliases(0)="SR"
-    Aliases(1)="SETSR"
-    MinLimit=0.0
-    MaxLimit=10.0
-    MinArgsNum=0
     MaxArgsNum=1
     ArgTypes(0)="number"
-    Signature="<? int | float SpawnRate>"
+
+    MaxLimit=10.0
+
+    Aliases(0)="SR"
+    Aliases(1)="SETSR"
     Description="Set interval between ZED squads spawn"
+    Signature="<? float SpawnRate>"
 }

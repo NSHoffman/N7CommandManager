@@ -79,12 +79,15 @@ protected function string InvalidArgsMessage(N7_CommandExecutionState ExecState)
 
 defaultproperties
 {
-    Aliases(0)="HELP"
-    ArgTypes(0)="word"
     MinArgsNum=0
     MaxArgsNum=1
-    Signature="<? string Command>"
+    ArgTypes(0)="word"
+
+    Aliases(0)="HELP"
     Description="Show list of commands available to players or display extended info about one specific command"
+    Signature="<? string Command>"
+
     bNotifySenderOnSuccess=False
+
     bOnlyPlayerSender=False
 }
