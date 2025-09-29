@@ -162,10 +162,10 @@ public final function SetWave(int NewWaveNum)
 	bTradeTime = !KFGT.bWaveInProgress && !KFGT.bWaveBossInProgress && KFGT.WaveCountDown > 0;
 
 	/**
-		* KFGT.WaveNum is actual Wave, starting from 0 
-		* KFGRI.WaveNumber is the wave number displayed in HUD, byte value that gets incremented in the default HUD
-		* Under different conditions different wave setting setup is required
-		*/
+	 * KFGT.WaveNum is actual Wave, starting from 0 
+	 * KFGRI.WaveNumber is the wave number displayed in HUD, byte value that gets incremented in the default HUD
+	 * Under different conditions different wave setting setup is required
+	 */
 	if (bTradeTime && KFGT.WaveCountDown > 5)
 	{
 		KFGT.WaveNum = NewWaveNum - 1;
