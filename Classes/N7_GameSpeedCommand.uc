@@ -45,7 +45,16 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 /** @Override */
 protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecState)
 {
-    return "Game Speed set to "$ColorizeValue(KFGT.GameSpeed)$" by "$ColorizeSender(ExecState);
+    local float NewGameSpeed;
+
+    NewGameSpeed = KFGT.GameSpeed;
+
+    if (ExecState.GetArgC() == 0)
+    {
+        return "Game Speed has been reset by "$ColorizeSender(ExecState);
+    }
+
+    return "Game Speed set to "$ColorizeValue(NewGameSpeed)$" by "$ColorizeSender(ExecState);
 }
 
 /** @Override */

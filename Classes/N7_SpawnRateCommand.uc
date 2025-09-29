@@ -45,7 +45,16 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 /** @Override */
 protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecState)
 {
-    return "Spawn Rate set to "$ColorizeValue(KFGT.KFLRules.WaveSpawnPeriod)$" by "$ColorizeSender(ExecState);
+	local float NewSpawnRate;
+
+	NewSpawnRate = KFGT.KFLRules.WaveSpawnPeriod;
+
+	if (ExecState.GetArgC() == 0)
+	{
+		return "Spawn Rate has been reset by "$ColorizeSender(ExecState);
+	}
+
+	return "Spawn Rate set to "$ColorizeValue(NewSpawnRate)$" by "$ColorizeSender(ExecState);
 }
 
 /** @Override */

@@ -50,7 +50,16 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 /** @Override */
 protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecState)
 {
-    return "Max Zeds set to "$ColorizeValue(KFGT.MaxZombiesOnce)$" by "$ColorizeSender(ExecState);
+    local int NewMaxZeds;
+
+    NewMaxZeds = KFGT.MaxZombiesOnce;
+
+    if (ExecState.GetArgC() == 0)
+    {
+        return "Max Zeds number has been reset by "$ColorizeSender(ExecState);
+    }
+
+    return "Max Zeds set to "$ColorizeValue(NewMaxZeds)$" by "$ColorizeSender(ExecState);
 }
 
 /** @Override */

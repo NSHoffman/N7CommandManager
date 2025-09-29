@@ -34,10 +34,7 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
     {
         NewHPConfig = int(ExecState.GetArg(ECmdArgs.ARG_HPCONFIG));
 
-        MinLimitActual = Min(
-            GetZedHPConfigThreshold(),
-            Max(MinLimit, GetAlivePlayersNum())
-        );
+        MinLimitActual = Min(GetZedHPConfigThreshold(), Max(MinLimit, GetAlivePlayersNum()));
 
         if (!IsInRange(NewHPConfig, MinLimitActual, MaxLimit))
         {
@@ -52,7 +49,16 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 /** @Override */
 protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecState)
 {
-    return "HP Config set to "$ColorizeValue(GetZedHPConfig())$" by "$ColorizeSender(ExecState);
+    local int NewHPConfig;
+
+    NewHPConfig = GetZedHPConfig();
+
+    if (ExecState.GetArgC() == 0)
+    {
+        return "HP Config has been reset by "$ColorizeSender(ExecState);
+    }
+
+    return "HP Config set to "$ColorizeValue(NewHPConfig)$" by "$ColorizeSender(ExecState);
 }
 
 /** @Override */

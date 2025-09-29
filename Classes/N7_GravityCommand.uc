@@ -45,7 +45,16 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 /** @Override */
 protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecState)
 {
-	return "Gravity set to "$ColorizeValue(PhysicsVolume.Gravity.Z)$" by "$ColorizeSender(ExecState);
+    local int NewGravity;
+
+    NewGravity = PhysicsVolume.Gravity.Z;
+
+    if (ExecState.GetArgC() == 0)
+    {
+        return "Gravity has been reset by "$ColorizeSender(ExecState);
+    }
+
+    return "Gravity set to "$ColorizeValue(NewGravity)$" by "$ColorizeSender(ExecState);
 }
 
 /** @Override */

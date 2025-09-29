@@ -19,6 +19,7 @@
 - Updated GiveWeapon command so it uses a weapon list from the configuration file.
 - Updated GiveWeapon command so it supports giving all possible weapons to players.
 - Updated Status command so it shows game speed information.
+- Updated Gravity, GameSpeed, MaxZeds, SpawnRate and ZedHPConfig commands so they now display a reset message when values are reset to default.
   
 - Removed minimum limit when setting trade time via TradeTime command.
 
