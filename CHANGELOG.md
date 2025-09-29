@@ -14,11 +14,12 @@
 - Added Gravity command to modify gravity settings.
 - Added InfiniteAmmo command to enable infinite ammo for players.
 
-- Added BlowerBile and ZedGun projectiles support for the SpawnProj command.
-- Updated BreakDoors command behavior to destroy all doors, including unwelded ones.
-- Updated GiveWeapon command to use a weapon list from the configuration file.
-- Updated GiveWeapon command to support giving all possible weapons to players.
-- Updated Status command to show game speed information.
+- Updated SpawnProj command so it now supports BlowerBile and ZedGun projectiles.
+- Updated BreakDoors command behavior so it destroys all doors, including unwelded ones.
+- Updated GiveWeapon command so it uses a weapon list from the configuration file.
+- Updated GiveWeapon command so it supports giving all possible weapons to players.
+- Updated Status command so it shows game speed information.
+  
 - Removed minimum limit when setting trade time via TradeTime command.
 
 - Fixed search by name algorithm.
