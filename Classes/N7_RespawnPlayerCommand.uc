@@ -1,8 +1,7 @@
 class N7_RespawnPlayerCommand extends N7_UnaryTargetCommand;
 
 /** @Override */
-protected function DoActionForSingleTarget
-    (N7_CommandExecutionState ExecState, PlayerController PC)
+protected function DoActionForSingleTarget(N7_CommandExecutionState ExecState, PlayerController PC)
 {
     local bool bWaveInProgress;
     bWaveInProgress = Invasion(Level.Game).bWaveInProgress;
@@ -58,6 +57,7 @@ protected function string GetTargetSuccessMessage(N7_CommandExecutionState ExecS
 protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecState)
 {
     local string TargetName;
+
     TargetName = LoadTarget(ExecState);
 
     if (TargetName ~= "all")
@@ -72,8 +72,9 @@ defaultproperties
 {
     Aliases(0)="RP"
     Aliases(1)="RESPAWN"
-    Description="Respawn Player"
-    Signature="<? (string TargetName | 'all')>"
-    bOnlyDeadTargets=True
+    Description="Respawn player"
+
     bNotifyGlobalOnSuccess=True
+    
+    bOnlyDeadTargets=True
 }

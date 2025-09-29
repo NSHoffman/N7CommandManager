@@ -44,14 +44,15 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
 
 defaultproperties
 {
+    MaxArgsNum=1
+    ArgTypes(0)="number"
+
+    MinLimit=6
+    MaxLimit=600
+
     Aliases(0)="WI"
     Aliases(1)="WT"
     Aliases(2)="INTERVAL"
-    MinLimit=6
-    MaxLimit=600
-    MinArgsNum=0
-    MaxArgsNum=1
-    ArgTypes(0)="number"
-    Signature="<? int WaveInterval>"
     Description="Set interval between waves"
+    Signature="<? int WaveInterval>"
 }

@@ -9,6 +9,7 @@ enum ECmdArgs
 var protected const int MinLimit;
 var protected config const int MaxLimit;
 var protected config const int DefaultDamage;
+var protected config float MaxRange;
 
 var protected const Array<string> AvailableDamageTypes;
 
@@ -22,24 +23,25 @@ protected function DoAction(N7_CommandExecutionState ExecState)
     local string ZedDamageType;
 
     Sender = ExecState.GetSender();
-    HitActor = Trace(
-        HitLocation, 
-        HitNormal, 
-        Sender.ViewTarget.Location + 10000 * Vector(Sender.Rotation), 
-        Sender.ViewTarget.Location,
-        True
-    );
+    HitActor = Trace(HitLocation, HitNormal, Sender.ViewTarget.Location + MaxRange * Vector(Sender.Rotation), Sender.ViewTarget.Location, True);
 
     if (ExecState.GetArgC() > 0)
+    {
         ZedDamageType = Locs(ExecState.GetArg(ECmdArgs.ARG_DAMAGETYPE));
+    }
     else
+    {
         ZedDamageType = AvailableDamageTypes[0];
-        
+    }
 
     if (ExecState.GetArgC() > 1) 
+    {
         ZedDamage = int(ExecState.GetArg(ECmdArgs.ARG_DAMAGE));
+    }
     else
+    {
         ZedDamage = DefaultDamage;
+    }
 
     if (Sender.Pawn != None && KFMonster(HitActor) != None)
     {
@@ -47,8 +49,7 @@ protected function DoAction(N7_CommandExecutionState ExecState)
     }
 }
 
-protected function DoDamage(
-    int Damage, Pawn Target, Pawn InstigatedBy, Vector HitLocation, Vector Momentum, string DamageType)
+protected function DoDamage(int Damage, Pawn Target, Pawn InstigatedBy, Vector HitLocation, Vector Momentum, string DamageType)
 {
     local class<DamageType> DamTypeClass;
 
@@ -60,10 +61,7 @@ protected function DoDamage(
 
         case AvailableDamageTypes[1]:
             DamTypeClass = class'KFMod.DamTypeFrag';
-            InstigatedBy.Spawn(
-                class<Actor>(DynamicLoadObject("KFMod.KFNadeLExplosion", class'Class')),,,
-                Target.Location + 72 * Vector(InstigatedBy.Rotation) + vect(0, 0, 1) * 15
-            );
+            InstigatedBy.Spawn(class<Actor>(DynamicLoadObject("KFMod.KFNadeLExplosion", class'Class')),,, Target.Location + 72 * Vector(InstigatedBy.Rotation) + vect(0, 0, 1) * 15);
             break;
     
         case AvailableDamageTypes[2]: 
@@ -118,21 +116,39 @@ protected function string InvalidArgsMessage(N7_CommandExecutionState ExecState)
     return "You must provide valid DamageType and Damage value between "$MinLimit$" and "$MaxLimit;
 }
 
+protected function ExtendedHelp(PlayerController PC)
+{
+    local int i;
+    HelpSectionSeparator(PC, "Available Damage Types");
+
+    for (i = 0; i < AvailableDamageTypes.Length; i++)
+    {
+        SendMessage(PC, AvailableDamageTypes[i]);
+    }
+}
+
 defaultproperties
 {
-    Aliases(0)="HITZ"
-    AvailableDamageTypes(0)="hit"
-    AvailableDamageTypes(1)="frag"
-    AvailableDamageTypes(2)="fire"
-    MinLimit=0
-    MaxLimit=100000
-    DefaultDamage=10000
-    MinArgsNum=0
     MaxArgsNum=2
     ArgTypes(0)="word"
     ArgTypes(1)="number"
+
+    MaxRange=10000
+    MaxLimit=100000
+    DefaultDamage=10000
+
+    AvailableDamageTypes(0)="hit"
+    AvailableDamageTypes(1)="frag"
+    AvailableDamageTypes(2)="fire"
+
+    Aliases(0)="HITZ"
+    Description="Damage ZED being looked at"
     Signature="<? string DamageType, ? int Damage>"
-    Description="Damage Zed being looked at. Available Damage types: hit, frag, fire"
-    bOnlyAliveSender=True
+
     bNotifySenderOnSuccess=False
+
+    bOnlyAliveSender=True
+    bDisableAdminPrivilegedAccess=True
+
+    bAdminOnly=True
 }

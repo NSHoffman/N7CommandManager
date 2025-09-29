@@ -1,8 +1,7 @@
 class N7_FlyCommand extends N7_MovementModeCommand;
 
 /** @Override */
-protected function DoActionForSingleTarget
-    (N7_CommandExecutionState ExecState, PlayerController PC)
+protected function DoActionForSingleTarget(N7_CommandExecutionState ExecState, PlayerController PC)
 {
     PC.Pawn.bAmbientCreature = False;
     PC.Pawn.UnderWaterTime = PC.Pawn.default.UnderWaterTime;
@@ -15,6 +14,7 @@ protected function DoActionForSingleTarget
 protected function string GetTargetSuccessMessage(N7_CommandExecutionState ExecState)
 {
     local string TargetName;
+
     TargetName = LoadTarget(ExecState);
 
     if (TargetName ~= "all")
@@ -29,6 +29,7 @@ protected function string GetTargetSuccessMessage(N7_CommandExecutionState ExecS
 protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecState)
 {
     local string TargetName;
+
     TargetName = LoadTarget(ExecState);
 
     if (TargetName ~= "all")
@@ -42,5 +43,5 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
 defaultproperties
 {
     Aliases(0)="FLY"
-    Description="Enable Flying mode"
+    Description="Enable flying mode"
 }

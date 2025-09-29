@@ -1,8 +1,7 @@
 class N7_ResetStatsCommand extends N7_UnaryTargetCommand;
 
 /** @Override */
-protected function DoActionForSingleTarget
-    (N7_CommandExecutionState ExecState, PlayerController PC)
+protected function DoActionForSingleTarget(N7_CommandExecutionState ExecState, PlayerController PC)
 {
     local KFPlayerReplicationInfo KFPRI;
     KFPRI = KFPlayerReplicationInfo(PC.PlayerReplicationInfo);
@@ -11,6 +10,12 @@ protected function DoActionForSingleTarget
     KFPRI.Kills = 0;
     KFPRI.KillAssists = 0;
     KFPRI.Score = KFGT.MinRespawnCash;
+}
+
+/** @Override */
+protected function bool CheckIfNonAdminExecutionAllowed(N7_CommandExecutionState ExecState)
+{
+	return ExecState.GetArgC() == 0 || ExecState.GetArg(ECmdArgs.ARG_TARGETNAME) == ExecState.GetSender().PlayerReplicationInfo.PlayerName;
 }
 
 /** @Override */
@@ -23,6 +28,7 @@ protected function string GetTargetSuccessMessage(N7_CommandExecutionState ExecS
 protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecState)
 {
     local string TargetName;
+
     TargetName = LoadTarget(ExecState);
 
     if (TargetName ~= "all")
@@ -39,4 +45,6 @@ defaultproperties
     Aliases(1)="RESETSTATS"
     Aliases(2)="RESETSCORE"
     Description="Reset Kills/Deaths/Assists/Score"
+
+    Signature="<adminonly ? (string TargetName | 'all')>"
 }

@@ -1,47 +1,101 @@
 class N7_GiveWeaponCommand extends N7_BinaryTargetCommand;
 
-var protected const Array<string> AvailableWeaponClasses;
+var protected config const Array<string> AvailableWeaponClasses;
 var protected class<Weapon> WeaponClass;
 
+var protected config const int MaxWeightLimit;
+
 /** @Override */
-protected function DoActionForSingleTarget
-    (N7_CommandExecutionState ExecState, PlayerController PC)
+protected function DoActionForSingleTarget(N7_CommandExecutionState ExecState, PlayerController PC)
 {
-    local Weapon NewWeapon;
-    NewWeapon = PC.Pawn.Spawn(WeaponClass);
+    local KFWeapon NewWeapon;
+    local int i;
+    local class<Weapon> WClass;
+    local KFHumanPawn KFP;
 
-    if (NewWeapon != None)
+    KFP = KFHumanPawn(PC.Pawn);
+
+    if (WeaponClass == None)
     {
-        NewWeapon.GiveTo(PC.Pawn);
-    }
+        for (i = 0; i < AvailableWeaponClasses.Length; i++)
+        {
+            if (KFP.CurrentWeight > MaxWeightLimit)
+            {
+                return;
+            }
 
-    ExecState.SaveString(WeaponClass.default.ItemName);
+            WClass = class<Weapon>(DynamicLoadObject(AvailableWeaponClasses[i], class'Class'));
+            
+            if (WClass == None || KFP.FindInventoryType(WClass) != None)
+            {
+                continue;
+            }
+
+            NewWeapon = KFWeapon(KFP.Spawn(WClass));
+
+            if (NewWeapon != None)
+            {
+                NewWeapon.GiveTo(KFP);
+            }
+        }
+    }
+    else
+    {
+        NewWeapon = KFWeapon(KFP.Spawn(WeaponClass));
+
+        if (NewWeapon != None)
+        {
+            NewWeapon.GiveTo(KFP);
+        }
+    }
 }
 
-/** @Override */
 protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 {
     local string WeaponName;
     local int i;
+    local float NearestWeaponMatchRatio, CurrentMatchRatio;
+    local string NearestWeaponClassName;
 
     WeaponName = ExecState.GetArg(ECmdArgs.ARG_VALUE);
 
+    if (WeaponName ~= "all")
+    {
+        WeaponClass = None;
+        return True;
+    }
+
     for (i = 0; i < AvailableWeaponClasses.Length; i++)
     {
-        if (IsStringPartOf(WeaponName, AvailableWeaponClasses[i]))
+        CurrentMatchRatio = GetStringMatchRatio(WeaponName, AvailableWeaponClasses[i]);
+
+        if (CurrentMatchRatio > NearestWeaponMatchRatio)
         {
-            WeaponClass = class<Weapon>(DynamicLoadObject(AvailableWeaponClasses[i], class'Class'));
-            return WeaponClass != None;
+            NearestWeaponMatchRatio = CurrentMatchRatio;
+            NearestWeaponClassName = AvailableWeaponClasses[i];
         }
+    }
+
+    if (NearestWeaponClassName != "")
+    {
+        WeaponClass = class<Weapon>(DynamicLoadObject(NearestWeaponClassName, class'Class'));
+        return WeaponClass != None;
     }
 
     return False;
 }
 
 /** @Override */
-protected function bool CheckTargetCustom(
-    N7_CommandExecutionState ExecState, PlayerController Target)
+protected function bool CheckTargetCustom(N7_CommandExecutionState ExecState, PlayerController Target)
 {
+    if (WeaponClass == None)
+    {
+        if (KFHumanPawn(Target.Pawn).CurrentWeight > MaxWeightLimit)
+        {
+            return False;
+        }
+    }
+
     return Target.Pawn.FindInventoryType(WeaponClass) == None;
 }
 
@@ -61,48 +115,70 @@ protected function string InvalidArgsMessage(N7_CommandExecutionState ExecState)
 protected function string InvalidTargetMessage(N7_CommandExecutionState ExecState)
 {
     local string TargetName;
+
     TargetName = ColorizeTarget(LoadTarget(ExecState));
 
-    return "Player "$TargetName$" not found or specified weapon is already owned";
+    if (WeaponClass == None)
+    {
+        return "Player "$TargetName$" not found or already fully equipped";
+    }
+
+    return "Player "$TargetName$" not found or already has the specified weapon";
 }
 
 /** @Override */
 protected function string GetTargetSuccessMessage(N7_CommandExecutionState ExecState)
 {
-    local string TargetName, WeaponName;
+    local string TargetName, WeaponStatus;
 
     TargetName = LoadTarget(ExecState);
-    WeaponName = ColorizeEntity(ExecState.LoadString());
 
-    if (TargetName ~= "all")
+    if (WeaponClass == None)
     {
-        return "All players have been given "$WeaponName;
+        WeaponStatus = "fully equipped";
+    }
+    else
+    {
+        WeaponStatus = "given "$ColorizeEntity(WeaponClass.Default.ItemName);
     }
 
-    return "You have been given "$WeaponName;
+    if (TargetName == "all")
+    {
+        return "All players have been "$WeaponStatus;
+    }
+
+    return "You have been "$WeaponStatus;
 }
 
 /** @Override */
 protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecState)
 {
-    local string TargetName, WeaponName;
+    local string TargetName, WeaponStatus;
 
     TargetName = LoadTarget(ExecState);
-    WeaponName = ColorizeEntity(ExecState.LoadString());
 
-    if (TargetName ~= "all")
+    if (WeaponClass == None)
     {
-        return "All players have been given "$WeaponName;
+        WeaponStatus = "fully equipped";
+    }
+    else
+    {
+        WeaponStatus = "given "$ColorizeEntity(WeaponClass.Default.ItemName);
     }
 
-    return ColorizeTarget(TargetName)$" has been given "$WeaponName;
+    if (TargetName == "all")
+    {
+        return "All players have been "$WeaponStatus;
+    }
+
+    return ColorizeTarget(TargetName)$" has been "$WeaponStatus;
 }
 
 /** @Override */
 protected function ExtendedHelp(PlayerController PC)
 {
     local int i;
-    HelpSectionSeparator(PC, "Available Weapon Classes");
+    HelpSectionSeparator(PC, "Available Weapons");
 
     for (i = 0; i < AvailableWeaponClasses.Length; i++)
     {
@@ -118,16 +194,10 @@ protected function Cleanup()
 
 defaultproperties
 {
-    bAdminOnly=True
-    Aliases(0)="GW"
-    Aliases(1)="WEAPON"
-    Aliases(2)="GIVEWEAPON"
     MinArgsNum=1
-    Signature="<string WeaponClass, ? (string TargetName | 'all')>"
     ArgTypes(0)="any"
-    Description="Give Weapon"
-    bOnlyAliveTargets=True
-    bNotifyGlobalOnSuccess=True
+
+    MaxWeightLimit=100
 
     AvailableWeaponClasses(0)="KFMod.AA12AutoShotgun"
     AvailableWeaponClasses(1)="KFMod.AK47AssaultRifle"
@@ -206,4 +276,17 @@ defaultproperties
     AvailableWeaponClasses(74)="KFMod.Winchester"
     AvailableWeaponClasses(75)="KFMod.ZEDGun"
     AvailableWeaponClasses(76)="KFMod.ZEDMKIIWeapon"
+    AvailableWeaponClasses(77)="KFMod.Shotgun"
+
+    Aliases(0)="GW"
+    Aliases(1)="WEAPON"
+    Aliases(2)="GIVEWEAPON"
+    Description="Give weapon to the player"
+    Signature="<string Weapon, ? (string TargetName | 'all')>"
+
+    bNotifyGlobalOnSuccess=True
+    
+    bOnlyAliveTargets=True
+
+    bAdminOnly=True
 }

@@ -27,9 +27,7 @@ protected function DoAction(N7_CommandExecutionState ExecState)
 }
 
 /** @Override */
-protected function bool ShouldBeTarget(
-    N7_CommandExecutionState ExecState, 
-    PlayerController PC)
+protected function bool ShouldBeTarget(N7_CommandExecutionState ExecState, PlayerController PC)
 {
     return True;
 }
@@ -39,16 +37,14 @@ protected function bool ShouldBeTarget(
  *  (Used in ::CheckTargets)
  ****************************/
 
-protected function bool VerifyTargetBySender(
-    N7_CommandExecutionState ExecState, out string TargetName)
+protected function bool VerifyTargetBySender(N7_CommandExecutionState ExecState, out string TargetName)
 {
     TargetName = ExecState.GetSender().PlayerReplicationInfo.PlayerName;
     
     return ValidateTarget(ExecState, ExecState.GetSender());
 }
 
-protected function bool VerifyTargetByName(
-    N7_CommandExecutionState ExecState, out string TargetName)
+protected function bool VerifyTargetByName(N7_CommandExecutionState ExecState, out string TargetName)
 {
     local PlayerController Target;
 
@@ -76,24 +72,18 @@ protected function bool VerifyTargetByName(
  *  (Used in ::ShouldBeTarget)
  ****************************/
 
-protected function bool AcceptTargetBySender(
-    N7_CommandExecutionState ExecState,
-    PlayerController Target,
-    optional string TargetName)
+protected function bool AcceptTargetBySender(N7_CommandExecutionState ExecState, PlayerController Target)
 {
     return Target == ExecState.GetSender() && ValidateTarget(ExecState, Target);
 }
 
-protected function bool AcceptTargetByName(
-    N7_CommandExecutionState ExecState,
-    PlayerController Target,
-    string TargetName)
+protected function bool AcceptTargetByName(N7_CommandExecutionState ExecState, PlayerController Target, string TargetName)
 {
     if (bAllowTargetAll && TargetName ~= "all" && ValidateTarget(ExecState, Target))
     {
         return True;
     }
-    else if (ValidateTarget(ExecState, Target) && IsStringPartOf(TargetName, Target.PlayerReplicationInfo.PlayerName))
+    else if (ValidateTarget(ExecState, Target) && TargetName ~= Target.PlayerReplicationInfo.PlayerName)
     {
         if (bOnlyFirstTargetMatch)
         {
@@ -110,8 +100,7 @@ protected function bool AcceptTargetByName(
  *  TARGET VALIDATION
  ****************************/
 
-protected final function bool ValidateTarget(
-    N7_CommandExecutionState ExecState, PlayerController Target)
+protected final function bool ValidateTarget(N7_CommandExecutionState ExecState, PlayerController Target)
 {
     return CheckTargetReplicationInfo(ExecState, Target)
         && CheckTargetSelf(ExecState, Target)
@@ -121,44 +110,32 @@ protected final function bool ValidateTarget(
         && CheckTargetCustom(ExecState, Target);
 }
 
-protected final function bool CheckTargetReplicationInfo(
-    N7_CommandExecutionState ExecState, PlayerController Target)
+protected final function bool CheckTargetReplicationInfo(N7_CommandExecutionState ExecState, PlayerController Target)
 {
     return Target.PlayerReplicationInfo != None && !IsWebAdmin(Target);
 }
 
-protected final function bool CheckTargetSelf(
-    N7_CommandExecutionState ExecState, PlayerController Target)
+protected final function bool CheckTargetSelf(N7_CommandExecutionState ExecState, PlayerController Target)
 {
     return Target != ExecState.GetSender() || bAllowTargetSelf;
 }
 
-protected final function bool CheckTargetAdmin(
-    N7_CommandExecutionState ExecState, PlayerController Target)
+protected final function bool CheckTargetAdmin(N7_CommandExecutionState ExecState, PlayerController Target)
 {
-    return bOnlyNonAdminTargets && !IsAdmin(Target)
-        || bOnlyAdminTargets && IsAdmin(Target)
-        || !bOnlyAdminTargets && !bOnlyNonAdminTargets;
+    return bOnlyNonAdminTargets && !IsAdmin(Target) || bOnlyAdminTargets && IsAdmin(Target) || !bOnlyAdminTargets && !bOnlyNonAdminTargets;
 }
 
-protected final function bool CheckTargetSpectator(
-    N7_CommandExecutionState ExecState, PlayerController Target)
+protected final function bool CheckTargetSpectator(N7_CommandExecutionState ExecState, PlayerController Target)
 {
-    return bOnlyPlayerTargets && !IsSpectator(Target)
-        || bOnlySpectatorTargets && IsSpectator(Target)
-        || !bOnlyPlayerTargets && !bOnlySpectatorTargets;
+    return bOnlyPlayerTargets && !IsSpectator(Target) || bOnlySpectatorTargets && IsSpectator(Target) || !bOnlyPlayerTargets && !bOnlySpectatorTargets;
 }
 
-protected final function bool CheckTargetHealth(
-    N7_CommandExecutionState ExecState, PlayerController Target)
+protected final function bool CheckTargetHealth(N7_CommandExecutionState ExecState, PlayerController Target)
 {
-    return bOnlyAliveTargets && IsAlive(Target)
-        || bOnlyDeadTargets && !IsAlive(Target)
-        || !bOnlyAliveTargets && !bOnlyDeadTargets;
+    return bOnlyAliveTargets && IsAlive(Target) || bOnlyDeadTargets && !IsAlive(Target) || !bOnlyAliveTargets && !bOnlyDeadTargets;
 }
 
-protected function bool CheckTargetCustom(
-    N7_CommandExecutionState ExecState, PlayerController Target)
+protected function bool CheckTargetCustom(N7_CommandExecutionState ExecState, PlayerController Target)
 {
     return True;
 }
@@ -167,8 +144,7 @@ protected function bool CheckTargetCustom(
  *  TARGET UTILS
  ****************************/
 
-protected function SaveTarget(
-    N7_CommandExecutionState ExecState, string TargetName)
+protected function SaveTarget(N7_CommandExecutionState ExecState, string TargetName)
 {
     if (bOnlyFirstTargetMatch)
     {
@@ -176,8 +152,7 @@ protected function SaveTarget(
     }
 }
 
-protected function SaveSecondaryTarget(
-    N7_CommandExecutionState ExecState, string TargetName)
+protected function SaveSecondaryTarget(N7_CommandExecutionState ExecState, string TargetName)
 {
     ExecState.SaveSecondaryTarget(TargetName);
 }
@@ -195,30 +170,39 @@ protected function string LoadSecondaryTarget(N7_CommandExecutionState ExecState
 protected function PlayerController FindTarget(string TargetName)
 {
     local Controller C;
+    local PlayerController NearestTargetPC;
+    local float CurrentMatchRatio, NearestTargetMatchRatio;
 
     for (C = Level.ControllerList; C != None; C = C.NextController)
     {
-        if (IsPlayer(C) && IsStringPartOf(TargetName, C.PlayerReplicationInfo.PlayerName))
+        if (IsPlayer(C))
         {
-            return PlayerController(C);   
+            CurrentMatchRatio = GetStringMatchRatio(TargetName, C.PlayerReplicationInfo.PlayerName);
+    
+            if (CurrentMatchRatio > NearestTargetMatchRatio)
+            {
+                NearestTargetMatchRatio = CurrentMatchRatio;
+                NearestTargetPC = PlayerController(C);
+            }
         }
     }
 
-    return None;
+    return NearestTargetPC;
 }
 
 defaultproperties
 {
+    bNotifySenderOnSuccess=False
+    bNotifyTargetsOnSuccess=True
+
     bUseTargets=True
     bAllowTargetAll=True
     bAllowTargetSelf=True
+    bOnlyFirstTargetMatch=True
     bOnlyAliveTargets=False
     bOnlyDeadTargets=False
     bOnlyPlayerTargets=True
     bOnlySpectatorTargets=False
     bOnlyAdminTargets=False
     bOnlyNonAdminTargets=False
-    bOnlyFirstTargetMatch=True
-    bNotifySenderOnSuccess=False
-    bNotifyTargetsOnSuccess=True
 }

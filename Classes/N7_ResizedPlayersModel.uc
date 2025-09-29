@@ -1,8 +1,8 @@
 class N7_ResizedPlayersModel extends Core.Object within N7_CommandManager;
 
-struct ResizedPlayer
+struct ResizedPlayer 
 {
-    var PlayerController PC;
+    var string Hash;
     var float ResizeMultiplier;
 };
 
@@ -15,51 +15,69 @@ public final function Array<ResizedPlayer> GetResizedPlayers()
 
 public final function RefreshResizedPlayers()
 {
+    local Controller C;
+    local PlayerController PC;
     local int i;
 
+    i = 0;
     while (i < ResizedPlayers.Length)
     {
-        if (ResizedPlayers[i].PC == None || 
-            ResizedPlayers[i].PC.Pawn == None || 
-            ResizedPlayers[i].PC.Pawn.Health <= 0 || 
-            ResizedPlayers[i].ResizeMultiplier == 1.0)
+        PC = None;
+
+        for (C = Level.ControllerList; C != None; C = C.NextController)
+        {
+            if (PlayerController(C) != None && PlayerController(C).GetPlayerIDHash() == ResizedPlayers[i].Hash)
+            {
+                PC = PlayerController(C);
+                break;
+            }
+        }
+
+        if (PC == None || PC.Pawn == None || PC.Pawn.Health <= 0 || ResizedPlayers[i].ResizeMultiplier == 1.0)
         {
             ResizedPlayers.Remove(i, 1);
-            break;
+            continue;
         }
+
         i++;
     }
 }
 
 public final function AddResizedPlayer(PlayerController PC, float ResizeMultiplier)
 {
+    local ResizedPlayer RP;
     local ResizedPlayer NewPlayer;
     local int i;
 
-    NewPlayer.PC = PC;
-    NewPlayer.ResizeMultiplier = ResizeMultiplier;
+    RP = FindResizedPlayer(PC);
 
-    for (i = 0; i < ResizedPlayers.Length; i++)
+    if (RP.Hash == "")
     {
-        if (ResizedPlayers[i].PC == PC)
+        NewPlayer.Hash = PC.GetPlayerIDHash();
+        NewPlayer.ResizeMultiplier = ResizeMultiplier;
+
+        ResizedPlayers[ResizedPlayers.Length] = NewPlayer;
+    } 
+    else 
+    {
+        for (i = 0; i < ResizedPlayers.Length; i++)
         {
-            ResizedPlayers[i].ResizeMultiplier = ResizeMultiplier;
-            return;
+            if (ResizedPlayers[i].Hash == PC.GetPlayerIDHash())
+            {
+                ResizedPlayers[i].ResizeMultiplier = ResizeMultiplier;
+                return;
+            }
         }
     }
-
-    ResizedPlayers[ResizedPlayers.Length] = NewPlayer;
 }
 
 public final function RemoveResizedPlayer(PlayerController PC)
 {
-    local PlayerController CurrentPC;
     local int i;
 
     for (i = 0; i < ResizedPlayers.Length; i++)
     {
-        CurrentPC = ResizedPlayers[i].PC;
-        if (CurrentPC == PC)
+        if (ResizedPlayers[i].Hash == PC.GetPlayerIDHash())
         {
             ResizedPlayers.Remove(i, 1);
             return;
@@ -67,5 +85,26 @@ public final function RemoveResizedPlayer(PlayerController PC)
     }
 }
 
+public final function ResizedPlayer FindResizedPlayer(PlayerController PC)
+{
+    local int i;
+    local ResizedPlayer Result;
+
+    for (i = 0; i < ResizedPlayers.Length; i++)
+    {
+        if (ResizedPlayers[i].Hash == PC.GetPlayerIDHash())
+        {
+            return ResizedPlayers[i];
+        }
+    }
+
+    Result.Hash = "";
+    Result.ResizeMultiplier = 1.0;
+
+    return Result;
+}
+
+
 defaultproperties
-{}
+{
+}

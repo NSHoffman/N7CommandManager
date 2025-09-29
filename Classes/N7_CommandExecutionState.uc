@@ -104,8 +104,7 @@ public final function bool ShouldStopTargetSearch()
  *  STATE INITIALIZATION
  ****************************/
 
-public final function Initialize(
-    PlayerController InitSender, Array<string> InitArgs, int MaxArgsNum)
+public final function Initialize(PlayerController InitSender, Array<string> InitArgs, int MaxArgsNum)
 {
     local int i;
 
@@ -435,4 +434,5 @@ protected final function string EnsureUpperCase(string Value, bool bAllCaps)
 }
 
 defaultproperties
-{}
+{
+}

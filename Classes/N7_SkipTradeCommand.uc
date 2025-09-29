@@ -7,15 +7,14 @@ protected function DoAction(N7_CommandExecutionState ExecState)
 
     KFGRI = KFGameReplicationInfo(KFGT.GameReplicationInfo);
     KFGRI.WaveNumber = KFGT.WaveNum;
+    KFGameReplicationInfo(Level.Game.GameReplicationInfo).MaxMonstersOn = False;
     KFGT.WaveCountDown = 1;
 }
 
 /** @Override */
 protected function bool CheckGameState(N7_CommandExecutionState ExecState)
 {
-    return KFGT.IsInState('MatchInProgress') 
-        && (KFGT.bTradingDoorsOpen || KFGT.WaveNum == 0)
-        && KFGT.WaveCountDown > 5;
+    return KFGT.IsInState('MatchInProgress') && (KFGT.bTradingDoorsOpen || KFGT.WaveNum == 0) && KFGT.WaveCountDown > 1;
 }
 
 /** @Override */
@@ -32,9 +31,10 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
 
 defaultproperties
 {
-    Aliases(0)="SKIP"
     MinArgsNum=0
     MaxArgsNum=0
-    Signature="<>"
+
+    Aliases(0)="SKIP"
     Description="Skip trader time"
+    Signature="<>"
 }

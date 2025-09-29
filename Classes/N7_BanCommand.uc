@@ -7,8 +7,7 @@ enum ECmdArgs_X
 };
 
 /** @Override */
-protected function DoActionForSingleTarget
-    (N7_CommandExecutionState ExecState, PlayerController PC)
+protected function DoActionForSingleTarget(N7_CommandExecutionState ExecState, PlayerController PC)
 {
     local string IP;
     local bool bPermanentBan;
@@ -57,8 +56,7 @@ protected function DoActionForSingleTarget
 }
 
 /** @Override */
-protected function bool CheckTargetCustom(
-    N7_CommandExecutionState ExecState, PlayerController Target)
+protected function bool CheckTargetCustom(N7_CommandExecutionState ExecState, PlayerController Target)
 {
     return NetConnection(Target.Player) != None && KFGT.AccessControl.CheckIPPolicy(Target.GetPlayerNetworkAddress()) == 0;
 }
@@ -82,16 +80,19 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
 
 defaultproperties
 {
-    bAdminOnly=True
-    ArgTypes(1)="switch"
-    Aliases(0)="BAN"
     MinArgsNum=1
     MaxArgsNum=2
+    ArgTypes(1)="switch"
+
+    Aliases(0)="BAN"
     Description="Ban player for the time of current session or permanently"
     Signature="<string TargetName, ? (0 | 1 | ON | OFF) IsPermanent>"
+
+    bNotifyTargetsOnSuccess=False
+    bNotifyGlobalOnSuccess=True
+
     bAllowTargetAll=False
     bOnlyPlayerTargets=False
     bOnlyNonAdminTargets=True
-    bNotifyTargetsOnSuccess=False
-    bNotifyGlobalOnSuccess=True
+    bAdminOnly=True
 }

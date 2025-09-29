@@ -1,8 +1,7 @@
 class N7_ForceSpectatorCommand extends N7_UnaryTargetCommand;
 
 /** @Override */
-protected function DoActionForSingleTarget
-    (N7_CommandExecutionState ExecState, PlayerController PC)
+protected function DoActionForSingleTarget(N7_CommandExecutionState ExecState, PlayerController PC)
 {
     PC.PlayerReplicationInfo.bOnlySpectator = True;
     KFGT.NumSpectators++;
@@ -28,13 +27,9 @@ protected function DoActionForSingleTarget
 }
 
 /** @Override */
-protected function bool CheckTargetCustom(
-    N7_CommandExecutionState ExecState, PlayerController PC)
+protected function bool CheckTargetCustom(N7_CommandExecutionState ExecState, PlayerController PC)
 {
-    return PC.PlayerReplicationInfo != None
-        && KFGT.NumSpectators < KFGT.MaxSpectators 
-        && !PC.IsInState('GameEnded') 
-        && !PC.IsInState('RoundEnded');
+    return PC.PlayerReplicationInfo != None && KFGT.NumSpectators < KFGT.MaxSpectators && !PC.IsInState('GameEnded') && !PC.IsInState('RoundEnded');
 }
 
 /** @Override */
@@ -56,6 +51,7 @@ protected function string GetTargetSuccessMessage(N7_CommandExecutionState ExecS
 protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecState)
 {
     local string TargetName;
+
     TargetName = ColorizeTarget(LoadTarget(ExecState));
 
     return TargetName$" has been forced to become a spectator";
@@ -63,12 +59,15 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
 
 defaultproperties
 {
-    bAdminOnly=True
     Aliases(0)="FSPEC"
     Aliases(1)="FORCESPEC"
     Description="Force player to become a spectator"
     Signature="<? string TargetName>"
+
+    bNotifyGlobalOnSuccess=True
+
     bAllowTargetAll=False
     bOnlyNonAdminTargets=True
-    bNotifyGlobalOnSuccess=True
+
+    bAdminOnly=True
 }

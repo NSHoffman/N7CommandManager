@@ -14,8 +14,7 @@ var protected config const int DefaultDamage;
 var protected const Array<string> AvailableDamageTypes;
 
 /** @Override */
-protected function DoActionForSingleTarget
-    (N7_CommandExecutionState ExecState, PlayerController PC)
+protected function DoActionForSingleTarget(N7_CommandExecutionState ExecState, PlayerController PC)
 {
     local int PlayerDamage;
     local string PlayerDamageType;
@@ -24,20 +23,27 @@ protected function DoActionForSingleTarget
     InstigatedBy = ExecState.GetSender().Instigator;
 
     if (ExecState.GetArgC() > 1)
+    {
         PlayerDamageType = Locs(ExecState.GetArg(ECmdArgs_X.ARG_DAMAGETYPE));
+    }
     else
+    {
         PlayerDamageType = AvailableDamageTypes[0];
+    }
 
     if (ExecState.GetArgC() > 2) 
+    {
         PlayerDamage = int(ExecState.GetArg(ECmdArgs_X.ARG_DAMAGE));
+    }
     else
+    {
         PlayerDamage = DefaultDamage;
+    }
 
     DoDamage(PlayerDamage, PC.Pawn, InstigatedBy, vect(0, 0, 0), vect(0, 0, 0), PlayerDamageType);
 }
 
-protected function DoDamage(
-    int Damage, Pawn Target, Pawn InstigatedBy, Vector HitLocation, Vector Momentum, string DamageType)
+protected function DoDamage(int Damage, Pawn Target, Pawn InstigatedBy, Vector HitLocation, Vector Momentum, string DamageType)
 {
     local class<DamageType> DamTypeClass;
 
@@ -49,10 +55,7 @@ protected function DoDamage(
 
         case AvailableDamageTypes[1]:
             DamTypeClass = class'KFMod.DamTypeFrag';
-            InstigatedBy.Spawn(
-                class<Actor>(DynamicLoadObject("KFMod.KFNadeLExplosion", class'Class')),,,
-                Target.Location + 72 * Vector(InstigatedBy.Rotation) + vect(0, 0, 1) * 15
-            );
+            InstigatedBy.Spawn(class<Actor>(DynamicLoadObject("KFMod.KFNadeLExplosion", class'Class')),,, Target.Location + 72 * Vector(InstigatedBy.Rotation) + vect(0, 0, 1) * 15);
             break;
     
         case AvailableDamageTypes[2]: 
@@ -128,6 +131,7 @@ protected function string GetTargetSuccessMessage(N7_CommandExecutionState ExecS
 protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecState)
 {
     local string TargetName;
+
     TargetName = LoadTarget(ExecState);
 
     if (TargetName ~= "all")
@@ -138,24 +142,38 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
     return ColorizeTarget(TargetName)$" has been hit by "$ColorizeSender(ExecState);
 }
 
+protected function ExtendedHelp(PlayerController PC)
+{
+    local int i;
+    HelpSectionSeparator(PC, "Available Damage Types");
+
+    for (i = 0; i < AvailableDamageTypes.Length; i++)
+    {
+        SendMessage(PC, AvailableDamageTypes[i]);
+    }
+}
+
 defaultproperties
 {
-    bAdminOnly=True
-    Aliases(0)="HITP"
-    ArgTypes(0)="any"
+    MaxArgsNum=3
     ArgTypes(1)="word"
-    MinLimit=0
+    ArgTypes(2)="number"
+
     MaxLimit=10000
     DefaultDamage=10
+
     AvailableDamageTypes(0)="hit"
     AvailableDamageTypes(1)="frag"
     AvailableDamageTypes(2)="fire"
     AvailableDamageTypes(3)="vomit"
-    MinArgsNum=0
-    MaxArgsNum=3
-    ArgTypes(2)="number"
+
+    Aliases(0)="HITP"
+    Description="Damage player"
     Signature="<? string TargetName, ? string DamageType, ? int Damage>"
-    Description="Damage Player. Available Damage types: hit, frag, fire, vomit"
-    bOnlyAliveTargets=True
+
     bNotifyGlobalOnSuccess=True
+
+    bOnlyAliveTargets=True
+
+    bAdminOnly=True
 }

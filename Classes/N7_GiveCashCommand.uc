@@ -4,8 +4,7 @@ var protected const int MinLimit;
 var protected config const int MaxLimit;
 
 /** @Override */
-protected function DoActionForSingleTarget
-    (N7_CommandExecutionState ExecState, PlayerController PC)
+protected function DoActionForSingleTarget(N7_CommandExecutionState ExecState, PlayerController PC)
 {
     local int CashAmount;
     CashAmount = int(ExecState.GetArg(ECmdArgs.ARG_VALUE));
@@ -18,6 +17,7 @@ protected function DoActionForSingleTarget
     {
         CashAmount = MinLimit;
     }
+
     PC.PlayerReplicationInfo.Score += CashAmount;
     ExecState.SaveNumber(CashAmount);
 }
@@ -56,15 +56,19 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
 
 defaultproperties
 {
-    bAdminOnly=True
+    MinArgsNum=1
+
+    MinLimit=1
+    MaxLimit=50000
+
     Aliases(0)="GC"
     Aliases(1)="GD"
     Aliases(2)="CASH"
     Aliases(3)="DOSH"
-    MinArgsNum=1
-    MinLimit=1
-    MaxLimit=50000
+    Description="Give money to the player"
     Signature="<int Amount, ? (string TargetName | 'all')>"
-    Description="Give Money"
+
     bNotifyGlobalOnSuccess=True
+
+    bAdminOnly=True
 }

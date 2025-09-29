@@ -45,7 +45,16 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 /** @Override */
 protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecState)
 {
-    return "Spawn Rate set to "$ColorizeValue(KFGT.KFLRules.WaveSpawnPeriod)$" by "$ColorizeSender(ExecState);
+	local float NewSpawnRate;
+
+	NewSpawnRate = KFGT.KFLRules.WaveSpawnPeriod;
+
+	if (ExecState.GetArgC() == 0)
+	{
+		return "Spawn Rate has been reset by "$ColorizeSender(ExecState);
+	}
+
+	return "Spawn Rate set to "$ColorizeValue(NewSpawnRate)$" by "$ColorizeSender(ExecState);
 }
 
 /** @Override */
@@ -56,13 +65,13 @@ protected function string InvalidArgsMessage(N7_CommandExecutionState ExecState)
 
 defaultproperties
 {
-    Aliases(0)="SR"
-    Aliases(1)="SETSR"
-    MinLimit=0.0
-    MaxLimit=10.0
-    MinArgsNum=0
     MaxArgsNum=1
     ArgTypes(0)="number"
-    Signature="<? int | float SpawnRate>"
+
+    MaxLimit=10.0
+
+    Aliases(0)="SR"
+    Aliases(1)="SETSR"
     Description="Set interval between ZED squads spawn"
+    Signature="<? float SpawnRate>"
 }

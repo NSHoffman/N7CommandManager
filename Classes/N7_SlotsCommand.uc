@@ -56,13 +56,14 @@ protected function string InvalidArgsMessage(N7_CommandExecutionState ExecState)
 
 defaultproperties
 {
-    Aliases(0)="SLOT"
-    Aliases(1)="SLOTS"
-    MinLimit=1
-    MaxLimit=10
-    MinArgsNum=0
     MaxArgsNum=1
     ArgTypes(0)="number"
-    Signature="<? int NewSlots>"
+
+    MinLimit=1
+    MaxLimit=10
+
+    Aliases(0)="SLOT"
+    Aliases(1)="SLOTS"
     Description="Set maximum number of players"
+    Signature="<? int Slots>"
 }
