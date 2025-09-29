@@ -44,7 +44,7 @@ defaultproperties
     Aliases(0)="RS"
     Aliases(1)="RESETSTATS"
     Aliases(2)="RESETSCORE"
-    Description="Reset Kills/Deaths/Assists/Score"
+    Description="Reset Kills/Deaths/Assists/Score. Admin access allows for clearing other players score"
 
     Signature="<adminonly ? (string TargetName | 'all')>"
 }
