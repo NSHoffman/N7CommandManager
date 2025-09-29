@@ -22,13 +22,13 @@
   
 - Removed minimum limit when setting trade time via TradeTime command.
 
-- Fixed search by name algorithm.
+- Fixed/improved name matching algorithm when searching for players and other entities by name.
 - Fixed ammo restoration to properly account for active perks.
 - Fixed possible crashes caused by the RestoreAttributes command.
 - Fixed auto attribute restoration not triggering for new players.
 - Fixed incorrect player count calculation when setting fake players.
 - Fixed incorrect zeds health calculation when resetting hp config to default.
-- Fixed issues with access denial in commands supporting additional admin-only features for players with temporary admin status.
+- Fixed issues with access denial when players with temporary admin status use commands supporting additional admin-only features.
 - Fixed cases when non-admin players could target someone other than themselves with regular commands.
 
-- Modified the order of commands to improve grouping and readability when listing all the commands.
+- Rearranged the list of commands to improve grouping and readability.
