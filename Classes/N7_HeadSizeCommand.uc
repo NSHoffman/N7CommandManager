@@ -1,8 +1,7 @@
 class N7_HeadSizeCommand extends N7_SizeCommand;
 
 /** @Override */
-protected function DoActionForSingleTarget
-    (N7_CommandExecutionState ExecState, PlayerController PC)
+protected function DoActionForSingleTarget(N7_CommandExecutionState ExecState, PlayerController PC)
 {
     PC.Pawn.HeadScale = ExecState.LoadNumberF();
 }
@@ -45,9 +44,10 @@ protected function string GetSenderSuccessMessage(N7_CommandExecutionState ExecS
 
 defaultproperties
 {
-    bAdminOnly=True
     Aliases(0)="HEAD"
     Aliases(1)="HEADSIZE"
+    Description="Set player's head size scale"
     Signature="<? float HeadScale, ? (string TargetName | 'all')>"
-    Description="Set Player's head size scale"
+
+    bAdminOnly=True
 }

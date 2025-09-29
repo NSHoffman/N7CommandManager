@@ -7,13 +7,9 @@ enum ECmdArgs_X
 };
 
 /** @Override */
-protected function DoActionForSingleTarget
-    (N7_CommandExecutionState ExecState, PlayerController PC)
+protected function DoActionForSingleTarget(N7_CommandExecutionState ExecState, PlayerController PC)
 {
-    local bool bGrantTempAdmin;
-    bGrantTempAdmin = ToBool(ExecState.GetArg(ECmdArgs_X.ARG_FLAG));
-
-    if (bGrantTempAdmin)
+    if (ToBool(ExecState.GetArg(ECmdArgs_X.ARG_FLAG)))
     {
         PC.MakeAdmin();
         /** 
@@ -33,16 +29,16 @@ protected function DoActionForSingleTarget
 /** @Override */
 protected function string GetTargetSuccessMessage(N7_CommandExecutionState ExecState)
 {
-    local string TargetName, AdminAccessGrantStatus;
-    local bool bGrantTempAdmin;
+    local string AdminAccessGrantStatus;
 
-    TargetName = LoadTarget(ExecState);
-    bGrantTempAdmin = ToBool(ExecState.GetArg(ECmdArgs_X.ARG_FLAG));
-
-    if (bGrantTempAdmin)
+    if (ToBool(ExecState.GetArg(ECmdArgs_X.ARG_FLAG)))
+    {
         AdminAccessGrantStatus = "granted to";
+    }
     else
+    {
         AdminAccessGrantStatus = "revoked from";
+    }
 
     return "Temporary admin access has been "$AdminAccessGrantStatus$" you";
 }
@@ -51,15 +47,17 @@ protected function string GetTargetSuccessMessage(N7_CommandExecutionState ExecS
 protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecState)
 {
     local string TargetName, AdminAccessGrantStatus;
-    local bool bGrantTempAdmin;
 
     TargetName = LoadTarget(ExecState);
-    bGrantTempAdmin = ToBool(ExecState.GetArg(ECmdArgs_X.ARG_FLAG));
 
-    if (bGrantTempAdmin)
+    if (ToBool(ExecState.GetArg(ECmdArgs_X.ARG_FLAG)))
+    {
         AdminAccessGrantStatus = "granted to";
+    }
     else
+    {
         AdminAccessGrantStatus = "revoked from";
+    }
 
     if (TargetName ~= "all")
     {
@@ -71,15 +69,19 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
 
 defaultproperties
 {
-    bAdminOnly=True
-    Aliases(0)="TEMPADMIN"
     MinArgsNum=2
     MaxArgsNum=2
     ArgTypes(1)="switch"
-    Signature="<string TargetName, (0 | 1 | ON | OFF)>"
+
+    Aliases(0)="TEMPADMIN"
     Description="Grant temporary admin access to players"
+    Signature="<string TargetName, (0 | 1 | ON | OFF)>"
+
+    bNotifyGlobalOnSuccess=True
+
     bAllowTargetSelf=False
     bOnlyPlayerTargets=False
     bOnlyNonAdminTargets=True
-    bNotifyGlobalOnSuccess=True
+
+    bAdminOnly=True
 }

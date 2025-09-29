@@ -57,6 +57,6 @@ defaultproperties
 {
     MinLimit=0.1
     MaxLimit=5.0
+
     bOnlyAliveTargets=True
-    bNotifySenderOnSuccess=True
 }

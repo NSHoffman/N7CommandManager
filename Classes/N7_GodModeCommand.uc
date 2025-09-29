@@ -1,8 +1,7 @@
 class N7_GodModeCommand extends N7_BinaryTargetCommand;
 
 /** @Override */
-protected function DoActionForSingleTarget
-    (N7_CommandExecutionState ExecState, PlayerController PC)
+protected function DoActionForSingleTarget(N7_CommandExecutionState ExecState, PlayerController PC)
 {
     switch (ExecState.GetArgC())
     {
@@ -23,6 +22,7 @@ protected function DoActionForSingleTarget
 protected function string GetTargetSuccessMessage(N7_CommandExecutionState ExecState)
 {
     local string TargetName, GodModeState;
+
     TargetName = LoadTarget(ExecState);
     GodModeState = ColorizeValue(ExecState.LoadEnabled());
 
@@ -38,6 +38,7 @@ protected function string GetTargetSuccessMessage(N7_CommandExecutionState ExecS
 protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecState)
 {
     local string TargetName, GodModeState;
+
     TargetName = LoadTarget(ExecState);
     GodModeState = ColorizeValue(ExecState.LoadEnabled());
 
@@ -51,11 +52,14 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
 
 defaultproperties
 {
+    ArgTypes(0)="switch"
+
     Aliases(0)="GM"
     Aliases(1)="GOD"
-    ArgTypes(0)="switch"
-    Signature="<? (0 | 1 | ON | OFF) Flag, ? (string TargetName | 'all')>"
-    Description="Toggle God Mode"
-    bAdminOnly=True
+    Description="Toggle god mode"
+    Signature="<? (0 | 1 | ON | OFF), ? (string TargetName | 'all')>"
+
     bNotifyGlobalOnSuccess=True
+
+    bAdminOnly=True
 }

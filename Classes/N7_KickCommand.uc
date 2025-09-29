@@ -1,8 +1,7 @@
 class N7_KickCommand extends N7_UnaryTargetCommand;
 
 /** @Override */
-protected function DoActionForSingleTarget
-    (N7_CommandExecutionState ExecState, PlayerController PC)
+protected function DoActionForSingleTarget(N7_CommandExecutionState ExecState, PlayerController PC)
 {
     PC.ClientNetworkMessage("AC_Kicked", KFGT.AccessControl.DefaultKickReason);
 
@@ -18,8 +17,7 @@ protected function DoActionForSingleTarget
 }
 
 /** @Override */
-protected function bool CheckTargetCustom(
-    N7_CommandExecutionState ExecState, PlayerController Target)
+protected function bool CheckTargetCustom(N7_CommandExecutionState ExecState, PlayerController Target)
 {
     return NetConnection(Target.Player) != None;
 }
@@ -35,15 +33,18 @@ protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecS
 
 defaultproperties
 {
-    bAdminOnly=True
-    Aliases(0)="KICK"
     MinArgsNum=1
-    MaxArgsNum=1
+
+    Aliases(0)="KICK"
+    Description="Kick player"
     Signature="<string TargetName>"
-    Description="Kick Player"
+
+    bNotifyTargetsOnSuccess=False
+    bNotifyGlobalOnSuccess=True
+
     bAllowTargetAll=False
     bOnlyPlayerTargets=False
     bOnlyNonAdminTargets=True
-    bNotifyTargetsOnSuccess=False
-    bNotifyGlobalOnSuccess=True
+
+    bAdminOnly=True
 }

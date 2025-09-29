@@ -23,6 +23,7 @@ protected function DoAction(N7_CommandExecutionState ExecState)
     {
         HitLocation = Sender.ViewTarget.Location + 10000 * Vector(Sender.Rotation);
     }
+
     Sender.ViewTarget.SetLocation(HitLocation);
     Sender.ViewTarget.PlayTeleportEffect(False, True);
 }
@@ -41,11 +42,14 @@ protected function string InvalidGameStateMessage()
 
 defaultproperties
 {
-    bAdminOnly=True
     Aliases(0)="TP"
     Aliases(1)="TELEPORT"
-    Signature="<>"
     Description="Teleport to the position being looked at"
-    bOnlyAliveSender=True
+    Signature="<>"
+
     bNotifySenderOnSuccess=False
+
+    bOnlyAliveSender=True
+
+    bAdminOnly=True
 }

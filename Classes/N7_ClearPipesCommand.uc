@@ -15,8 +15,7 @@ protected function DoAction(N7_CommandExecutionState ExecState)
 /** @Override */
 protected function bool CheckGameState(N7_CommandExecutionState ExecState)
 {
-    return !KFGT.IsInState('PendingMatch') 
-        && (KFGT.WaveCountDown > 0 || IsAdmin(ExecState.GetSender()));
+    return !KFGT.IsInState('PendingMatch') && (KFGT.WaveCountDown > 0 || IsAdmin(ExecState.GetSender()));
 }
 
 /** @Override */
@@ -35,6 +34,6 @@ defaultproperties
 {
     Aliases(0)="CP"
     Aliases(1)="CLEARPIPES"
-    Signature="<>"
     Description="Remove all pipes from level"
+    Signature="<>"
 }

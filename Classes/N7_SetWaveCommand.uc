@@ -76,21 +76,21 @@ protected function DoAction(N7_CommandExecutionState ExecState)
         KFGT.WaveNum = WaveNum - 2;
         KFGRI.WaveNumber = Max(KFGT.WaveNum, 0);
     }
+
     ExecState.SaveNumber(WaveNum);
 }
 
 /** @Override */
 protected function bool CheckGameState(N7_CommandExecutionState ExecState)
 {
-    return KFGT.IsInState('MatchInProgress') 
-        || KFGT.bGameEnded && KFGameReplicationInfo(Level.Game.GameReplicationInfo).EndGameType == 1;
+    return KFGT.IsInState('MatchInProgress') || KFGT.bGameEnded && KFGameReplicationInfo(Level.Game.GameReplicationInfo).EndGameType == 1;
 }
 
 /** @Override */
 protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 {
     local int WaveNum;
-    MaxLimit = KFGT.FinalWave + 1;
+    MaxLimit = KFGT.FinalWave + 2;
     WaveNum = int(ExecState.GetArg(ECmdArgs.ARG_WAVE));
 
     return IsInRange(WaveNum, MinLimit, MaxLimit);
@@ -119,17 +119,19 @@ protected function string InvalidArgsMessage(N7_CommandExecutionState ExecState)
 
 defaultproperties
 {
+    MinArgsNum=1
+    MaxArgsNum=1
+    ArgTypes(0)="number"
+
+    MinLimit=1
+    MaxLimit=11
+
     Aliases(0)="WN"
     Aliases(1)="FW"
     Aliases(2)="WAVE"
     Aliases(3)="WAVENUM"
     Aliases(4)="SETWAVE"
     Aliases(5)="WAVENUM"
-    MinLimit=1
-    MaxLimit=11
-    MinArgsNum=1
-    MaxArgsNum=1
-    ArgTypes(0)="number"
+    Description="Set wave number"
     Signature="<int WaveNum>"
-    Description="Set Wave number"
 }

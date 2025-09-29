@@ -35,21 +35,16 @@ protected function bool CheckTargets(N7_CommandExecutionState ExecState)
 }
 
 /** @Override */
-protected function bool ShouldBeTarget(
-    N7_CommandExecutionState ExecState, 
-    PlayerController PC)
+protected function bool ShouldBeTarget(N7_CommandExecutionState ExecState, PlayerController PC)
 {
-    local string TargetName;
-    
     switch (ExecState.GetArgC())
     {
         case 0:
-            return AcceptTargetBySender(ExecState, PC, TargetName);
+            return AcceptTargetBySender(ExecState, PC);
 
         case 1:
         default:
-            TargetName = ExecState.GetArg(ECmdArgs.ARG_TARGETNAME);
-            return AcceptTargetByName(ExecState, PC, TargetName);
+            return AcceptTargetByName(ExecState, PC, LoadTarget(ExecState));
     }
 
     return False;
@@ -63,8 +58,8 @@ protected function string InvalidTargetMessage(N7_CommandExecutionState ExecStat
 
 defaultproperties
 {
-    MinArgsNum=0
     MaxArgsNum=1
     ArgTypes(0)="any"
+
     Signature="<? (string TargetName | 'all')>"
 }

@@ -56,13 +56,13 @@ protected function string InvalidArgsMessage(N7_CommandExecutionState ExecState)
 
 defaultproperties
 {
-    Aliases(0)="SPEC"
-    Aliases(1)="SPECS"
-    MinLimit=0
-    MaxLimit=10
-    MinArgsNum=0
     MaxArgsNum=1
     ArgTypes(0)="number"
-    Signature="<? int NewSpectators>"
+
+    MaxLimit=10
+
+    Aliases(0)="SPEC"
+    Aliases(1)="SPECS"
     Description="Set maximum number of spectators"
+    Signature="<? int Spectators>"
 }

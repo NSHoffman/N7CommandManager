@@ -66,8 +66,19 @@ protected function SpawnProjectile(PlayerController PC, string ProjType)
             KFPlayerController(PC).ClientWeaponSpawned(class'KFMod.KrissMMedicGun', None);
             ProjClass = class'KFMod.KrissMHealingProjectile';
             break;
+
+        case AvailableProjTypes[9]:
+            KFPlayerController(PC).ClientWeaponSpawned(class'KFMod.BlowerThrower', None);
+            ProjClass = class'KFMod.BlowerBileProjectile';
+            break;
+
+        case AvailableProjTypes[10]:
+            KFPlayerController(PC).ClientWeaponSpawned(class'KFMod.BlowerThrower', None);
+            ProjClass = class'KFMod.ZedGunProjectile';
+            break;
     }
-    PC.Spawn(ProjClass, PC,, PC.Pawn.Location + 72 * Vector(PC.Rotation) + vect(0, 0, 1) * 15);
+
+    PC.Spawn(ProjClass, PC,, PC.ViewTarget.Location + 72 * Vector(PC.Rotation) + vect(0, 0, 1) * 15);
 }
 
 /** @Override */
@@ -116,15 +127,9 @@ protected function ExtendedHelp(PlayerController PC)
 
 defaultproperties
 {
-    bAdminOnly=True
-    ArgTypes(0)="any"
     MinArgsNum=1
     MaxArgsNum=1
-    Aliases(0)="PROJ"
-    Signature="<string ProjType>"
-    Description="Spawn projectile"
-    // bOnlyAliveSender=True
-    bNotifySenderOnSuccess=False
+    ArgTypes(0)="any"
 
     AvailableProjTypes(0)="KFMod.FlareRevolver"
     AvailableProjTypes(1)="KFMod.HuskGun"
@@ -135,4 +140,14 @@ defaultproperties
     AvailableProjTypes(6)="KFMod.NailGun"
     AvailableProjTypes(7)="KFMod.SealSquealHarpoonBomber"
     AvailableProjTypes(8)="KFMod.KrissMMedicGun"
+    AvailableProjTypes(9)="KFMod.BlowerThrower"
+    AvailableProjTypes(10)="KFMod.ZedGun"
+
+    Aliases(0)="PROJ"
+    Description="Spawn projectile"
+    Signature="<string ProjType>"
+
+    bNotifySenderOnSuccess=False
+
+    bAdminOnly=True
 }

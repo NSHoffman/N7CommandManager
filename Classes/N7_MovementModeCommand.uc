@@ -20,7 +20,8 @@ protected function string InvalidGameStateMessage()
 
 defaultproperties
 {
-    bAdminOnly=True
     bOnlyAliveTargets=True
     bNotifyGlobalOnSuccess=True
+
+    bAdminOnly=True
 }

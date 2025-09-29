@@ -25,6 +25,20 @@ public function int GetMaxAcceptableStringLength()
     return default.MaxAcceptableStringLength;
 }
 
+public function float GetStringMatchRatio(string SubStr, string SupStr)
+{
+    local int MatchSubstrStartIdx;
+
+    MatchSubstrStartIdx = InStr(Caps(SupStr), Caps(SubStr));
+
+    if (MatchSubstrStartIdx < 0)
+    {
+        return 0;
+    }
+
+    return (1 - Min(MatchSubstrStartIdx, 1) * 0.01) * (float(Len(SubStr)) / float(Len(SupStr)));
+}
+
 public function bool IsValidLengthString(string Str)
 {
     return Len(Str) <= default.MaxAcceptableStringLength;
@@ -178,6 +192,11 @@ public function bool IsAdmin(PlayerController PC)
 public function bool IsTempAdmin(PlayerController PC)
 {
     return PC.PlayerReplicationInfo.bAdmin && PC.PlayerReplicationInfo.bSilentAdmin;
+}
+
+public function bool HasAdminAccess(PlayerController PC)
+{
+    return IsAdmin(PC) || IsTempAdmin(PC);
 }
 
 public function bool IsWebAdmin(PlayerController PC)
