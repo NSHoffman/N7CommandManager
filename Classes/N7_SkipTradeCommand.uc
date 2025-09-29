@@ -1,4 +1,4 @@
-class N7_SkipTradeCommand extends N7_TradeTimeCommand;
+class N7_SkipTradeCommand extends N7_GameSettingsCommand;
 
 /** @Override */
 protected function DoAction(N7_CommandExecutionState ExecState)
@@ -18,15 +18,15 @@ protected function bool CheckGameState(N7_CommandExecutionState ExecState)
 }
 
 /** @Override */
-protected function string InvalidGameStateMessage()
-{
-    return "Trader Time cannot be skipped when the wave is in progress";
-}
-
-/** @Override */
 protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecState)
 {
     return "Trader skipped by "$ColorizeSender(ExecState);
+}
+
+/** @Override */
+protected function string InvalidGameStateMessage()
+{
+    return "Trader Time cannot be skipped when the wave is in progress";
 }
 
 defaultproperties
