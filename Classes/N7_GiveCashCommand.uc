@@ -7,16 +7,9 @@ var protected config const int MaxLimit;
 protected function DoActionForSingleTarget(N7_CommandExecutionState ExecState, PlayerController PC)
 {
     local int CashAmount;
-    CashAmount = int(ExecState.GetArg(ECmdArgs.ARG_VALUE));
 
-    if (!IsInRange(CashAmount, MinLimit, MaxLimit) && IsInRange(CashAmount, MinLimit))
-    {
-        CashAmount = MaxLimit;
-    }
-    else if (!IsInRange(CashAmount, MinLimit))
-    {
-        CashAmount = MinLimit;
-    }
+    CashAmount = int(ExecState.GetArg(ECmdArgs.ARG_VALUE));
+    CashAmount = Clamp(CashAmount, MinLimit, MaxLimit);
 
     PC.PlayerReplicationInfo.Score += CashAmount;
     ExecState.SaveNumber(CashAmount);
