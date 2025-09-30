@@ -3,7 +3,12 @@ class N7_HeadSizeCommand extends N7_SizeCommand;
 /** @Override */
 protected function DoActionForSingleTarget(N7_CommandExecutionState ExecState, PlayerController PC)
 {
-    PC.Pawn.HeadScale = ExecState.LoadNumberF();
+    local float NewHeadScale;
+
+    NewHeadScale = ExecState.LoadNumberF();
+
+    PC.Pawn.SetHeadScale(NewHeadScale);
+    PC.Pawn.SetBoneScale(4, NewHeadScale, 'chr_head');
 }
 
 /** @Override */
