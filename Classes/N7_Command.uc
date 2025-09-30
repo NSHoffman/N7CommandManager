@@ -823,12 +823,12 @@ protected final function bool IsNumber(string Str)
     return Validator.IsNumber(Str);
 }
 
-protected final function bool IsInRange(coerce int Number, int Start, optional int End)
+protected final function bool IsInRange(coerce int Number, int Start, int End)
 {
     return Validator.IsInRange(Number, Start, End);
 }
 
-protected final function bool IsInRangeF(coerce float Number, float Start, optional float End)
+protected final function bool IsInRangeF(coerce float Number, float Start, float End)
 {
     return Validator.IsInRangeF(Number, Start, End);
 }
