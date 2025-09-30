@@ -458,6 +458,7 @@ defaultproperties
 
     RestoredPlayersModelClass=class'N7CommandManager.N7_RestoredPlayersModel'
     ResizedPlayersModelClass=class'N7CommandManager.N7_ResizedPlayersModel'
+    InfiniteAmmoPlayersModelClass=class'N7CommandManager.N7_InfiniteAmmoPlayersModel'
     HPConfigModelClass=class'N7CommandManager.N7_HPConfigModel'
     FakedPlayersModelClass=class'N7CommandManager.N7_FakedPlayersModel'
 

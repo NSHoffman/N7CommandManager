@@ -135,27 +135,17 @@ public function bool IsSwitchValue(string Value)
 public function bool IsInRange(
     coerce int Number, 
     int Start, 
-    optional int End)
+    int End)
 {
-    if (End > 0)
-    {
-        return Number >= Start && Number <= End;
-    }
-
-    return Number >= Start;
+    return Number >= Start && Number <= End;
 }
 
 public function bool IsInRangeF(
     coerce float Number, 
     float Start, 
-    optional float End)
+    float End)
 {
-    if (End > 0)
-    {
-        return Number >= Start && Number <= End;
-    }
-
-    return Number >= Start;
+    return Number >= Start && Number <= End;
 }
 
 /*********************************

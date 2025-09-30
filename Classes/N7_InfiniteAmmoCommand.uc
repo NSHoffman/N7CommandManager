@@ -83,7 +83,7 @@ defaultproperties
 	ArgTypes(0)="switch"
 	Aliases(0)="INFAMMO"
 	Description="Toggle infinite ammo"
-	Signature="? (0 | 1 | ON | OFF), ? (string TargetName | 'all')"
+	Signature="<? (0 | 1 | ON | OFF), ? (string TargetName | 'all')>"
 
 	bNotifyGlobalOnSuccess=True
 
