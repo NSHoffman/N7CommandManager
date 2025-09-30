@@ -16,19 +16,7 @@ protected function DoAction(N7_CommandExecutionState ExecState)
     if (ExecState.GetArgC() > 0)
     {
         NewWaveInterval = int(ExecState.GetArg(ECmdArgs.ARG_NEWTIME));
-
-        if (IsInRange(NewWaveInterval, MinLimit, MaxLimit))
-        {
-            KFGT.TimeBetweenWaves = NewWaveInterval; 
-        }
-        else if (IsInRange(NewWaveInterval, MinLimit))
-        {
-            KFGT.TimeBetweenWaves = MaxLimit;
-        }
-        else
-        {
-            KFGT.TimeBetweenWaves = MinLimit;
-        }
+        KFGT.TimeBetweenWaves = Clamp(NewWaveInterval, MinLimit, MaxLimit);
     }
     else
     {
