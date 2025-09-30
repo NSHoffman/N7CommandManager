@@ -196,7 +196,7 @@ event Timer()
 
 			if (PC != None)
 			{
-				if (GetRealPlayersNum() > 0 && FindRestoredPlayer(PC) == "" && GetRestoredPlayers().Length == GetRealPlayersNum() - 1)
+				if (GetRealPlayersNum() > 0 && GetRestoredPlayers().Length > 0 && FindRestoredPlayer(PC) == "" && GetRestoredPlayers().Length == GetRealPlayersNum() - 1)
 				{
 					AddRestoredPlayer(PC);
 				}
