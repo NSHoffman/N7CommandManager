@@ -33,3 +33,8 @@
 - Fixed cases when non-admin players could target someone other than themselves with regular commands.
 
 - Rearranged the list of commands to improve grouping and readability.
+
+## `1.2.0`
+
+- Added SetPerkLevel command to set current perk level.
+- Fixed SpawnRate command defaulting to a value irrelevant to the current map's default spawn rate settings.
