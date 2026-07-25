@@ -58,7 +58,7 @@ defaultproperties
     Aliases(1)="GD"
     Aliases(2)="CASH"
     Aliases(3)="DOSH"
-    Description="Give money to the player"
+    Description="Give money to player"
     Signature="<int Amount, ? (string TargetName | 'all')>"
 
     bNotifyGlobalOnSuccess=True

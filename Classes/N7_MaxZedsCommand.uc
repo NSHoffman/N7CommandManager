@@ -25,7 +25,7 @@ protected function DoAction(N7_CommandExecutionState ExecState)
     {
         KFGT.MaxZombiesOnce = KFGT.default.MaxZombiesOnce;
         KFGT.StandardMaxZombiesOnce = KFGT.default.StandardMaxZombiesOnce;
-        KFGT.MaxMonsters = KFGT.default.MaxMonsters;
+        KFGT.MaxMonsters = KFGT.MaxZombiesOnce;
     }
 }
 

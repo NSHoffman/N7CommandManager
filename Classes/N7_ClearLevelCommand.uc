@@ -26,7 +26,7 @@ protected function DoAction(N7_CommandExecutionState ExecState)
 /** @Override */
 protected function bool CheckGameState(N7_CommandExecutionState ExecState)
 {
-    return !KFGT.IsInState('PendingMatch') && (KFGT.WaveCountDown > 0 || HasAdminAccess(ExecState.GetSender()));
+    return KFGT.IsInState('MatchInProgress') && (KFGT.WaveCountDown > 0 || HasAdminAccess(ExecState.GetSender()));
 }
 
 /** @Override */

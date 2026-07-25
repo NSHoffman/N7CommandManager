@@ -22,14 +22,14 @@ protected function DoAction(N7_CommandExecutionState ExecState)
     if (KFGT.WaveCountDown <= 5)
     {
         KFGRI.WaveNumber = KFGT.WaveNum;
-        KFGameReplicationInfo(Level.Game.GameReplicationInfo).MaxMonstersOn = False;
+        KFGameReplicationInfo(KFGT.GameReplicationInfo).MaxMonstersOn = False;
     }
 }
 
 /** @Override */
 protected function bool CheckGameState(N7_CommandExecutionState ExecState)
 {
-    return KFGT.IsInState('MatchInProgress') && (KFGT.bTradingDoorsOpen || KFGT.WaveNum == 0 && KFGT.WaveCountDown > 0);
+    return KFGT.IsInState('MatchInProgress') && (!KFGT.bWaveInProgress && !KFGT.bWaveBossInProgress && KFGT.WaveCountDown > 0) && (KFGT.bTradingDoorsOpen || KFGT.WaveNum == 0);
 }
 
 /** @Override */

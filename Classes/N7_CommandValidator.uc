@@ -202,5 +202,5 @@ defaultproperties
     MaxUppercaseLetterCode=90
     MinLowercaseLetterCode=97
     MaxLowercaseLetterCode=122
-    MaxAcceptableStringLength=25
+    MaxAcceptableStringLength=100
 }

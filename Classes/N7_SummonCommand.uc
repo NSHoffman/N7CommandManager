@@ -1,5 +1,7 @@
 class N7_SummonCommand extends N7_BinaryTargetCommand;
 
+var protected config float SummonDistance;
+
 /** @Override */
 protected function DoActionForSingleTarget(N7_CommandExecutionState ExecState, PlayerController PC)
 {
@@ -8,7 +10,7 @@ protected function DoActionForSingleTarget(N7_CommandExecutionState ExecState, P
 
     TargetZedClass = class<KFMonster>(DynamicLoadObject(ExecState.LoadString(), class'Class'));
 
-    SpawnedZed = Spawn(TargetZedClass,,, PC.Pawn.Location + 72 * Vector(PC.Rotation) + vect(0, 0, 1) * 15);
+    SpawnedZed = Spawn(TargetZedClass,,, PC.Pawn.Location + SummonDistance * Vector(PC.Rotation) + vect(0, 0, 1) * 15);
     ExecState.SaveString(TargetZedClass.default.MenuName);
     
     if (SpawnedZed == None)
@@ -98,8 +100,10 @@ defaultproperties
     MinArgsNum=1
     ArgTypes(0)="any"
 
+    SummonDistance=350.00
+
     Aliases(0)="SUMMON"
-    Description="Spawn ZED next to a player"
+    Description="Spawn ZED next to player"
     Signature="<string ZedClass, ? string TargetName>"
 
     bAllowTargetAll=False

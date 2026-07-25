@@ -104,7 +104,7 @@ protected function bool CheckArgs(N7_CommandExecutionState ExecState)
 /** @Override */
 protected function bool CheckGameState(N7_CommandExecutionState ExecState)
 {
-    return !KFGT.IsInState('PendingMatch');
+    return KFGT.IsInState('MatchInProgress');
 }
 
 /** @Override */
