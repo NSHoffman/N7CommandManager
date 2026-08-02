@@ -51,7 +51,7 @@ defaultproperties
 
     Aliases(0)="TPP"
     Aliases(1)="TELEPORTP"
-    Description="Teleport a player to another player"
+    Description="Teleport player to another player"
     Signature="<string TeleportTo, ? string TargetName>"
 
     bNotifyTargetsOnSuccess=False

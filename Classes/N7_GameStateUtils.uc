@@ -11,7 +11,7 @@ public final function KillAllZeds(optional bool bDestroyNextTick)
     KFGT.NumMonsters = 0;
     KFGT.TotalMaxMonsters = 0;
     KFGT.MaxMonsters = 0;
-    KFGameReplicationInfo(Level.Game.GameReplicationInfo).MaxMonsters = 0;
+    KFGameReplicationInfo(KFGT.GameReplicationInfo).MaxMonsters = 0;
 }
 
 public final function KillLivingZeds(optional bool bDestroyNextTick)
@@ -104,6 +104,38 @@ public final function RestorePlayerAmmo(PlayerController PC)
 	}
 }
 
+public final function bool GetPlayerSpawnLocation(string PlayerName, optional out Vector OutLocation, optional out Rotator OutRotation)
+{
+  local Controller C;
+  local NavigationPoint Start;
+
+  if (PlayerName == "")
+  {
+    Start = KFGT.FindPlayerStart(None);
+
+    if (Start == None)
+    {
+      return False;
+    }
+
+    OutLocation = Start.Location;
+    OutRotation = Start.Rotation;
+    return True;
+  }
+
+  for (C = Level.ControllerList; C != None; C = C.NextController)
+  {
+    if (PlayerController(C) != None && C.Pawn != None && C.PlayerReplicationInfo != None && C.PlayerReplicationInfo.PlayerName ~= PlayerName)
+    {
+      OutLocation = C.Pawn.Location + 120 * Vector(C.Pawn.Rotation);
+      OutRotation = C.Pawn.Rotation;
+      return True;
+    }
+  }
+
+  return False;
+}
+
 /****************************
  *  GAME RELATED UTILS
  ****************************/
@@ -123,7 +155,7 @@ public final function SetWave(int NewWaveNum)
 	local Controller C;
 	local bool bTradeTime;
 
-	KFGRI = KFGameReplicationInfo(Level.Game.GameReplicationInfo);
+	KFGRI = KFGameReplicationInfo(KFGT.GameReplicationInfo);
 
 	KillAllZeds(True);
 	StopZedTime();

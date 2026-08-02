@@ -1,7 +1,6 @@
 class N7_HPConfigModel extends Core.Object within N7_CommandManager;
 
 var protected int ZedHPConfig;
-var protected const int ZedHPConfigThreshold;
 
 public final function int GetZedHPConfig()
 {
@@ -11,22 +10,22 @@ public final function int GetZedHPConfig()
     AlivePlayersNum = GetAlivePlayersNum();
     ZedHPConfigThreshold = GetZedHPConfigThreshold();
 
-    if (AlivePlayersNum >= ZedHPConfigThreshold)
+    if (ZedHPConfig == 0)
     {
-        return ZedHPConfigThreshold;
+        if (AlivePlayersNum >= ZedHPConfigThreshold)
+        {
+            return ZedHPConfigThreshold;
+        }
+
+        return Max(AlivePlayersNum, 1);
     }
 
-    return Max(AlivePlayersNum, ZedHPConfig);
+    return ZedHPConfig;
 }
 
 public final function SetZedHPConfig(int NewZedHPConfig)
 {
     ZedHPConfig = NewZedHPConfig;
-}
-
-public final function int GetZedHPConfigThreshold()
-{
-    return ZedHPConfigThreshold;
 }
 
 public final function int GetAlivePlayersNum()
@@ -79,6 +78,5 @@ protected final function float GetZedHeadHPModifierByPlayers(KFMonster Zed)
 
 defaultproperties
 {
-    ZedHPConfig=1
-    ZedHPConfigThreshold=6
+    ZedHPConfig=0
 }

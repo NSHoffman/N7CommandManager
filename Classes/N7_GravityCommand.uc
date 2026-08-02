@@ -16,51 +16,27 @@ protected function DoAction(N7_CommandExecutionState ExecState)
 	if (ExecState.GetArgC() > 0)
 	{
 		NewGravity = int(ExecState.GetArg(ECmdArgs.ARG_NEWGRAVITY));
+        NewGravity = Clamp(NewGravity, MinLimit, MaxLimit);
+
 		PhysicsVolume.Gravity.Z = NewGravity;
 	}
 	else
 	{
 		PhysicsVolume.Gravity.Z = Level.default.DefaultGravity;
 	}
-}
 
-/** @Override */
-protected function bool CheckArgs(N7_CommandExecutionState ExecState)
-{
-	local int NewGravity;
-
-	if (ExecState.GetArgC() > 0)
-	{
-		NewGravity = int(ExecState.GetArg(ECmdArgs.ARG_NEWGRAVITY));
-
-		if (!IsInRange(NewGravity, MinLimit, MaxLimit))
-		{
-			return False;
-		}
-	}
- 
-	return True;
+    ExecState.SaveNumber(NewGravity);
 }
 
 /** @Override */
 protected function string GetGlobalSuccessMessage(N7_CommandExecutionState ExecState)
 {
-    local int NewGravity;
-
-    NewGravity = PhysicsVolume.Gravity.Z;
-
     if (ExecState.GetArgC() == 0)
     {
         return "Gravity has been reset by "$ColorizeSender(ExecState);
     }
 
-    return "Gravity set to "$ColorizeValue(NewGravity)$" by "$ColorizeSender(ExecState);
-}
-
-/** @Override */
-protected function string InvalidArgsMessage(N7_CommandExecutionState ExecState)
-{
-	return "New Gravity must be in range from "$MinLimit$" to "$MaxLimit;
+    return "Gravity set to "$ColorizeValue(ExecState.LoadNumber())$" by "$ColorizeSender(ExecState);
 }
 
 defaultproperties

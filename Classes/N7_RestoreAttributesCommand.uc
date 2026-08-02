@@ -28,7 +28,7 @@ protected function DoActionForSingleTarget(N7_CommandExecutionState ExecState, P
 /** @Override */
 protected function bool CheckGameState(N7_CommandExecutionState ExecState)
 {
-    return ExecState.GetArgC() > 0 || ExecState.GetArgC() == 0 && !KFGT.IsInState('PendingMatch') && (KFGT.WaveCountDown > 0 || HasAdminAccess(ExecState.GetSender()));
+    return ExecState.GetArgC() > 0 || ExecState.GetArgC() == 0 && KFGT.IsInState('MatchInProgress') && (KFGT.WaveCountDown > 0 || HasAdminAccess(ExecState.GetSender()));
 }
 
 /** @Override */

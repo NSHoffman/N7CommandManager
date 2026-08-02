@@ -22,7 +22,7 @@ protected function DoAction(N7_CommandExecutionState ExecState)
 /** @Override */
 protected function bool CheckGameState(N7_CommandExecutionState ExecState)
 {
-    return KFGT.IsInState('MatchInProgress') || KFGT.bGameEnded && KFGameReplicationInfo(Level.Game.GameReplicationInfo).EndGameType == 1;
+    return KFGT.IsInState('MatchInProgress') || KFGT.bGameEnded && KFGameReplicationInfo(KFGT.GameReplicationInfo).EndGameType == 1;
 }
 
 /** @Override */
