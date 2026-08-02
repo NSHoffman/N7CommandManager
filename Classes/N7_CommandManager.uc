@@ -37,17 +37,18 @@ var protected Array<KFPlayerController> PendingPlayers;
 var protected bool bHasPendingPlayers;
 
 /** Commands List */
-const COMMANDS_COUNT = 100;
-
-var protected const class<N7_Command> CommandsClasses[COMMANDS_COUNT];
-var protected const Array<N7_Command> Commands;
+var protected config Array<string> CommandClassNames;
+var protected Array<N7_Command> Commands;
 
 /** Game settings */
 var public float OriginalWaveSpawnPeriod;
 var public bool bOriginalWaveSpawnPeriodSaved;
 
 var protected bool bZedTimeEnabled;
+var protected int LastWaveCountDown;
 var protected float LastAttributeRestoreTime;
+
+var protected config int ZedHPConfigThreshold;
 
 /*********************************
  * INITIALIZATION
@@ -72,13 +73,26 @@ protected function InitModels()
 protected function InitCommands()
 {
     local int i;
+    local class<N7_Command> CommandClass;
 
-    for (i = 0; i < COMMANDS_COUNT; i++)
+    Commands.Length = 0;
+
+    for (i = 0; i < CommandClassNames.Length; i++)
     {
-        if (CommandsClasses[i] != None) 
+        if (CommandClassNames[i] == "")
         {
-            Commands[i] = new(self) CommandsClasses[i];
+            continue;
         }
+
+        CommandClass = class<N7_Command>(DynamicLoadObject(CommandClassNames[i], class'Class', True));
+
+        if (CommandClass == None)
+        {
+            Warn("Could not load class" @ CommandClass);
+            continue;
+        }
+
+        Commands[Commands.Length] = new(self) CommandClass;
     }
 }
 
@@ -91,9 +105,9 @@ protected function SaveConfiguration()
     Colors.SaveConfig();
     Colors.ColorManager.static.StaticSaveConfig();
 
-    for (i = 0; i < COMMANDS_COUNT; i++)
+    for (i = 0; i < Commands.Length; i++)
     {
-        if (CommandsClasses[i] != None) 
+        if (Commands[i] != None) 
         {
             Commands[i].SaveConfig();
         }
@@ -112,6 +126,8 @@ event PostBeginPlay()
     {
         Destroy();
     }
+
+    LastWaveCountDown = KFGT.WaveCountDown;
 
     InitServices();
     InitModels();
@@ -282,7 +298,8 @@ event Tick(float DeltaTime)
     }
 
     bWaveStart = KFGT.WaveCountDown <= 1 && !KFGT.bWaveInProgress && !KFGT.bWaveBossInProgress;
-    bWaveEnd = (KFGT.bWaveInProgress || KFGT.bWaveBossInProgress) && KFGT.NumMonsters <= 0 && KFGT.TotalMaxMonsters <= 0;
+    bWaveEnd = LastWaveCountDown == 0 && KFGT.WaveCountDown > 0;
+    LastWaveCountDown = KFGT.WaveCountDown;
 
     /**
     * Keeping players' attributes restored
@@ -406,7 +423,7 @@ public final function int GetZedHPConfig()
 
 public final function int GetZedHPConfigThreshold()
 {
-    return HPConfigModel.GetZedHPConfigThreshold();
+    return ZedHPConfigThreshold;
 }
 
 public final function int GetAlivePlayersNum()
@@ -447,7 +464,7 @@ protected final function int GetCommandIndex(string Alias)
 {
     local int i;
 
-    for (i = 0; i < COMMANDS_COUNT; i++)
+    for (i = 0; i < Commands.Length; i++)
     {
         if (Commands[i] != None && Commands[i].HasAlias(Alias))
         {
@@ -474,73 +491,76 @@ defaultproperties
     HPConfigModelClass=class'N7CommandManager.N7_HPConfigModel'
     FakedPlayersModelClass=class'N7CommandManager.N7_FakedPlayersModel'
 
-    CommandsClasses(0)=class'N7CommandManager.N7_HelpCommand'
-    CommandsClasses(1)=class'N7CommandManager.N7_AdminHelpCommand'
-    CommandsClasses(2)=class'N7CommandManager.N7_SlotsCommand'
-    CommandsClasses(3)=class'N7CommandManager.N7_SpectatorsCommand'
-    CommandsClasses(4)=class'N7CommandManager.N7_FakesCommand'
-    CommandsClasses(5)=class'N7CommandManager.N7_ZedHPConfigCommand'
-    CommandsClasses(6)=class'N7CommandManager.N7_SpawnRateCommand'
-    CommandsClasses(7)=class'N7CommandManager.N7_ZedTimeCommand'
-    CommandsClasses(8)=class'N7CommandManager.N7_MaxZedsCommand'
-    CommandsClasses(9)=class'N7CommandManager.N7_StatusCommand'
+    CommandClassNames(0)="N7CommandManager.N7_HelpCommand"
+    CommandClassNames(1)="N7CommandManager.N7_AdminHelpCommand"
+    CommandClassNames(2)="N7CommandManager.N7_SlotsCommand"
+    CommandClassNames(3)="N7CommandManager.N7_SpectatorsCommand"
+    CommandClassNames(4)="N7CommandManager.N7_FakesCommand"
+    CommandClassNames(5)="N7CommandManager.N7_ZedHPConfigCommand"
+    CommandClassNames(6)="N7CommandManager.N7_SpawnRateCommand"
+    CommandClassNames(7)="N7CommandManager.N7_ZedTimeCommand"
+    CommandClassNames(8)="N7CommandManager.N7_MaxZedsCommand"
+    CommandClassNames(9)="N7CommandManager.N7_StatusCommand"
 
-    CommandsClasses(10)=class'N7CommandManager.N7_TradeTimeCommand'
-    CommandsClasses(11)=class'N7CommandManager.N7_SkipTradeCommand'
-    CommandsClasses(12)=class'N7CommandManager.N7_WaveIntervalCommand'
+    CommandClassNames(10)="N7CommandManager.N7_TradeTimeCommand"
+    CommandClassNames(11)="N7CommandManager.N7_SkipTradeCommand"
+    CommandClassNames(12)="N7CommandManager.N7_WaveIntervalCommand"
 
-    CommandsClasses(13)=class'N7CommandManager.N7_SetWaveCommand'
-    CommandsClasses(14)=class'N7CommandManager.N7_RestartWaveCommand'
-    CommandsClasses(15)=class'N7CommandManager.N7_RespawnPlayerCommand'
-    CommandsClasses(16)=class'N7CommandManager.N7_RestoreAttributesCommand'
+    CommandClassNames(13)="N7CommandManager.N7_SetWaveCommand"
+    CommandClassNames(14)="N7CommandManager.N7_RestartWaveCommand"
+    CommandClassNames(15)="N7CommandManager.N7_RespawnPlayerCommand"
+    CommandClassNames(16)="N7CommandManager.N7_RestoreAttributesCommand"
 
-    CommandsClasses(17)=class'N7CommandManager.N7_ReadyAllCommand'
-    CommandsClasses(18)=class'N7CommandManager.N7_ResetStatsCommand'
+    CommandClassNames(17)="N7CommandManager.N7_ReadyAllCommand"
+    CommandClassNames(18)="N7CommandManager.N7_ResetStatsCommand"
 
-    CommandsClasses(19)=class'N7CommandManager.N7_RespawnDoorsCommand'
-    CommandsClasses(20)=class'N7CommandManager.N7_BreakDoorsCommand'
-    CommandsClasses(21)=class'N7CommandManager.N7_WeldDoorsCommand'
+    CommandClassNames(19)="N7CommandManager.N7_RespawnDoorsCommand"
+    CommandClassNames(20)="N7CommandManager.N7_BreakDoorsCommand"
+    CommandClassNames(21)="N7CommandManager.N7_WeldDoorsCommand"
 
-    CommandsClasses(22)=class'N7CommandManager.N7_ClearPipesCommand'
-    CommandsClasses(23)=class'N7CommandManager.N7_ClearLevelCommand'
+    CommandClassNames(22)="N7CommandManager.N7_ClearPipesCommand"
+    CommandClassNames(23)="N7CommandManager.N7_ClearLevelCommand"
 
-    CommandsClasses(24)=class'N7CommandManager.N7_SetNameCommand'
-    CommandsClasses(25)=class'N7CommandManager.N7_SetPerkCommand'
-    CommandsClasses(26)=class'N7CommandManager.N7_SetPerkLevelCommand'
+    CommandClassNames(24)="N7CommandManager.N7_SetNameCommand"
+    CommandClassNames(25)="N7CommandManager.N7_SetPerkCommand"
+    CommandClassNames(26)="N7CommandManager.N7_SetPerkLevelCommand"
 
-    CommandsClasses(27)=class'N7CommandManager.N7_GameSpeedCommand'
-    CommandsClasses(28)=class'N7CommandManager.N7_GravityCommand'
+    CommandClassNames(27)="N7CommandManager.N7_GameSpeedCommand"
+    CommandClassNames(28)="N7CommandManager.N7_GravityCommand"
 
-    CommandsClasses(29)=class'N7CommandManager.N7_SummonCommand'
-    CommandsClasses(30)=class'N7CommandManager.N7_HitZedCommand'
-    CommandsClasses(31)=class'N7CommandManager.N7_KillZedsCommand'
+    CommandClassNames(29)="N7CommandManager.N7_SummonCommand"
+    CommandClassNames(30)="N7CommandManager.N7_HitZedCommand"
+    CommandClassNames(31)="N7CommandManager.N7_KillZedsCommand"
 
-    CommandsClasses(32)=class'N7CommandManager.N7_SpawnProjCommand'
-    CommandsClasses(33)=class'N7CommandManager.N7_HitPlayerCommand'
-    CommandsClasses(34)=class'N7CommandManager.N7_SlapCommand'
+    CommandClassNames(32)="N7CommandManager.N7_SpawnProjCommand"
+    CommandClassNames(33)="N7CommandManager.N7_HitPlayerCommand"
+    CommandClassNames(34)="N7CommandManager.N7_SlapCommand"
 
-    CommandsClasses(35)=class'N7CommandManager.N7_GodModeCommand'
-    CommandsClasses(36)=class'N7CommandManager.N7_WalkCommand'
-    CommandsClasses(37)=class'N7CommandManager.N7_SpiderCommand'
-    CommandsClasses(38)=class'N7CommandManager.N7_FlyCommand'
-    CommandsClasses(39)=class'N7CommandManager.N7_GhostCommand'
-    CommandsClasses(40)=class'N7CommandManager.N7_BoostCommand'
+    CommandClassNames(35)="N7CommandManager.N7_GodModeCommand"
+    CommandClassNames(36)="N7CommandManager.N7_WalkCommand"
+    CommandClassNames(37)="N7CommandManager.N7_SpiderCommand"
+    CommandClassNames(38)="N7CommandManager.N7_FlyCommand"
+    CommandClassNames(39)="N7CommandManager.N7_GhostCommand"
 
-    CommandsClasses(41)=class'N7CommandManager.N7_InfiniteAmmoCommand'
+    CommandClassNames(40)="N7CommandManager.N7_SetPlayerHealthCommand"    
+    CommandClassNames(41)="N7CommandManager.N7_SetPlayerArmorCommand"   
+    CommandClassNames(42)="N7CommandManager.N7_RestorePlayerAmmoCommand"   
+    CommandClassNames(43)="N7CommandManager.N7_InfiniteAmmoCommand"
 
-    CommandsClasses(42)=class'N7CommandManager.N7_GiveWeaponCommand'
-    CommandsClasses(43)=class'N7CommandManager.N7_GiveCashCommand'
+    CommandClassNames(44)="N7CommandManager.N7_GiveWeaponCommand"
+    CommandClassNames(45)="N7CommandManager.N7_GiveCashCommand"
 
-    CommandsClasses(44)=class'N7CommandManager.N7_TeleportCommand'
-    CommandsClasses(45)=class'N7CommandManager.N7_TeleportToCommand'
+    CommandClassNames(46)="N7CommandManager.N7_TeleportCommand"
+    CommandClassNames(47)="N7CommandManager.N7_TeleportToCommand"
 
-    CommandsClasses(46)=class'N7CommandManager.N7_HeadSizeCommand'
-    CommandsClasses(47)=class'N7CommandManager.N7_BodySizeCommand'
+    CommandClassNames(48)="N7CommandManager.N7_HeadSizeCommand"
+    CommandClassNames(49)="N7CommandManager.N7_BodySizeCommand"
 
-    CommandsClasses(48)=class'N7CommandManager.N7_ForceSpectatorCommand'
-    CommandsClasses(49)=class'N7CommandManager.N7_KickCommand'
-    CommandsClasses(50)=class'N7CommandManager.N7_BanCommand'
-    CommandsClasses(51)=class'N7CommandManager.N7_TempAdminCommand'
+    CommandClassNames(50)="N7CommandManager.N7_ForceSpectatorCommand"
+    CommandClassNames(51)="N7CommandManager.N7_KickCommand"
+    CommandClassNames(52)="N7CommandManager.N7_BanCommand"
+    CommandClassNames(53)="N7CommandManager.N7_TempAdminCommand"
 
     bZedTimeEnabled=True
+    ZedHPConfigThreshold=6
 }

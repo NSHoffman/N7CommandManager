@@ -7,7 +7,7 @@ protected function DoAction(N7_CommandExecutionState ExecState)
 
     KFGRI = KFGameReplicationInfo(KFGT.GameReplicationInfo);
     KFGRI.WaveNumber = KFGT.WaveNum;
-    KFGameReplicationInfo(Level.Game.GameReplicationInfo).MaxMonstersOn = False;
+    KFGameReplicationInfo(KFGT.GameReplicationInfo).MaxMonstersOn = False;
     KFGT.WaveCountDown = 1;
 }
 

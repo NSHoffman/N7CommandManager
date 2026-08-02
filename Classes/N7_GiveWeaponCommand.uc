@@ -281,7 +281,7 @@ defaultproperties
     Aliases(0)="GW"
     Aliases(1)="WEAPON"
     Aliases(2)="GIVEWEAPON"
-    Description="Give weapon to the player"
+    Description="Give weapon to player"
     Signature="<string Weapon, ? (string TargetName | 'all')>"
 
     bNotifyGlobalOnSuccess=True

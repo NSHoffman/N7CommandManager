@@ -17,13 +17,28 @@ var protected const Array<string> AvailableDamageTypes;
 protected function DoAction(N7_CommandExecutionState ExecState)
 {
     local Actor HitActor;
-    local Vector HitNormal, HitLocation;
+    local Vector HitNormal, HitLocation, EndTrace, CamLoc;
     local PlayerController Sender;
+    local KFMonster KFM;
     local int ZedDamage;
     local string ZedDamageType;
 
     Sender = ExecState.GetSender();
-    HitActor = Trace(HitLocation, HitNormal, Sender.ViewTarget.Location + MaxRange * Vector(Sender.Rotation), Sender.ViewTarget.Location, True);
+
+    if (Sender.Pawn != None)
+    {
+        CamLoc = Sender.Pawn.Location + Sender.Pawn.EyePosition();
+        EndTrace = CamLoc + MaxRange * Vector(Sender.Rotation);
+        HitActor = Sender.Pawn.Trace(HitLocation, HitNormal, EndTrace, CamLoc, True);
+    }
+    else
+    {
+        CamLoc = Sender.Location;
+        EndTrace = CamLoc + MaxRange * Vector(Sender.Rotation);
+        HitActor = Sender.Trace(HitLocation, HitNormal, EndTrace, CamLoc, True);
+    }
+
+    KFM = GetMonster(HitActor);
 
     if (ExecState.GetArgC() > 0)
     {
@@ -43,10 +58,39 @@ protected function DoAction(N7_CommandExecutionState ExecState)
         ZedDamage = DefaultDamage;
     }
 
-    if (Sender.Pawn != None && KFMonster(HitActor) != None)
+    if (KFM != None)
     {
-        DoDamage(ZedDamage, Pawn(HitActor), Sender.Pawn, vect(0, 0, 0), vect(0, 0, 0), ZedDamageType);
+        DoDamage(ZedDamage, KFM, Sender.Pawn, HitLocation, Vector(Sender.Rotation) * ZedDamage, ZedDamageType);
     }
+}
+
+protected function KFMonster GetMonster(Actor HitActor)
+{
+    local KFMonster KFM;
+
+    if (HitActor == None)
+    {
+        return None;
+    }
+
+    KFM = KFMonster(HitActor);
+
+    if (KFM != None)
+    {
+        return KFM;
+    }
+
+    if (HitActor.IsA('ExtendedZCollision'))
+    {
+        KFM = KFMonster(HitActor.Owner);
+
+        if (KFM != None)
+        {
+            return KFM;
+        }
+    }
+
+    return None;
 }
 
 protected function DoDamage(int Damage, Pawn Target, Pawn InstigatedBy, Vector HitLocation, Vector Momentum, string DamageType)
@@ -61,7 +105,7 @@ protected function DoDamage(int Damage, Pawn Target, Pawn InstigatedBy, Vector H
 
         case AvailableDamageTypes[1]:
             DamTypeClass = class'KFMod.DamTypeFrag';
-            InstigatedBy.Spawn(class<Actor>(DynamicLoadObject("KFMod.KFNadeLExplosion", class'Class')),,, Target.Location + 72 * Vector(InstigatedBy.Rotation) + vect(0, 0, 1) * 15);
+            InstigatedBy.Spawn(class<Actor>(DynamicLoadObject("KFMod.KFNadeLExplosion", class'Class')),,, HitLocation);
             break;
     
         case AvailableDamageTypes[2]: 
@@ -147,8 +191,8 @@ defaultproperties
 
     bNotifySenderOnSuccess=False
 
-    bOnlyAliveSender=True
-    bDisableAdminPrivilegedAccess=True
+    bOnlyPlayerSender=False
+    bOnlyAliveSender=False
 
     bAdminOnly=True
 }
