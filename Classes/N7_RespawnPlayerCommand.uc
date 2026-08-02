@@ -129,7 +129,7 @@ defaultproperties
     Aliases(0)="RP"
     Aliases(1)="RESPAWN"
     Description="Respawn player"
-    Signature="<? (string TargetName | 'all'), ? string SpawnNear>"
+    Signature="<? (string TargetName | 'all'), ? string DestTargetName>"
 
     bNotifyGlobalOnSuccess=True
 

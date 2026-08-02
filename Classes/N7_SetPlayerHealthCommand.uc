@@ -6,7 +6,13 @@ var protected const config int MaxLimit;
 /** @Override */
 protected function DoActionForSingleTarget(N7_CommandExecutionState ExecState, PlayerController PC)
 {
-  PC.Pawn.Health = int(ExecState.GetArg(ECmdArgs.ARG_VALUE));
+    local int NewHealth;
+
+    NewHealth = int(ExecState.GetArg(ECmdArgs.ARG_VALUE));
+    NewHealth = Clamp(NewHealth, MinLimit, MaxLimit);
+
+    PC.Pawn.Health = NewHealth;
+    ExecState.SaveNumber(NewHealth);
 }
 
 /** @Override */
@@ -16,60 +22,41 @@ protected function bool CheckGameState(N7_CommandExecutionState ExecState)
 }
 
 /** @Override */
-protected function bool CheckArgs(N7_CommandExecutionState ExecState)
-{
-  local int NewHealth;
-
-  NewHealth = int(ExecState.GetArg(ECmdArgs.ARG_VALUE));
-
-  if (!IsInRange(NewHealth, MinLimit, MaxLimit))
-  {
-    return False;
-  }
-
-  return True;
-}
-
-/** @Override */
 protected function string InvalidGameStateMessage()
 {
-  return "Health can be set only during the game";
-}
-
-/** @Override */
-protected function string InvalidArgsMessage(N7_CommandExecutionState ExecState)
-{
-  return "Health must be in range from " $ MinLimit $ " to " $ MaxLimit;
+    return "Health can be set only during the game";
 }
 
 /** @Override */
 protected function string GetTargetSuccessMessage(N7_CommandExecutionState ExecState)
 {
-  local string TargetName;
+    local string TargetName, NewHealth;
 
-  TargetName = LoadTarget(ExecState);
+    TargetName = LoadTarget(ExecState);
+    NewHealth = ColorizeValue(ExecState.LoadNumber());
 
-  if (TargetName ~= "all")
-  {
-    return "All players' health has been set to " $ ColorizeValue(ExecState.GetArg(ECmdArgs.ARG_VALUE));
-  }
 
-  return "Your health has been set to " $ ColorizeValue(ExecState.GetArg(ECmdArgs.ARG_VALUE));
+    if (TargetName ~= "all")
+    {
+        return "All players' health has been set to " $ NewHealth;
+    }
+
+    return "Your health has been set to " $ NewHealth;
 }
 
 defaultproperties
 {
-  MinArgsNum=1
+    MinArgsNum=1
 
-  MinLimit=1
-  MaxLimit=500
+    MinLimit=1
+    MaxLimit=500
 
-  Aliases(0)="SH"
-  Aliases(1)="SETHEALTH"
-  Description="Set player's health"
-  Signature="<int Health, ? (string TargetName | 'all')>"
+    Aliases(0)="SH"
+    Aliases(1)="SETHEALTH"
+    Description="Set player's health"
+    Signature="<int Health, ? (string TargetName | 'all')>"
 
-  bOnlyAliveTargets=True
+    bOnlyAliveTargets=True
 
-  bAdminOnly=True
+    bAdminOnly=True
 }
